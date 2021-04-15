@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://162.215.253.45/gurpal/';
+$config['base_url'] = 'http://localhost/gurpal/';
 
 /*
 |--------------------------------------------------------------------------
