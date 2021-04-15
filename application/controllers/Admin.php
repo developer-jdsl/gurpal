@@ -10,6 +10,8 @@ class Admin extends CI_Controller {
 			redirect('authentication/admin');	
 		}
 		
+		$this->load->model('admin/Admin_model');
+		
  	}
 
 	public function index()
@@ -17,6 +19,15 @@ class Admin extends CI_Controller {
 		$this->load->view('admin/header');
 		$this->load->view('admin/sidebar');
 		$this->load->view('admin/dashboard');
+		$this->load->view('admin/footer');
+	}
+	
+	
+	public function brands()
+	{
+		$this->load->view('admin/header');
+		$this->load->view('admin/sidebar');
+		$this->load->view('admin/brands');
 		$this->load->view('admin/footer');
 	}
 	
