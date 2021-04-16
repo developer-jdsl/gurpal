@@ -48,6 +48,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 										</select>
                               
                                         </div>
+										
+										
+										 <div class="form-group">
+										<label><?=keyword_value('meta_title','Meta Title')?></label>
+                                            <input type="text" name="meta_title" value="<?=@$results['meta_title']?>" class="form-control form-control-user" >
+                                        </div>
+										
+										 <div class="form-group">
+										<label><?=keyword_value('meta_keywords','Meta Keywords')?></label>
+                                            <input type="text" name="meta_keywords" value="<?=@$results['meta_keywords']?>" class="form-control form-control-user" >
+                                        </div>
+										
+										 <div class="form-group">
+										<label><?=keyword_value('meta_description','Meta Description')?></label>
+         
+											<textarea class="form-control form-control-user" name="meta_description"><?=@$results['meta_description']?></textarea>
+                                        </div>
 										<input type="hidden" name="id" value="<?=@$results['pk_city_id']?>">
                                         <button  type="submit" class="btn btn-primary btn-user btn-block">
                                             <?=keyword_value('submit','Submit')?>
