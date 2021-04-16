@@ -12,6 +12,11 @@ class Admin_model extends CI_Model {
 	   
    }
    
+   /* 
+   #######################################
+   ADMIN STATE MODULE
+   #######################################
+   */
    function get_states()
    {
 	   $states=$this->db->get_where('tbl_states',array('is_deleted'=>0));
@@ -95,4 +100,100 @@ class Admin_model extends CI_Model {
 	   return false;
    }
    
+   /* 
+   #######################################
+   ADMIN CITY MODULE 
+   #######################################
+   */
+  
+   function get_cities()
+   {
+	  
+	   $this->db->select('c.*,s.state_name');
+	   $this->db->from('tbl_cities as c');
+	   $this->db->join('tbl_states as s','c.fk_state_id=s.pk_state_id','inner');
+	   $this->db->where(array('c.is_deleted'=>0));
+	   $cities=$this->db->get();
+	   if($cities)
+	   {
+		  return $cities->result_array(); 
+	   }
+	   
+	   return null;
+	   
+   }
+   
+   function add_city($data=null)
+   {
+	   if($data)
+	   {
+		   $this->db->insert('tbl_cities',array('city_name'=>$data['city_name'],'active'=>$data['active'],'fk_state_id'=>$data['fk_state_id']));
+		   $id=$this->db->insert_id();
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   function edit_city($data=null)
+   {
+	   if($data)
+	   {
+		   $this->db->where(array('pk_city_id'=>$data['pk_city_id']));
+		   $id=$this->db->update('tbl_cities',array('city_name'=>$data['city_name'],'active'=>$data['active'],'fk_state_id'=>$data['fk_state_id']));
+		   
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   function remove_city($id)
+   {
+	   if($id)
+	   {
+		   $this->db->where(array('pk_city_id'=>$id));
+		   $rid=$this->db->update('tbl_cities',array('is_deleted'=>1));
+		   
+		   if($rid)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   
+   function check_city_id($id=null)
+   {
+	   if($id)
+	   {
+		  $return=$this->db->get_where('tbl_cities',array('pk_city_id'=>$id,'is_deleted'=>0)); 
+		  if($return)
+		  {
+			$return=$return->row_array();
+			if($return['pk_city_id'])
+			{
+				
+				return $return;
+			}
+		  }
+		   
+	   }
+	   
+	   return false;
+   }
+   
+ 
+  
 }

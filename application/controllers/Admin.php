@@ -36,6 +36,14 @@ class Admin extends CI_Controller {
 		$this->load->view('admin/footer');
 	}
 	
+	
+	/* 
+   #######################################
+   ADMIN STATE MODULE 
+   #######################################
+   */
+	
+	
 	public function states()
 	{
 		
@@ -252,6 +260,237 @@ class Admin extends CI_Controller {
 		
 	}
 	
+/* 
+   #######################################
+   ADMIN CITY MODULE 
+   #######################################
+   */
+	
+	
+	public function cities()
+	{
+		
+		$this->data['results']=$this->admin_model->get_cities();
+		$this->load->view('admin/header');
+		$this->load->view('admin/sidebar');
+		$this->load->view('admin/topbar');
+		$this->load->view('admin/cities/cities',$this->data);
+		$this->load->view('admin/footer');
+	}
+	
+	public function add_city()
+	{
+		
+		$this->form_validation->set_rules('state_name', 'State Name', 'required',
+			array('required' =>  keyword_value('you_must_select_state_name','You must select State Name.'))
+		);
+		$this->form_validation->set_rules('city_name', 'City Name', 'required',
+			array('required' =>  keyword_value('you_must_enter_city_name','You must enter City Name.'))
+		);
+		
+		
+		  if ($this->form_validation->run() == FALSE)
+		{
+			
+			$this->data['states']=$this->admin_model->get_states();
+			$this->load->view('admin/header');
+			$this->load->view('admin/sidebar');
+			$this->load->view('admin/topbar');
+			$this->load->view('admin/cities/add_city',$this->data);
+			$this->load->view('admin/footer');
+	
+		}
+		else
+		{
+			$data['fk_state_id']=$this->input->post('state_name');
+			$data['city_name']=$this->input->post('city_name');
+			$data['active']=$this->input->post('active');
+
+		
+			
+			$return=$this->admin_model->add_city($data);
+		
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_added','Item Added Successfully'));
+				redirect('admin/cities');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/cities/add_city');
+			}
+		}
+				
+	
+	}
+	
+	public function edit_city()
+	{
+		$id=$this->input->post('id');
+		if($id)
+		{
+			$result=$this->admin_model->check_city_id($id);
+	
+			if($result['pk_city_id'])
+				
+				{
+		
+				$this->data['states']=$this->admin_model->get_states();
+				$this->data['results']=$result;
+				$this->load->view('admin/header');
+				$this->load->view('admin/sidebar');
+				$this->load->view('admin/topbar');
+				$this->load->view('admin/cities/edit_city',$this->data);
+				$this->load->view('admin/footer');
+		
+				}
+				else
+				{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+					redirect('admin/cities');
+				}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/cities');
+		}
+	}
+	
+	
+	public  function update_city()
+	{
+		
+		$id=$this->input->post('id');
+		if($id)
+		{
+			
+		$this->form_validation->set_rules('state_name', 'State Name', 'required',
+			array('required' =>  keyword_value('you_must_select_state_name','You must select State Name.'))
+		);
+		$this->form_validation->set_rules('city_name', 'City Name', 'required',
+			array('required' =>  keyword_value('you_must_enter_city_name','You must enter City Name.'))
+		);
+		
+		
+		 if ($this->form_validation->run() == FALSE)
+		{
+			
+		$this->data['results']=$result;
+		$this->data['states']=$this->admin_model->get_states();
+		$this->load->view('admin/header');
+		$this->load->view('admin/sidebar');
+		$this->load->view('admin/topbar');
+		$this->load->view('admin/cities/edit_city',$this->data);
+		$this->load->view('admin/footer');
+		
+		}
+		else
+		{
+			
+			$data['fk_state_id']=$this->input->post('state_name');
+			$data['city_name']=$this->input->post('city_name');
+			$data['active']=$this->input->post('active');
+			$data['pk_city_id']=$id;
+		
+			
+			$return=$this->admin_model->edit_city($data);
+		
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_updated','Item Updated Successfully'));
+				redirect('admin/cities');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/cities/edit_city');
+			}
+			
+			
+		}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/cities');
+		}
+		
+		
+		
+	}
+	
+	public function delete_city()
+	{
+		
+		$id=$this->input->post('id');
+		if($id)
+		{
+			$result=$this->admin_model->check_city_id($id);
+	
+			if($result['pk_city_id'])
+				
+				{
+		
+		
+				$this->data['results']=$result;
+				$this->load->view('admin/header');
+				$this->load->view('admin/sidebar');
+				$this->load->view('admin/topbar');
+				$this->load->view('admin/cities/delete_city',$this->data);
+				$this->load->view('admin/footer');
+		
+				}
+				else
+				{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+					redirect('admin/cities');
+				}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/cities');
+		}
+		
+		
+	}
+	
+	public function remove_city()
+	{
+		$id=$this->input->post('id');
+		if($id)
+		{
+			
+			$return=$this->admin_model->remove_city($id);
+			
+			
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_deleted','Item Deleted Successfully'));
+				redirect('admin/cities');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/cities/edit_city');
+			}
+		}
+		
+		else
+		{
+			$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/cities');
+		}
+		
+	}
 	
 	
 }

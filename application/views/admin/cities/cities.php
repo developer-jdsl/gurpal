@@ -7,8 +7,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800"><?=keyword_value('states','States')?>  <a	
-                            href="<?=base_url('admin/add_state')?>" class="btn btn-primary text-right">Add State</a></h1>
+                    <h1 class="h3 mb-2 text-gray-800"><?=keyword_value('cities','Cities')?>  <a	
+                            href="<?=base_url('admin/add_city')?>" class="btn btn-primary text-right"><?=keyword_value('add_city','Add City')?></a></h1>
 					<?php if($msg=$this->session->flashdata('msg')){?>
 						  <div class="alert alert-primary alert-dismissible fade show" role="alert">
 						  <?=$msg?>
@@ -25,6 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <thead>
                                         <tr>
                                             <th><?=keyword_value('state_name','State Name')?></th>
+											<th><?=keyword_value('city_name','City Name')?></th>
                                             <th><?=keyword_value('status','Status')?></th>
                                             <th><?=keyword_value('action','Action')?></th>
                                             
@@ -32,9 +33,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                           <th><?=keyword_value('state_name','State Name')?></th>
-                                           <th><?=keyword_value('status','Status')?></th>
-                                           <th><?=keyword_value('action','Action')?></th>
+                                            <th><?=keyword_value('state_name','State Name')?></th>
+											<th><?=keyword_value('city_name','City Name')?></th>
+                                            <th><?=keyword_value('status','Status')?></th>
+                                            <th><?=keyword_value('action','Action')?></th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
@@ -42,16 +44,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                            <?php foreach($results as $row){ ?>
 										   <tr>
 										   <td><?=$row['state_name']?></td>
+										   <td><?=$row['city_name']?></td>
 										   <td><?=($row['active']==1)?'Active':'Inactive';?></td>
 										   <td>
-											<?php echo form_open('admin/edit_state',array('class'=>'d-inline')); ?>
-										   <input type="hidden" name="id" value="<?=$row['pk_state_id']?>"> 
+											<?php echo form_open('admin/edit_city',array('class'=>'d-inline')); ?>
+										   <input type="hidden" name="id" value="<?=$row['pk_city_id']?>"> 
 										   <button  class="btn btn-primary" type="submit"><?=keyword_value('edit','Edit')?></button>
 										   </form>
 										   
 									
-										   <?php echo form_open('admin/delete_state',array('class'=>'d-inline')); ?>
-										   <input type="hidden" name="id" value="<?=$row['pk_state_id']?>"> 
+										   <?php echo form_open('admin/delete_city',array('class'=>'d-inline')); ?>
+										   <input type="hidden" name="id" value="<?=$row['pk_city_id']?>"> 
 										   <button class="btn btn-primary" type="submit"><?=keyword_value('delete','Delete')?></button>
 										   </form>
 										 </td>
