@@ -22,7 +22,7 @@ class Authentication extends CI_Controller {
 	
 	public function admin()
 	{
-		$this->load->library('encrypt');
+	
 		$this->form_validation->set_rules('email', 'Email', 'required|valid_email',
 			array('required' =>  keyword_value('you_must_enter_email','You must enter Email.'),
 				  'valid_email' => keyword_value('please_enter_valid_email','Please Enter a valid Email'))

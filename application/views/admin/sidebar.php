@@ -37,6 +37,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="<?=base_url('admin/brands')?>"><?=keyword_value('brands','Brands')?></a>
                         <a class="collapse-item" href="<?=base_url('admin/colors')?>"><?=keyword_value('color','Color')?></a>
+						<a class="collapse-item" href="<?=base_url('admin/states')?>"><?=keyword_value('states','States')?></a>
+						<a class="collapse-item" href="<?=base_url('admin/cities')?>"><?=keyword_value('cities','Cities')?></a>
+                        
                     </div>
                 </div>
             </li>
