@@ -5,15 +5,7 @@ class Authentication extends CI_Controller {
 	
 	public function __construct(){
 		parent::__construct();
-		
-		if($this->session->userdata('user_type')=="admin" || $this->session->userdata('user_type')=="superadmin"){
-			redirect('admin');	
-		}
-		else if($this->session->userdata('user_type')=="user")
-		{
-			redirect('user');	
-		}
-		
+		 check_login();
 		 $this->load->library('form_validation');
 		 $this->load->helper('form');
 		 $this->load->model('authentication_model');

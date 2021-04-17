@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
             <!-- Divider -->
             <hr class="sidebar-divider">
-
+			<?php if($this->session->user_type=='superadmin') { ?>
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
@@ -36,14 +36,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="<?=base_url('admin/brands')?>"><?=keyword_value('brands','Brands')?></a>
-                        <a class="collapse-item" href="<?=base_url('admin/colors')?>"><?=keyword_value('color','Color')?></a>
+                        <!-- <a class="collapse-item" href="<?=base_url('admin/colors')?>"><?=keyword_value('color','Color')?></a> -->
 						<a class="collapse-item" href="<?=base_url('admin/states')?>"><?=keyword_value('states','States')?></a>
 						<a class="collapse-item" href="<?=base_url('admin/cities')?>"><?=keyword_value('cities','Cities')?></a>
+						<a class="collapse-item" href="<?=base_url('admin/gst')?>"><?=keyword_value('gst','Gst')?></a>
                         
                     </div>
                 </div>
             </li>
-
+			<?php }	 ?>
+			
+			<li class="nav-item">
+                <a class="nav-link " href="<?=base_url('admin/products')?>">
+                    <i class="fas fa-fw fa-shopping-cart"></i>
+                    <span><?=keyword_value('products','Products')?></span>
+                </a>
+               
+            </li>
+			
           
 
             <!-- Divider -->

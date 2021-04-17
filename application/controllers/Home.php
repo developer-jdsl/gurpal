@@ -7,5 +7,6 @@ class Home extends CI_Controller {
 	{
 		$this->load->library('encrypt');
 		$this->load->view('home');
+		var_dump($this->session->user_type);
 	}
 }

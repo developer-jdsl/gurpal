@@ -5,12 +5,8 @@ class Admin extends CI_Controller {
 	
 	public function __construct(){
 		parent::__construct();
-
-		if(!$this->session->userdata('user_type') || $this->session->userdata('user_type')=='user'){
-			redirect('authentication/admin');	
-		}
-		
-		$this->load->model('admin/admin_model');
+		 is_authenticated();
+		 $this->load->model('admin/admin_model');
 		 $this->load->library('form_validation');
 		 $this->load->helper('form');
 		
@@ -18,11 +14,11 @@ class Admin extends CI_Controller {
 
 	public function index()
 	{
-		$this->load->view('admin/header');
-		$this->load->view('admin/sidebar');
-		$this->load->view('admin/topbar');
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
 		$this->load->view('admin/dashboard');
-		$this->load->view('admin/footer');
+		$this->load->view('admin/templates/footer');
 	}
 	
 
@@ -35,18 +31,18 @@ class Admin extends CI_Controller {
 	
 	public function states()
 	{
-		
+		is_superadmin();
 		$this->data['results']=$this->admin_model->get_states();
-		$this->load->view('admin/header');
-		$this->load->view('admin/sidebar');
-		$this->load->view('admin/topbar');
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
 		$this->load->view('admin/states/states',$this->data);
-		$this->load->view('admin/footer');
+		$this->load->view('admin/templates/footer');
 	}
 	
 	public function add_state()
 	{
-		
+		is_superadmin();
 		$this->form_validation->set_rules('state_name', 'State Name', 'required',
 			array('required' =>  keyword_value('you_must_enter_state_name','You must enter State Name.'))
 		);
@@ -55,11 +51,11 @@ class Admin extends CI_Controller {
 		  if ($this->form_validation->run() == FALSE)
 		{
 			
-			$this->load->view('admin/header');
-			$this->load->view('admin/sidebar');
-			$this->load->view('admin/topbar');
+			$this->load->view('admin/templates/header');
+			$this->load->view('admin/templates/sidebar');
+			$this->load->view('admin/templates/topbar');
 			$this->load->view('admin/states/add_state');
-			$this->load->view('admin/footer');
+			$this->load->view('admin/templates/footer');
 	
 		}
 		else
@@ -92,6 +88,7 @@ class Admin extends CI_Controller {
 	
 	public function edit_state()
 	{
+		is_superadmin();
 		$id=$this->input->post('id');
 		if($id)
 		{
@@ -103,11 +100,11 @@ class Admin extends CI_Controller {
 		
 		
 					$this->data['results']=$result;
-				$this->load->view('admin/header');
-				$this->load->view('admin/sidebar');
-				$this->load->view('admin/topbar');
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
 				$this->load->view('admin/states/edit_state',$this->data);
-				$this->load->view('admin/footer');
+				$this->load->view('admin/templates/footer');
 		
 				}
 				else
@@ -127,7 +124,7 @@ class Admin extends CI_Controller {
 	
 	public  function update_state()
 	{
-		
+		is_superadmin();
 		$id=$this->input->post('id');
 		if($id)
 		{
@@ -141,11 +138,11 @@ class Admin extends CI_Controller {
 		{
 			
 		$this->data['results']=$result;
-		$this->load->view('admin/header');
-		$this->load->view('admin/sidebar');
-		$this->load->view('admin/topbar');
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
 		$this->load->view('admin/states/edit_state',$this->data);
-		$this->load->view('admin/footer');
+		$this->load->view('admin/templates/footer');
 		
 		}
 		else
@@ -190,7 +187,7 @@ class Admin extends CI_Controller {
 	
 	public function delete_state()
 	{
-		
+		is_superadmin();
 		$id=$this->input->post('id');
 		if($id)
 		{
@@ -202,11 +199,11 @@ class Admin extends CI_Controller {
 		
 		
 				$this->data['results']=$result;
-				$this->load->view('admin/header');
-				$this->load->view('admin/sidebar');
-				$this->load->view('admin/topbar');
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
 				$this->load->view('admin/states/delete_state',$this->data);
-				$this->load->view('admin/footer');
+				$this->load->view('admin/templates/footer');
 		
 				}
 				else
@@ -227,6 +224,7 @@ class Admin extends CI_Controller {
 	
 	public function remove_state()
 	{
+		is_superadmin();
 		$id=$this->input->post('id');
 		if($id)
 		{
@@ -255,7 +253,7 @@ class Admin extends CI_Controller {
 		
 	}
 	
-/* 
+   /* 
    #######################################
    ADMIN CITY MODULE 
    #######################################
@@ -264,18 +262,18 @@ class Admin extends CI_Controller {
 	
 	public function cities()
 	{
-		
+		is_superadmin();
 		$this->data['results']=$this->admin_model->get_cities();
-		$this->load->view('admin/header');
-		$this->load->view('admin/sidebar');
-		$this->load->view('admin/topbar');
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
 		$this->load->view('admin/cities/cities',$this->data);
-		$this->load->view('admin/footer');
+		$this->load->view('admin/templates/footer');
 	}
 	
 	public function add_city()
 	{
-		
+		is_superadmin();
 		$this->form_validation->set_rules('state_name', 'State Name', 'required',
 			array('required' =>  keyword_value('you_must_select_state_name','You must select State Name.'))
 		);
@@ -288,11 +286,11 @@ class Admin extends CI_Controller {
 		{
 			
 			$this->data['states']=$this->admin_model->get_states();
-			$this->load->view('admin/header');
-			$this->load->view('admin/sidebar');
-			$this->load->view('admin/topbar');
+			$this->load->view('admin/templates/header');
+			$this->load->view('admin/templates/sidebar');
+			$this->load->view('admin/templates/topbar');
 			$this->load->view('admin/cities/add_city',$this->data);
-			$this->load->view('admin/footer');
+			$this->load->view('admin/templates/footer');
 	
 		}
 		else
@@ -326,6 +324,7 @@ class Admin extends CI_Controller {
 	
 	public function edit_city()
 	{
+		is_superadmin();
 		$id=$this->input->post('id');
 		if($id)
 		{
@@ -337,11 +336,11 @@ class Admin extends CI_Controller {
 		
 				$this->data['states']=$this->admin_model->get_states();
 				$this->data['results']=$result;
-				$this->load->view('admin/header');
-				$this->load->view('admin/sidebar');
-				$this->load->view('admin/topbar');
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
 				$this->load->view('admin/cities/edit_city',$this->data);
-				$this->load->view('admin/footer');
+				$this->load->view('admin/templates/footer');
 		
 				}
 				else
@@ -361,7 +360,7 @@ class Admin extends CI_Controller {
 	
 	public  function update_city()
 	{
-		
+		is_superadmin();
 		$id=$this->input->post('id');
 		if($id)
 		{
@@ -379,11 +378,11 @@ class Admin extends CI_Controller {
 			
 		$this->data['results']=$result;
 		$this->data['states']=$this->admin_model->get_states();
-		$this->load->view('admin/header');
-		$this->load->view('admin/sidebar');
-		$this->load->view('admin/topbar');
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
 		$this->load->view('admin/cities/edit_city',$this->data);
-		$this->load->view('admin/footer');
+		$this->load->view('admin/templates/footer');
 		
 		}
 		else
@@ -428,7 +427,7 @@ class Admin extends CI_Controller {
 	
 	public function delete_city()
 	{
-		
+		is_superadmin();
 		$id=$this->input->post('id');
 		if($id)
 		{
@@ -440,11 +439,11 @@ class Admin extends CI_Controller {
 		
 		
 				$this->data['results']=$result;
-				$this->load->view('admin/header');
-				$this->load->view('admin/sidebar');
-				$this->load->view('admin/topbar');
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
 				$this->load->view('admin/cities/delete_city',$this->data);
-				$this->load->view('admin/footer');
+				$this->load->view('admin/templates/footer');
 		
 				}
 				else
@@ -465,6 +464,7 @@ class Admin extends CI_Controller {
 	
 	public function remove_city()
 	{
+		is_superadmin();
 		$id=$this->input->post('id');
 		if($id)
 		{
@@ -501,19 +501,19 @@ class Admin extends CI_Controller {
 	
 	public function brands()
 	{
-		
+		is_superadmin();
 		$this->data['results']=$this->admin_model->get_brands();
-		$this->load->view('admin/header');
-		$this->load->view('admin/sidebar');
-		$this->load->view('admin/topbar');
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
 		$this->load->view('admin/brands/brands',$this->data);
-		$this->load->view('admin/footer');
+		$this->load->view('admin/templates/footer');
 	}
 	
 	public function add_brand()
 	{
 
-		
+		is_superadmin();
 		$this->form_validation->set_rules('brand_name', 'Brand Name', 'required',
 			array('required' =>  keyword_value('you_must_enter_brand_name','You must Enter Brand Name.'))
 		);
@@ -524,11 +524,11 @@ class Admin extends CI_Controller {
 		{
 			
 	
-			$this->load->view('admin/header');
-			$this->load->view('admin/sidebar');
-			$this->load->view('admin/topbar');
+			$this->load->view('admin/templates/header');
+			$this->load->view('admin/templates/sidebar');
+			$this->load->view('admin/templates/topbar');
 			$this->load->view('admin/brands/add_brand');
-			$this->load->view('admin/footer');
+			$this->load->view('admin/templates/footer');
 	
 		}
 		else
@@ -586,6 +586,7 @@ class Admin extends CI_Controller {
 	
 	public function edit_brand()
 	{
+		is_superadmin();
 		$id=$this->input->post('id');
 		if($id)
 		{
@@ -598,11 +599,11 @@ class Admin extends CI_Controller {
 				{
 		
 				$this->data['results']=$result;
-				$this->load->view('admin/header');
-				$this->load->view('admin/sidebar');
-				$this->load->view('admin/topbar');
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
 				$this->load->view('admin/brands/edit_brand',$this->data);
-				$this->load->view('admin/footer');
+				$this->load->view('admin/templates/footer');
 		
 				}
 				else
@@ -622,7 +623,7 @@ class Admin extends CI_Controller {
 	
 	public  function update_brand()
 	{
-		
+		is_superadmin();
 		$id=$this->input->post('id');
 		if($id)
 		{
@@ -635,11 +636,11 @@ class Admin extends CI_Controller {
 		 if ($this->form_validation->run() == FALSE)
 		{
 	
-		$this->load->view('admin/header');
-		$this->load->view('admin/sidebar');
-		$this->load->view('admin/topbar');
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
 		$this->load->view('admin/brands/edit_brand',$this->data);
-		$this->load->view('admin/footer');
+		$this->load->view('admin/templates/footer');
 		
 		}
 		else
@@ -710,7 +711,7 @@ class Admin extends CI_Controller {
 	
 	public function delete_brand()
 	{
-		
+		is_superadmin();
 		$id=$this->input->post('id');
 		if($id)
 		{
@@ -722,11 +723,11 @@ class Admin extends CI_Controller {
 		
 		
 				$this->data['results']=$result;
-				$this->load->view('admin/header');
-				$this->load->view('admin/sidebar');
-				$this->load->view('admin/topbar');
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
 				$this->load->view('admin/brands/delete_brand',$this->data);
-				$this->load->view('admin/footer');
+				$this->load->view('admin/templates/footer');
 		
 				}
 				else
@@ -747,6 +748,7 @@ class Admin extends CI_Controller {
 	
 	public function remove_brand()
 	{
+		is_superadmin();
 		$id=$this->input->post('id');
 		if($id)
 		{
@@ -774,6 +776,603 @@ class Admin extends CI_Controller {
 		}
 		
 	}
+	
+	
+		
+	/* 
+   #######################################
+   ADMIN GST MODULE 
+   #######################################
+   */
+	
+	
+	
+		public function gst()
+	{
+		
+		$this->data['results']=$this->admin_model->get_gst();
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
+		$this->load->view('admin/gst/gst',$this->data);
+		$this->load->view('admin/templates/footer');
+	}
+
+	public function add_gst()
+	{
+		
+		$this->form_validation->set_rules('gst_slab', 'Gst Name', 'required',
+			array('required' =>  keyword_value('you_must_enter_gst_slab','You must enter Gst Name.'))
+		);
+		
+		
+		  if ($this->form_validation->run() == FALSE)
+		{
+			
+			$this->load->view('admin/templates/header');
+			$this->load->view('admin/templates/sidebar');
+			$this->load->view('admin/templates/topbar');
+			$this->load->view('admin/gst/add_gst');
+			$this->load->view('admin/templates/footer');
+	
+		}
+		else
+		{
+			$data['gst_slab']=$this->input->post('gst_slab');
+			$data['gst_value']=$this->input->post('gst_value');
+			$data['active']=$this->input->post('active');
+			
+		
+			
+			$return=$this->admin_model->add_gst($data);
+		
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_added','Item Added Successfully'));
+				redirect('admin/gst');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/gst/add_gst');
+			}
+		}
+				
+	
+	}
+	
+	public function edit_gst()
+	{
+		$id=$this->input->post('id');
+		if($id)
+		{
+			$result=$this->admin_model->check_gst_id($id);
+	
+			if($result['pk_gst_id'])
+				
+				{
+		
+		
+					$this->data['results']=$result;
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
+				$this->load->view('admin/gst/edit_gst',$this->data);
+				$this->load->view('admin/templates/footer');
+		
+				}
+				else
+				{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+					redirect('admin/gst');
+				}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/gst');
+		}
+	}
+	
+	
+	public  function update_gst()
+	{
+		
+		$id=$this->input->post('id');
+		if($id)
+		{
+			
+		$this->form_validation->set_rules('gst_slab', 'Gst Name', 'required',
+			array('required' =>  keyword_value('you_must_enter_gst_slab','You must enter Gst Name.'))
+		);
+		
+		
+		 if ($this->form_validation->run() == FALSE)
+		{
+			
+		$this->data['results']=$result;
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
+		$this->load->view('admin/gst/edit_gst',$this->data);
+		$this->load->view('admin/templates/footer');
+		
+		}
+		else
+		{
+			
+			$data['gst_slab']=$this->input->post('gst_slab');
+			$data['gst_value']=$this->input->post('gst_value');
+			$data['active']=$this->input->post('active');
+			$data['pk_gst_id']=$id;
+		
+			
+			$return=$this->admin_model->edit_gst($data);
+		
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_updated','Item Updated Successfully'));
+				redirect('admin/gst');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/gst/edit_gst');
+			}
+			
+			
+		}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/gst');
+		}
+		
+		
+		
+	}
+	
+	public function delete_gst()
+	{
+		
+		$id=$this->input->post('id');
+		if($id)
+		{
+			$result=$this->admin_model->check_gst_id($id);
+	
+			if($result['pk_gst_id'])
+				
+				{
+		
+		
+				$this->data['results']=$result;
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
+				$this->load->view('admin/gst/delete_gst',$this->data);
+				$this->load->view('admin/templates/footer');
+		
+				}
+				else
+				{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+					redirect('admin/gst');
+				}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/gst');
+		}
+		
+		
+	}
+	
+	public function remove_gst()
+	{
+		$id=$this->input->post('id');
+		if($id)
+		{
+			
+			$return=$this->admin_model->remove_gst($id);
+			
+			
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_deleted','Item Deleted Successfully'));
+				redirect('admin/gst');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/gst/edit_gst');
+			}
+		}
+		
+		else
+		{
+			$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/gst');
+		}
+		
+	}
+	
+	/* 
+   #######################################
+   ADMIN PRODUCTS MODULE 
+   #######################################
+   */
+   
+   public function products()
+	{
+
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
+		$this->load->view('admin/products/products');
+		$this->load->view('admin/templates/footer');
+	}
+	
+	public function product_list()
+	{
+	
+      $list = $this->admin_model->get_products();
+      $data = array();
+      $no = $this->input->post('start');
+      foreach ($list as $ro) {
+      $no++;
+      $row = array();
+	  $row[] = 'Image';
+      $row[] = $ro->product_name;
+	  $row[] = $ro->discount_price?$ro->discount_price:$ro->original_price;
+	  $row[] = $ro->quantity;
+      if($ro->active==1){$row[] = 'Active';} else{$row[] = 'Inactive';}
+		
+		 $row[] = form_open('admin/edit_product',array('class'=>'d-inline')).'
+				   <input type="hidden" name="id" value="'.$ro->pk_product_id.'"> 
+				   <button  class="btn btn-primary" type="submit">'.keyword_value('edit','Edit').'</button>
+				   </form>'.form_open('admin/delete_product',array('class'=>'d-inline')).'
+				   <input type="hidden" name="id" value="'.$ro->pk_product_id.'"> 
+				   <button class="btn btn-primary" type="submit">'.keyword_value('delete','Delete').'</button>
+				   </form>';
+      $data[] = $row;
+      }
+      $output = array(
+      "draw" => $this->input->post('draw'),
+      "recordsTotal" => $this->admin_model->products_count_all(),
+      "recordsFiltered" => $this->admin_model->products_count_filtered(),
+      "data" => $data,
+      );
+      //output to json format
+      echo json_encode($output);
+      }
+	  
+	  
+	  public function add_product()
+	{
+
+		
+		$this->form_validation->set_rules('product_name', 'Product Name', 'required',
+			array('required' =>  keyword_value('you_must_enter_product_name','You must Enter Product Name.'))
+		);
+		
+		$this->form_validation->set_rules('product_sku', 'Product SKU', 'required',
+			array('required' =>  keyword_value('you_must_enter_product_sku','You must Enter Product SKU.'))
+		);
+		
+		$this->form_validation->set_rules('product_category', 'Product Category', 'required',
+			array('required' =>  keyword_value('you_must_enter_product_category','You must Select Product Category.'))
+		);
+		
+		$this->form_validation->set_rules('product_description', 'Product Description', 'required',
+			array('required' =>  keyword_value('you_must_enter_product_description','You must Enter Product Description.'))
+		);
+		
+		$this->form_validation->set_rules('fk_gst_id', 'GST Slab', 'required',
+			array('required' =>  keyword_value('you_must_enter_fk_gst_id','You must Select GST Slab.'))
+		);
+
+		
+		
+		  if ($this->form_validation->run() == FALSE)
+		{
+			$this->data['brands']=$this->admin_model->get_brands();
+			$this->data['cross']=$this->admin_model->get_cross_products();
+			$this->data['gst']=$this->admin_model->get_gst();
+			$this->data['categories']=$this->admin_model->get_product_cats();
+			
+			if($this->session->user_type=='superadmin')
+			{
+				$this->data['admins']=$this->admin_model->get_admins();
+				
+			}
+			
+			
+			$this->load->view('admin/templates/header');
+			$this->load->view('admin/templates/sidebar');
+			$this->load->view('admin/templates/topbar');
+			$this->load->view('admin/products/add_product',$this->data);
+			$this->load->view('admin/templates/footer');
+	
+		}
+		else
+		{
+			
+			$data['product_name']=$this->input->post('product_name');
+			$data['product_sku']=$this->input->post('product_sku');
+			$data['product_description']=$this->input->post('product_description');
+			$data['product_brand']=$this->input->post('product_brand');
+			$data['product_specifications']=$this->input->post('product_specifications');
+			if($this->session->user_type=='admin')
+			{
+				$data['cross_sell']=$this->input->post('cross_sell');
+				
+			}
+			$data['meta_title']			=	$this->input->post('meta_title');
+			$data['meta_keyword']		=	$this->input->post('meta_keyword');
+			$data['meta_description']	=	$this->input->post('meta_description');
+			$data['is_cod']				=	$this->input->post('is_cod');
+			$data['ordering']			=	$this->input->post('ordering');
+			$data['fk_gst_id']			=	$this->input->post('fk_gst_id');
+			$data['fk_admin_id']		=	$this->input->post('cid')?$this->input->post('cid'):$this->session->pk_admin_id;
+			$data['product_category']	=	$this->input->post('product_category');
+			$data['active']				=	$this->input->post('active');
+			$data['created_by']			=	$this->session->pk_admin_id;
+			
+			$return=$this->admin_model->add_product($data);
+		
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('product_added','Product Added Successfully'));
+				
+				
+				redirect('admin/products');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('product_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/products/add_product');
+			}
+		}
+				
+	
+	}
+	
+	
+	
+	public function edit_product()
+	{
+		$id=$this->input->post('id');
+		if($id)
+		{
+			
+			
+			$result=$this->admin_model->check_product_id($id);
+	
+			if($result['pk_product_id'])
+				
+				{
+					
+					
+			$this->data['brands']=$this->admin_model->get_brands();
+			$this->data['cross']=$this->admin_model->get_cross_products();
+			$this->data['gst']=$this->admin_model->get_gst();
+			$this->data['categories']=$this->admin_model->get_product_cats();
+			
+			if($this->session->user_type=='superadmin')
+			{
+				$this->data['admins']=$this->admin_model->get_admins();
+				
+			}
+		
+				$this->data['results']=$result;
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
+				$this->load->view('admin/products/edit_product',$this->data);
+				$this->load->view('admin/templates/footer');
+		
+				}
+				else
+				{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+					redirect('admin/products');
+				}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/products');
+		}
+	}
+	
+	
+	
+	public  function update_product()
+	{
+		
+		$id=$this->input->post('id');
+		if($id)
+		{
+			
+			
+		$this->form_validation->set_rules('product_name', 'Product Name', 'required',
+			array('required' =>  keyword_value('you_must_enter_product_name','You must Enter Product Name.'))
+		);
+		
+		$this->form_validation->set_rules('product_sku', 'Product SKU', 'required',
+			array('required' =>  keyword_value('you_must_enter_product_sku','You must Enter Product SKU.'))
+		);
+		
+		$this->form_validation->set_rules('product_category', 'Product Category', 'required',
+			array('required' =>  keyword_value('you_must_enter_product_category','You must Select Product Category.'))
+		);
+		
+		$this->form_validation->set_rules('product_description', 'Product Description', 'required',
+			array('required' =>  keyword_value('you_must_enter_product_description','You must Enter Product Description.'))
+		);
+		
+		$this->form_validation->set_rules('fk_gst_id', 'GST Slab', 'required',
+			array('required' =>  keyword_value('you_must_enter_fk_gst_id','You must Select GST Slab.'))
+		);
+
+		
+		 if ($this->form_validation->run() == FALSE)
+		{
+			
+			$this->data['brands']=$this->admin_model->get_brands();
+			$this->data['cross']=$this->admin_model->get_cross_products();
+			$this->data['gst']=$this->admin_model->get_gst();
+			$this->data['categories']=$this->admin_model->get_product_cats();
+			
+			if($this->session->user_type=='superadmin')
+			{
+				$this->data['admins']=$this->admin_model->get_admins();
+				
+			}
+			
+	
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
+		$this->load->view('admin/products/edit_product',$this->data);
+		$this->load->view('admin/templates/footer');
+		
+		}
+		else
+		{
+		
+
+			$data['product_name']=$this->input->post('product_name');
+			$data['product_sku']=$this->input->post('product_sku');
+			$data['product_description']=$this->input->post('product_description');
+			$data['product_brand']=$this->input->post('product_brand');
+			$data['product_specifications']=$this->input->post('product_specifications');
+			if($this->session->user_type=='admin')
+			{
+				$data['cross_sell']=$this->input->post('cross_sell');
+				
+			}
+			$data['meta_title']			=	$this->input->post('meta_title');
+			$data['meta_keyword']		=	$this->input->post('meta_keyword');
+			$data['meta_description']	=	$this->input->post('meta_description');
+			$data['is_cod']				=	$this->input->post('is_cod');
+			$data['ordering']			=	$this->input->post('ordering');
+			$data['fk_gst_id']			=	$this->input->post('fk_gst_id');
+			$data['fk_admin_id']		=	$this->input->post('cid')?$this->input->post('cid'):$this->session->pk_admin_id;
+			$data['product_category']	=	$this->input->post('product_category');
+			$data['active']				=	$this->input->post('active');
+			
+		
+			
+			$return=$this->admin_model->edit_product($data,$id);
+		
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('Product_updated','Product Updated Successfully'));
+				redirect('admin/products');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/products/edit_product');
+			}
+			
+			
+		}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/products');
+		}
+		
+		
+		
+	}
+	
+	
+	
+	 
+	
+	public function delete_product()
+	{
+		
+		$id=$this->input->post('id');
+		if($id)
+		{
+			$result=$this->admin_model->check_product_id($id);
+	
+			if($result['pk_product_id'])
+				
+				{
+		
+		
+				$this->data['results']=$result;
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
+				$this->load->view('admin/products/delete_product',$this->data);
+				$this->load->view('admin/templates/footer');
+		
+				}
+				else
+				{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+					redirect('admin/products');
+				}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/products');
+		}
+		
+		
+	}
+	
+	public function remove_product()
+	{
+		$id=$this->input->post('id');
+		if($id)
+		{
+			
+			$return=$this->admin_model->remove_product($id);
+			
+			
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_deleted','Item Deleted Successfully'));
+				redirect('admin/products');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/products');
+			}
+		}
+		
+		else
+		{
+			$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/products');
+		}
+		
+	}
+	
 	
 	
 }
