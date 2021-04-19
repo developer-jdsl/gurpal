@@ -7,8 +7,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800"><?=keyword_value('add_city','Add City')?></h1>
-					<a href="<?=base_url('admin/cities')?>" class="btn btn-primary text-right"><?=keyword_value('back','Back')?></a>
+                    <h1 class="h3 mb-2 text-gray-800"><?=keyword_value('add_size','Add Size')?></h1>
+					<a href="<?=base_url('admin/size')?>" class="btn btn-primary text-right"><?=keyword_value('back','Back')?></a>
 					<?php if($msg=$this->session->flashdata('msg')){?>
 						  <div class="alert alert-primary alert-dismissible fade show" role="alert">
 						  <?=$msg?>
@@ -24,21 +24,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <div class="card-body">
                             <?php echo validation_errors();?>
 
-									<?php echo form_open('admin/add_city'); ?>
+									<?php echo form_open('admin/add_size'); ?>
 									
-										<div class="form-group">
-										<label><?=keyword_value('state_name','State Name')?></label>
-										<select name="state_name" class="form-control form-control-user">
-										<?php foreach($states as $state){ ?>
-										<option value="<?=$state['pk_state_id']?>"><?=$state['state_name']?></option>
-										<?php } ?>
-                                         </select>
-                                        </div>
-										
-										
                                         <div class="form-group">
-										<label><?=keyword_value('city_name','City Name')?></label>
-                                            <input type="text" name="city_name" class="form-control form-control-user" required>
+										<label><?=keyword_value('size_name','Size Name')?></label>
+                                            <input type="text" name="size_name" class="form-control form-control-user" required>
+                                        </div>
+                                        <div class="form-group">
+                                        <label><?=keyword_value('size_value','Size Value')?></label>
+                                            <input type="text" name="size_value" class="form-control form-control-user" required>
                                         </div>
                                         <div class="form-group">
 										<label><?=keyword_value('status','Status')?></label>
@@ -47,22 +41,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 										<option value="0">Inactive</option>
 										</select>
                               
-                                        </div>
-										
-										 <div class="form-group">
-										<label><?=keyword_value('meta_title','Meta Title')?></label>
-                                            <input type="text" name="meta_title"  class="form-control form-control-user" >
-                                        </div>
-										
-										 <div class="form-group">
-										<label><?=keyword_value('meta_keywords','Meta Keywords')?></label>
-                                            <input type="text" name="meta_keywords"  class="form-control form-control-user" >
-                                        </div>
-										
-										 <div class="form-group">
-										<label><?=keyword_value('meta_description','Meta Description')?></label>
-         
-											<textarea class="form-control form-control-user" name="meta_description"></textarea>
                                         </div>
                                   
                                         <button  type="submit" class="btn btn-primary btn-user btn-block">

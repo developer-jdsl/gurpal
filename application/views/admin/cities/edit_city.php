@@ -7,6 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800"><?=keyword_value('edit_city','Edit City')?></h1>
+					<a href="<?=base_url('admin/cities')?>" class="btn btn-primary text-right"><?=keyword_value('back','Back')?></a>
 					<?php if($msg=$this->session->flashdata('msg')){?>
 						  <div class="alert alert-primary alert-dismissible fade show" role="alert">
 						  <?=$msg?>

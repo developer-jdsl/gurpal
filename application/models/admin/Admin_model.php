@@ -548,22 +548,163 @@ class Admin_model extends CI_Model {
 	   
    }
    
-  function remove_product($id)
+
+   
+   function remove_product()
    {
 	   if($id)
 	   {
+		   $imgs=$this->db->get_where('tbl_product_pricing',array('fk_products_id'=>$id));
+		   if($imgs)
+		   {
+			   $imgs=$imgs->result_array();
+			   
+			   foreach($imgs as $img){
+				
+				unlink(".uploads/product/".$img['product_image']);				
+				   
+			   }
+			   
+		   }
+		   
+		   $this->db->where(array('fk_products_id'=>$id));
+		   $this->db->delete('tbl_product_pricing');
+		   
 		   $this->db->where(array('pk_products_id'=>$id));
 		   $rid=$this->db->delete('tbl_products');
 		   
+		   
+		   
 		   if($rid)
 		   {
-				return array('status'=>true);
+				return true;
 		   }
 		   
-		   return array('status'=>false);
+		   return false;
 	   }
 	   
    }
+   
+     function get_product_gallery($id)
+   {
+	   if($id)
+	   {
+		   $rid=$this->db->get_where('tbl_product_pricing',array('fk_product_id'=>$id));
+		   
+		   if($rid)
+		   {
+				$rid=$rid->result_array();
+				return $rid;
+		   }
+		   
+		   
+	   }
+	   return false;
+   }
+   
+   
+       function get_colors()
+   {
+	   $colors=$this->db->get_where('tbl_color',array('active'=>1));
+	   if($colors)
+	   {
+		  return $colors->result_array(); 
+	   }
+	   
+	   return null;
+	   
+   }
  
+ 
+ function get_sizes()
+   {
+	   $sizes=$this->db->get_where('tbl_size',array('active'=>1));
+
+	   if($sizes)
+	   {
+		  return $sizes->result_array(); 
+	   }
+	   
+	   return null;
+	   
+   }
+   
+   
+   function pricing_product($insert_data=null)
+   {
+	   if($insert_data)
+	   {
+		   $chk=$this->db->get_where('tbl_product_pricing',array('is_default'=>1));
+		   if($chk->num_rows()==0)
+		   {
+			  $insert_data[0]['is_default']=1; 
+		   }
+		
+		  $this->db->insert_batch('tbl_product_pricing',$insert_data);
+		  
+	   }
+	   
+   }
+   
+   function update_product_ajax($id,$table,$column,$value)
+   {
+	   
+	 $this->db->where(array('pk_price_id'=>$id));
+	 $id=$this->db->update('tbl_'.$table,array($column=>$value));
+	 if($id)
+	 {
+		 return true;
+	 }
+	  return false;
+	   
+   }
+   
+   function update_product_default($id,$table)
+   {
+	 $this->db->update('tbl_'.$table,array('is_default'=>0));
+	 
+	 $this->db->where(array('pk_price_id'=>$id));
+	 $id=$this->db->update('tbl_'.$table,array('is_default'=>1));
+	 
+	 if($id)
+	 {
+		 return true;
+	 }
+	  return false;
+		
+	   
+   }
+   
+      function remove_gallery_ajax($id)
+   {
+	   if($id)
+	   {
+		   $imgs=$this->db->get_where('tbl_product_pricing',array('fk_products_id'=>$id));
+		   if($imgs)
+		   {
+			   $imgs=$imgs->result_array();
+			   
+			   foreach($imgs as $img){
+				
+				unlink(".uploads/product/".$img['product_image']);				
+				   
+			   }
+			   
+		   }
+		   
+		   $this->db->where(array('fk_products_id'=>$id));
+		   $rid=$this->db->delete('tbl_product_pricing');
+		   
+		
+		   if($rid)
+		   {
+				return true;
+		   }
+		   
+		   return false;
+	   }
+	   
+   }
+   
   
 }

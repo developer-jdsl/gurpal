@@ -1,7 +1,7 @@
 // Call the dataTables jQuery plugin
 $(document).ready(function() {
 
-  if(table_ajax_url)
+  if(typeof table_ajax_url !== 'undefined')
   {
 	$('#dataTable').DataTable({
 		"dom": 'Bfrtip',

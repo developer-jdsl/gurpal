@@ -22,6 +22,7 @@
 	<link href="<?=base_url('public/vendor/datatables/dataTables.bootstrap4.min.css')?>" rel="stylesheet">
 
 </head>
+<script> var base_url="<?=base_url()?>";</script>
 
 <body id="page-top">
 

@@ -1029,7 +1029,7 @@ class Admin extends CI_Controller {
       foreach ($list as $ro) {
       $no++;
       $row = array();
-	  $row[] = 'Image';
+	  $row[] = '<img src="'.base_url('uploads/product/'.$ro->product_image).'" width="100px">';
       $row[] = $ro->product_name;
 	  $row[] = $ro->discount_price?$ro->discount_price:$ro->original_price;
 	  $row[] = $ro->quantity;
@@ -1166,6 +1166,7 @@ class Admin extends CI_Controller {
 			$this->data['cross']=$this->admin_model->get_cross_products();
 			$this->data['gst']=$this->admin_model->get_gst();
 			$this->data['categories']=$this->admin_model->get_product_cats();
+			$this->data['gallery']=$this->admin_model->get_product_gallery($id);
 			
 			if($this->session->user_type=='superadmin')
 			{
@@ -1233,6 +1234,9 @@ class Admin extends CI_Controller {
 			$this->data['cross']=$this->admin_model->get_cross_products();
 			$this->data['gst']=$this->admin_model->get_gst();
 			$this->data['categories']=$this->admin_model->get_product_cats();
+			$this->data['colors']=$this->admin_model->get_colors();
+			$this->data['sizes']=$this->admin_model->get_sizes();
+			
 			
 			if($this->session->user_type=='superadmin')
 			{
@@ -1272,7 +1276,76 @@ class Admin extends CI_Controller {
 			$data['product_category']	=	$this->input->post('product_category');
 			$data['active']				=	$this->input->post('active');
 			
-		
+			
+			
+			$sizes=$this->input->post('add_size');
+			$colors=$this->input->post('add_color');
+			$org_price=$this->input->post('add_original_price');
+			$dis_price=$this->input->post('add_discount_price');
+			$quantity=$this->input->post('add_quantity');
+			$img_array=array();
+			$insert_data = array();
+			if(!empty($_FILES['add_product_image']['name']) && count(array_filter($_FILES['add_product_image']['name'])) > 0){ 
+                $filesCount = count($_FILES['add_product_image']['name']); 
+                for($i = 0; $i < $filesCount; $i++){ 
+					if($_FILES['add_product_image']['name'][$i])
+					{
+                    $_FILES['file']['name']     = $_FILES['add_product_image']['name'][$i]; 
+                    $_FILES['file']['type']     = $_FILES['add_product_image']['type'][$i]; 
+                    $_FILES['file']['tmp_name'] = $_FILES['add_product_image']['tmp_name'][$i]; 
+                    $_FILES['file']['error']     = $_FILES['add_product_image']['error'][$i]; 
+                    $_FILES['file']['size']     = $_FILES['add_product_image']['size'][$i]; 
+                     
+                    // File upload configuration 
+                    $uploadPath = 'uploads/product/'; 
+                    $config['upload_path'] = $uploadPath; 
+                    $config['allowed_types'] = 'jpg|jpeg|png|gif'; 
+                    $config['max_size']    = '1000'; 
+                    //$config['max_width'] = '1024'; 
+                    //$config['max_height'] = '768'; 
+                     
+                    // Load and initialize upload library 
+                    $this->load->library('upload', $config); 
+                    $this->upload->initialize($config); 
+                     
+                    // Upload file to server 
+                    if($this->upload->do_upload('file')){ 
+                        // Uploaded file data 
+                        $fileData = $this->upload->data(); 
+                        $img_array[]=$fileData['file_name']; 
+                    }
+						else{
+							$img_array[]='default.jpg'; 
+						}
+                }
+						else{
+						$img_array[]='default.jpg'; 
+						}	
+				
+				}
+				
+			}
+			
+			
+			foreach($colors as $key=>$value)
+			{
+				 $insert_data[]  = array(
+				    'fk_product_id' => $id,
+                    'fk_color_id' => $value,
+					'product_image'=>$img_array[$key],
+                    'fk_size_id' => $sizes[$key],
+                    'original_price' => $org_price[$key],
+                    'discount_price' => $dis_price[$key],
+					'quantity' => $quantity[$key]
+                );
+				
+			}
+			
+			
+			
+			
+			$this->admin_model->pricing_product($insert_data);
+			
 			
 			$return=$this->admin_model->edit_product($data,$id);
 		
@@ -1374,5 +1447,106 @@ class Admin extends CI_Controller {
 	}
 	
 	
+	public function update_product_ajax()
+	{
+		$id=$this->input->post('id');
+		$table=$this->input->post('table');
+		$column=$this->input->post('column');
+		$value=$this->input->post('value');
+		
+		if(@$id && @$table && @$column && @$value)
+		{
+			
+			$chk=$this->admin_model->update_product_ajax($id,$table,$column,$value);
+			echo $chk;
+		
+			
+		}
+		
+		echo false;
+		
+	}
+	
+	 public function product_ajax_upload()  
+      {  
+		$id=$this->input->post('id');
+		$table=$this->input->post('table');
+		$column=$this->input->post('column');
+		
+		if(@$id && @$table && @$column)
+			
+			{
+				
+
+           if(isset($_FILES["file"]["name"]))  
+           {  
+                $config['upload_path'] = './uploads/product/';  
+                $config['allowed_types'] = 'jpg|jpeg|png|gif';  
+                $this->load->library('upload', $config);  
+                if(!$this->upload->do_upload("file"))  
+                {  
+       
+				echo json_encode(array('status'=>false,'msg'=>$this->upload->display_errors()));	
+				return false;				
+                }  
+                else  
+                {  
+                     $data = $this->upload->data();
+					 $this->admin_model->update_product_ajax($id,$table,$column,$data["file_name"]);
+					  echo json_encode(array('status'=>true,'src'=>base_url().'uploads/product/'.$data["file_name"]));
+					  return true;
+                }  
+           }  
+		   
+			}
+	  echo json_encode(array('status'=>false,'msg'=>'Invalid Request'));
+	
+	  }
+	  
+	  public function product_ajax_default()
+	  {
+		  
+		$id=$this->input->post('id');
+		$table=$this->input->post('table');
+		$column=$this->input->post('column');
+		
+		if(@$id && @$table)
+			
+			{
+			
+				$id=$this->admin_model->update_product_default($id,$table);
+				if($id)
+				{
+					echo json_encode(array('status'=>true)); 
+					return true;
+				}
+				
+			}
+				echo json_encode(array('status'=>false));  
+		  
+		  
+	  }
+	  
+	  	  public function remove_gallery_ajax()
+	  {
+		  
+		$id=$this->input->post('id');
+		
+		if(@$id)
+			
+			{
+			
+				$id=$this->admin_model->remove_gallery_ajax($id);
+				if($id)
+				{
+					echo json_encode(array('status'=>true)); 
+					return true;
+				}
+				
+			}
+				echo json_encode(array('status'=>false));  
+		  
+		  
+	  }
 	
 }

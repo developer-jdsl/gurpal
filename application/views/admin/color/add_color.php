@@ -7,8 +7,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800"><?=keyword_value('add_gst','Add Gst')?></h1>
-					<a href="<?=base_url('admin/gst')?>" class="btn btn-primary text-right"><?=keyword_value('back','Back')?></a>
+                    <h1 class="h3 mb-2 text-gray-800"><?=keyword_value('add_color','Add Color')?></h1>
+					<a href="<?=base_url('admin/color')?>" class="btn btn-primary text-right"><?=keyword_value('back','Back')?></a>
                     <?php if($msg=$this->session->flashdata('msg')){?>
                           <div class="alert alert-primary alert-dismissible fade show" role="alert">
                           <?=$msg?>
@@ -24,15 +24,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <div class="card-body">
                             <?php echo validation_errors();?>
 
-                                    <?php echo form_open('admin/add_gst'); ?>
+                                    <?php echo form_open('admin/add_color'); ?>
                                     
                                         <div class="form-group">
-                                        <label><?=keyword_value('gst_slab','Gst Name')?></label>
-                                            <input type="text" name="gst_slab" class="form-control form-control-user" required>
+                                        <label><?=keyword_value('color_name','Color Name')?></label>
+                                            <input type="text" name="color_name" class="form-control form-control-user" required>
                                         </div>
                                         <div class="form-group">
-                                        <label><?=keyword_value('gst_value','Gst Value')?></label>
-                                            <input type="text" name="gst_value" class="form-control form-control-user" required>
+                                        <label><?=keyword_value('color_value','Color Value')?></label>
+                                            <input type="text" name="color_value" class="form-control form-control-user" required>
                                         </div>
                                         <div class="form-group">
                                         <label><?=keyword_value('status','Status')?></label>
