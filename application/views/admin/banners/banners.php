@@ -45,9 +45,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                            <?php foreach($results as $row){ ?>
 										   <tr>
 										   <td><?php if(isset($row['banner_image'])){?>
-										   <img src="<?=base_url('uploads/banners/'.$row['banner_image'])?>" width="50px">
+										   <img src="<?=base_url('uploads/banners/'.$row['banner_image'])?>" width="200px">
 										   <?php } ?>
-										   <?=$row['banner_text']?></td>
+										  </td>
+										<td> <?=$row['banner_text']?></td>
 										  
 										   <td><?=($row['active']==1)?'Active':'Inactive';?></td>
 										   <td>

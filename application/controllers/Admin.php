@@ -2459,11 +2459,10 @@ class Admin extends CI_Controller {
 		
 		
 		
-		if (empty($_FILES['banner_image']['name']))
-		{
-			$this->form_validation->set_rules('banner_image', 'Document', 'required',
+	
+			$this->form_validation->set_rules('active', 'Status', 'required',
 			array('required' =>  keyword_value('you_must_select_ad_media','You must select Banner Image.')));
-		}
+		
 		
 		
 		  if ($this->form_validation->run() == FALSE)
@@ -2516,7 +2515,7 @@ class Admin extends CI_Controller {
 			}
 			else if($return['status']==true && $error)
 			{
-				$this->session->set_flashdata('msg', $error);
+				$this->session->set_flashdata('msg', '2'.$error);
 				redirect('admin/banners');
 				
 			}
