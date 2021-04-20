@@ -5,12 +5,7 @@ class Admin_model extends CI_Model {
         $this->load->database();
     }
    
-   
-   function get_banners()
-   {
-	   
-	   
-   }
+
    
    /* 
    #######################################
@@ -28,6 +23,18 @@ class Admin_model extends CI_Model {
 	   return null;
 	   
    }
+   
+   function get_business_cats()
+  {
+	 $cats=$this->db->get_where(' tbl_business_category',array('is_deleted'=>0,'active'=>1));
+	   if($cats)
+	   {
+		  return $cats->result_array(); 
+	   }
+	   
+	   return null;  
+	  
+  }
    
    function add_state($data=null)
    {
@@ -105,6 +112,7 @@ class Admin_model extends CI_Model {
    ADMIN CITY MODULE 
    #######################################
    */
+  
   
    function get_cities()
    {
@@ -220,7 +228,8 @@ class Admin_model extends CI_Model {
 		   
 		   $this->db->insert('tbl_brands',array('brand_name'=>$data['brand_name'],'brand_image'=>$data['brand_image'],'active'=>$data['active'],'created_by'=>$data['created_by']));
 		   $id=$this->db->insert_id();
-		   if($id)
+		   $slug=$this->create_slug($id,'pk_brand_id','tbl_brands','brand_slug',$data['brand_name'],true);
+		   if($id && $slug)
 		   {
 				return array('status'=>true);
 		   }
@@ -234,12 +243,16 @@ class Admin_model extends CI_Model {
    {
 	   if($data)
 	   {
-		   $this->db->where(array('pk_brand_id'=>$data['pk_brand_id']));
-		   $insert_arr=array('city_name'=>$data['city_name'],'active'=>$data['active']);
+		   
+		   $insert_arr=array('brand_name'=>$data['brand_name'],'active'=>$data['active']);
 		   if(isset($data['brand_image']) && !empty($data['brand_image']))
 		   {
 			 $insert_arr['brand_image']=  $data['brand_image'];
 		   }
+		   $slug=!empty($data['brand_slug'])?$data['brand_slug']:$data['brand_name'];
+		   $insert_arr['brand_slug']=  $this->create_slug($data['pk_brand_id'],'pk_brand_id','tbl_brands','brand_slug',$slug);
+		   
+		   $this->db->where(array('pk_brand_id'=>$data['pk_brand_id']));
 		   $id=$this->db->update('tbl_brands',$insert_arr);
 		   
 		   if($id)
@@ -379,6 +392,186 @@ class Admin_model extends CI_Model {
 	   return false;
    }
    
+      
+     
+   /* 
+   #######################################
+   ADMIN COLOR MODULE 
+   #######################################
+   */ 
+   
+   
+   function get_color()
+   {
+	   $color=$this->db->get_where('tbl_color',array('active'=>1));
+	   if($color)
+	   {
+		  return $color->result_array(); 
+	   }
+	   
+	   return null;
+	   
+   }
+   
+   function add_color($data=null)
+   {
+	   if($data)
+	   {
+		   $this->db->insert('tbl_color',array('color_name'=>$data['color_name'],'color_value'=>$data['color_value'],'active'=>$data['active']));
+		   $id=$this->db->insert_id();
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   function edit_color($data=null)
+   {
+	   if($data)
+	   {
+		   $this->db->where(array('pk_color_id'=>$data['pk_color_id']));
+		   $id=$this->db->update('tbl_color',array('color_name'=>$data['color_name'],'color_value'=>$data['color_value'],'active'=>$data['active']));
+		   
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   function remove_color($id)
+   {
+	   if($id)
+	   {
+		   $this->db->where(array('pk_color_id'=>$id));
+		   $rid=$this->db->update('tbl_color',array('active'=>0));
+		   
+		   if($rid)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   
+   function check_color_id($id=null)
+   {
+	   if($id)
+	   {
+		  $return=$this->db->get_where('tbl_color',array('pk_color_id'=>$id,'active'=>1)); 
+		  if($return)
+		  {
+			$return=$return->row_array();
+			if($return['pk_color_id'])
+			{
+				
+				return $return;
+			}
+		  }
+		   
+	   }
+	   
+	   return false;
+   }
+   
+      /* 
+   #######################################
+   ADMIN SIZE MODULE 
+   #######################################
+   */ 
+   
+    function get_size()
+   {
+	   $size=$this->db->get_where('tbl_size',array('active'=>1));
+	   if($size)
+	   {
+		  return $size->result_array(); 
+	   }
+	   
+	   return null;
+	   
+   }
+   
+   function add_size($data=null)
+   {
+	   if($data)
+	   {
+		   $this->db->insert('tbl_size',array('size_name'=>$data['size_name'],'size_value'=>$data['size_value'],'active'=>$data['active']));
+		   $id=$this->db->insert_id();
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   function edit_size($data=null)
+   {
+	   if($data)
+	   {
+		   $this->db->where(array('pk_size_id'=>$data['pk_size_id']));
+		   $id=$this->db->update('tbl_size',array('size_name'=>$data['size_name'],'size_value'=>$data['size_value'],'active'=>$data['active']));
+		   
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   function remove_size($id)
+   {
+	   if($id)
+	   {
+		   $this->db->where(array('pk_size_id'=>$id));
+		   $rid=$this->db->update('tbl_size',array('active'=>0));
+		   
+		   if($rid)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   
+   function check_size_id($id=null)
+   {
+	   if($id)
+	   {
+		  $return=$this->db->get_where('tbl_size',array('pk_size_id'=>$id,'active'=>1)); 
+		  if($return)
+		  {
+			$return=$return->row_array();
+			if($return['pk_size_id'])
+			{
+				
+				return $return;
+			}
+		  }
+		   
+	   }
+	   
+	   return false;
+   }
    
    
    
@@ -473,13 +666,13 @@ class Admin_model extends CI_Model {
 	
 	function get_admins()
 	{
-		$this->db->select('admin_name');
+		$this->db->select('pk_admin_id,admin_name');
 		$this->db->from('tbl_admin');
-		$this->db->where(array('active'=>1,'is_super'=>0));
+		$this->db->where(array('active'=>1,'is_super'=>0,'is_deleted'=>0));
 		$results=$this->db->get();	
 		if($results)
 		{
-			return $results->row_array();
+			return $results->result_array();
 		}
 		return false;
 	}
@@ -498,11 +691,13 @@ class Admin_model extends CI_Model {
    {
 	   if($data)
 	   {  
+			
 		   $this->db->insert('tbl_products',$data);
 		   $id=$this->db->insert_id();
+		   $this->create_slug($id,'pk_product_id','tbl_products','product_slug',$data['product_name'],true);
 		   if($id)
 		   {
-				return array('status'=>true);
+				return array('status'=>true,'id'=>$id);
 		   }
 		   
 		   return array('status'=>false);
@@ -536,6 +731,15 @@ class Admin_model extends CI_Model {
 	   {
 		   $this->db->where(array('pk_product_id'=>$id));
 		   
+		   if($data['product_slug'])
+		   {
+			  $data['product_slug']= $this->create_slug($id,'pk_product_id','tbl_products','product_slug',$data['product_slug']);
+		   }
+		   else
+		   {
+			   $data['product_slug']= $this->create_slug($id,'pk_product_id','tbl_products','product_slug',$data['product_name']);
+		   }
+		   
 		   $id=$this->db->update('tbl_products',$data);
 		   
 		   if($id)
@@ -550,11 +754,11 @@ class Admin_model extends CI_Model {
    
 
    
-   function remove_product()
+   function remove_product($id)
    {
 	   if($id)
 	   {
-		   $imgs=$this->db->get_where('tbl_product_pricing',array('fk_products_id'=>$id));
+		   $imgs=$this->db->get_where('tbl_product_pricing',array('fk_product_id'=>$id));
 		   if($imgs)
 		   {
 			   $imgs=$imgs->result_array();
@@ -567,10 +771,10 @@ class Admin_model extends CI_Model {
 			   
 		   }
 		   
-		   $this->db->where(array('fk_products_id'=>$id));
+		   $this->db->where(array('fk_product_id'=>$id));
 		   $this->db->delete('tbl_product_pricing');
 		   
-		   $this->db->where(array('pk_products_id'=>$id));
+		   $this->db->where(array('pk_product_id'=>$id));
 		   $rid=$this->db->delete('tbl_products');
 		   
 		   
@@ -602,34 +806,7 @@ class Admin_model extends CI_Model {
 	   return false;
    }
    
-   
-       function get_colors()
-   {
-	   $colors=$this->db->get_where('tbl_color',array('active'=>1));
-	   if($colors)
-	   {
-		  return $colors->result_array(); 
-	   }
-	   
-	   return null;
-	   
-   }
  
- 
- function get_sizes()
-   {
-	   $sizes=$this->db->get_where('tbl_size',array('active'=>1));
-
-	   if($sizes)
-	   {
-		  return $sizes->result_array(); 
-	   }
-	   
-	   return null;
-	   
-   }
-   
-   
    function pricing_product($insert_data=null)
    {
 	   if($insert_data)
@@ -706,5 +883,256 @@ class Admin_model extends CI_Model {
 	   
    }
    
+   
+    function create_slug($id=null,$key=null,$table=null,$column=null,$name=null,$insert=false)
+{
+    $count = 0;
+    $slug_name = $name = url_title($name,'-',true);
+    while(true) 
+    {
+		$where=array($column=>$slug_name,$key.'!='=>$id);
+        $this->db->from($table)->where($where);
+        if ($this->db->count_all_results() == 0) break;
+        $slug_name = $name . '-' . (++$count);
+    }
+	if($insert==true)
+	{
+	$this->db->where($key,$id);
+	return $this->db->update($table,array($column=>$slug_name));
+	}
+	else
+	{
+		return $slug_name;
+	}
+    
+}
+
+/* 
+   #######################################
+   ADMIN ADS MODULE 
+   #######################################
+   */
+  
+  
+  function get_advertisements($page=null,$section=null)
+  {
+	$this->db->select('*');
+	$this->db->from('tbl_advertisement');
+	
+	if($page)
+	{
+		$this->db->where('display_page',$page);
+	}
+	
+	if($section)
+	{
+		$this->db->where('display_section',$section);
+	}
+	
+	$ads=$this->db->get();
+	
+	 if($ads)
+	   {
+		  return $ads->result_array(); 
+	   }
+	   
+	   return null;
+	   
+	  
+  }
+   function get_ads()
+   {
+	  
+	   $ads=$this->db->get_where('tbl_advertisement',array('is_deleted'=>'0'));
+	   if($ads)
+	   {
+		  return $ads->result_array(); 
+	   }
+	   
+	   return null;
+	   
+   }
+   
+   function add_ad($data=null)
+   {
+	   if($data)
+	   {
+		   
+		   $this->db->insert('tbl_advertisement',$data);
+		   $id=$this->db->insert_id();
+		   if($id && $slug)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   function update_ad($id,$data=null)
+   {
+	   if($data)
+	   {
+		 
+		   $this->db->where(array('pk_advertisement_id'=>$id));
+		   $id=$this->db->update('tbl_advertisement',$data);
+
+		   
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   function remove_ad($id)
+   {
+	   if($id)
+	   {
+		   $this->db->where(array('pk_advertisement_id'=>$id));
+		   $rid=$this->db->delete('tbl_advertisement');
+		   
+		   if($rid)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   
+   function check_ad_id($id=null)
+   {
+	   if($id)
+	   {
+		  $return=$this->db->get_where('tbl_advertisement	',array('pk_advertisement_id'=>$id)); 
+		  if($return)
+		  {
+			$return=$return->row_array();
+			if($return['pk_advertisement_id'])
+			{
+				
+				return $return;
+			}
+		  }
+		   
+	   }
+	   
+	   return false;
+   }
+   
+   
+    /* 
+   #######################################
+   ADMIN banner MODULE 
+   #######################################
+   */
+  
+   function get_banners()
+   {
+	  
+	   $brands=$this->db->get_where('tbl_banners',array('is_deleted'=>0));
+	   if($brands)
+	   {
+		  return $brands->result_array(); 
+	   }
+	   
+	   return null;
+	   
+   }
+   
+   function get_banners_active()
+   {
+	  
+	   $brands=$this->db->get_where('tbl_banners',array('active'=>'1','is_deleted'=>0));
+	   if($brands)
+	   {
+		  return $brands->result_array(); 
+	   }
+	   
+	   return null;
+	   
+   }
+   
+   function add_banner($data=null)
+   {
+	   if($data)
+	   {
+		   
+		   $this->db->insert('tbl_banners',$data);
+		   $id=$this->db->insert_id();
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   function edit_banner($id,$data=null)
+   {
+	   if($data)
+	   {
+		   		   
+		   $this->db->where(array('pk_banner_id'=>$id));
+		   $id=$this->db->update('tbl_banners',$data);
+		   
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   function remove_banner($id)
+   {
+	   if($id)
+	   {
+		   $this->db->where(array('pk_banner_id'=>$id));
+		   $rid=$this->db->delete('tbl_banners');
+		   
+		   if($rid)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   
+   function check_banner_id($id=null)
+   {
+	   if($id)
+	   {
+		  $return=$this->db->get_where('tbl_banners',array('pk_banner_id'=>$id)); 
+		  if($return)
+		  {
+			$return=$return->row_array();
+			if($return['pk_banner_id'])
+			{
+				
+				return $return;
+			}
+		  }
+		   
+	   }
+	   
+	   return false;
+   }
+   
+
   
 }

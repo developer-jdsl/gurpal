@@ -53,6 +53,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <!-- Custom scripts for all pages-->
     <script src="<?=base_url('public/js/sb-admin-2.min.js')?>"></script>
 	
+	<?php if(in_array($this->uri->segment(2),array('add_ad','edit_ad'))){ ?>
+	<script src="<?=base_url('public/vendor/select2/select2.min.js')?>"></script>
+	<?php } ?>
+	
 	<script src="<?=base_url('public/js/custom.js')?>"></script>
 	
 	
@@ -70,6 +74,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     <!-- Page level custom scripts -->
     <script src="<?=base_url('public/js/demo/datatables-demo.js')?>"></script>
+	
+	
+	
 
 </body>
 

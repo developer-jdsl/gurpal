@@ -22,11 +22,12 @@ $(document).on('change', '.update_product_fields' ,function (e) {
  var id=$(this).data('id');
  var table=$(this).data('table');
  var column=$(this).data('column');
+ var cname=$(this).data('cname');
  var value=$(this).val();
  $.post(base_url+'admin/update_product_ajax', {id: id,table:table,column:column,value:value}, function(result){
     if(result==true)
 	{
-		alert(column+' sucessfully update');
+		alert(cname+' sucessfully update');
 	}
   });
 });
@@ -141,6 +142,13 @@ $('.remove_gallery_ajax').click(function(){
 	
 	
 });
+
+
+if($("select").hasClass("select2"))
+{
+	
+	$('.select2').select2();
+}
 
 
 

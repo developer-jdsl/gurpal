@@ -20,6 +20,10 @@
     <!-- Custom styles for this template-->
     <link href="<?=base_url('public/css/sb-admin-2.min.css')?>" rel="stylesheet">
 	<link href="<?=base_url('public/vendor/datatables/dataTables.bootstrap4.min.css')?>" rel="stylesheet">
+	
+	<?php if(in_array($this->uri->segment(2),array('add_ad','edit_ad'))){ ?>
+	<link href="<?=base_url('public/vendor/select2/select2.min.css')?>" rel="stylesheet">
+	<?php } ?>
 
 </head>
 <script> var base_url="<?=base_url()?>";</script>

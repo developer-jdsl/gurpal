@@ -46,6 +46,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 										<option value="1" <?php if($results['active']==1) {echo 'checked'; } ?> >Active</option>
 										<option value="0" <?php if($results['active']==0) {echo 'checked'; } ?> >Inactive</option>
 										</select>
+										
+											<div class="form-group">
+										<label><?=keyword_value('brand_slug','Brand Slug')?></label>
+                                            <input type="text" name="brand_slug" value="<?=@$results['brand_slug']?>"class="form-control form-control-user">
+                                        </div>
                               
                                         </div>
 										<input type="hidden" name="id" value="<?=@$results['pk_brand_id']?>">

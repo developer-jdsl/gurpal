@@ -36,10 +36,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="<?=base_url('admin/brands')?>"><?=keyword_value('brands','Brands')?></a>
+						<a class="collapse-item" href="<?=base_url('admin/banners')?>"><?=keyword_value('banners','Banners')?></a>
                         <!-- <a class="collapse-item" href="<?=base_url('admin/colors')?>"><?=keyword_value('color','Color')?></a> -->
 						<a class="collapse-item" href="<?=base_url('admin/states')?>"><?=keyword_value('states','States')?></a>
 						<a class="collapse-item" href="<?=base_url('admin/cities')?>"><?=keyword_value('cities','Cities')?></a>
 						<a class="collapse-item" href="<?=base_url('admin/gst')?>"><?=keyword_value('gst','Gst')?></a>
+						<a class="collapse-item" href="<?=base_url('admin/color')?>"><?=keyword_value('color','Color')?></a>
+						<a class="collapse-item" href="<?=base_url('admin/size')?>"><?=keyword_value('size','Size')?></a>
                         
                     </div>
                 </div>
@@ -53,6 +56,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </a>
                
             </li>
+				<?php if($this->session->user_type=='superadmin') { ?>
+			<li class="nav-item">
+                <a class="nav-link " href="<?=base_url('admin/ads')?>">
+                    <i class="fas fa-fw fa-shopping-cart"></i>
+                    <span><?=keyword_value('ads','ADS')?></span>
+                </a>
+               
+            </li>
+			
+				<?php } ?>
 			
           
 

@@ -23,12 +23,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <p align="center"><?php echo validation_errors();?></p>
 							
 							<ul class="nav nav-tabs">
-  <li class="nav-item "><a class="nav-link active" data-toggle="tab" href="#details"><?=keyword_value('details','Details')?></a></li>
-<li class="nav-item" ><a data-toggle="tab" class="nav-link" href="#gallery"><?=keyword_value('gallery','Gallery')?></a></li>
+  <li class="nav-item "><a class="nav-link <?php if(@$galleryf==false){echo 'active';} ?>" data-toggle="tab" href="#details"><?=keyword_value('details','Details')?></a></li>
+<li class="nav-item" ><a data-toggle="tab" class="nav-link <?php if(@$galleryf==true){echo 'active';} ?>" href="#gallery"><?=keyword_value('gallery','Gallery')?></a></li>
 </ul>
 <?php echo form_open_multipart('admin/update_product'); ?>
 <div class="tab-content">
-  <div id="details" class="container tab-pane  active">
+  <div id="details" class="container tab-pane  <?php if(@$galleryf==true){echo 'fade';} else {echo 'active';} ?>">
   <br>
     									
 										<div class="row">
@@ -166,13 +166,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 													<input type="number" name="ordering" class="form-control form-control-user" value="<?=$results['ordering']?>">
 												</div>
 												
+													<div class="form-group">
+												<label><?=keyword_value('product_slug','Product Slug')?></label>
+													<input type="text" name="product_slug" class="form-control form-control-user" value="<?=$results['product_slug']?>">
+												</div>
+												
 												
 												
 											</div>
 										</div>
 										
   </div>
-  <div id="gallery" class="container tab-pane fade">
+  <div id="gallery" class="container tab-pane <?php if(@$galleryf==true){echo 'active';} else {echo 'fade';} ?>">
      <br>
 	 <?php if($gallery) { ?>
 	 <table class="table table-bordered"  width="100%">
@@ -196,7 +201,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 											<input type="file" name="product_image_<?=$row['pk_price_id']?>" accept="jpg,jpeg,png,gif" class="image_update_ajax" style="width:100px" data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-column="product_image">
  											</td>
 											<td>
-											<select  class="form-control form-control-user update_product_fields" data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-column="fk_color_id">
+											<select  class="form-control form-control-user update_product_fields" data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-cname="Product Color" data-column="fk_color_id">
 											<option value="0"><?=keyword_value('not_applicable','Not Applicable')?></option>
 											<?php if(@$colors) {
 												foreach($colors as $row2) { ?>
@@ -205,7 +210,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 											</select>
 											</td>
 											<td>
-											<select  class="form-control form-control-user update_product_fields" data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-column="fk_size_id">
+											<select  class="form-control form-control-user update_product_fields" data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-cname="Product Size" data-column="fk_size_id">
 											<option value="0"><?=keyword_value('not_applicable','Not Applicable')?></option>
 											<?php if(@$sizes) { 
 											foreach($sizes as $row2) { ?>
@@ -215,13 +220,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 											
 											</td>
 											<td>
-											<input type="number"  class="form-control form-control-user update_product_fields" value="<?=$row['original_price']?>"  data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-column="original_price" style="width:100px" min="0">
+											<input type="number"  class="form-control form-control-user update_product_fields" value="<?=$row['original_price']?>"  data-cname="Original Price"  data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-column="original_price" style="width:100px" min="0">
 											</td>
 											<td>
-											<input type="number"  class="form-control form-control-user update_product_fields" value="<?=$row['discount_price']?>" data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-column="discount_price" style="width:100px"  min="0">
+											<input type="number"  class="form-control form-control-user update_product_fields" value="<?=$row['discount_price']?>"  data-cname="Discount Price" data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-column="discount_price" style="width:100px"  min="0">
 											</td>
 											<td>
-											<input type="number"  class="form-control form-control-user update_product_fields" value="<?=$row['quantity']?>" data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-column="quantity" style="width:100px"  min="1">
+											<input type="number"  class="form-control form-control-user update_product_fields" value="<?=$row['quantity']?>"  data-cname="Quantity" data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-column="quantity" style="width:100px"  min="1">
 											</td>
 											<td>
 											<input type="radio"  class="form-control form-control-user update_default" value="<?=$row['pk_price_id']?>"  data-table="product_pricing" data-column="is_default" style="width:20px" <?php if($row['is_default']==1){ echo 'checked';} ?>>

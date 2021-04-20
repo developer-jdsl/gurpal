@@ -25,6 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <thead>
                                         <tr>
                                             <th><?=keyword_value('size_name','Size Name')?></th>
+											<th><?=keyword_value('size','Size')?></th>
                                             <th><?=keyword_value('status','Status')?></th>
                                             <th><?=keyword_value('action','Action')?></th>
                                             
@@ -33,8 +34,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <tfoot>
                                         <tr>
                                            <th><?=keyword_value('size_name','Size Name')?></th>
-                                            <th><?=keyword_value('status','Status')?></th>
-                                            <th><?=keyword_value('action','Action')?></th>
+										   <th><?=keyword_value('size','Size')?></th>
+                                           <th><?=keyword_value('status','Status')?></th>
+                                           <th><?=keyword_value('action','Action')?></th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
@@ -42,6 +44,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                            <?php foreach($results as $row){ ?>
 										   <tr>
 										   <td><?=$row['size_name']?></td>
+										    <td><?=$row['size_value']?></td>
 										   <td><?=($row['active']==1)?'Active':'Inactive';?></td>
 										   <td>
 											<?php echo form_open('admin/edit_size',array('class'=>'d-inline')); ?>
