@@ -37,7 +37,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-primary" href="<?=base_url('admin/logout')?>">Logout</a>
                 </div>
             </div>
         </div>
@@ -55,6 +55,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	
 	<?php if(in_array($this->uri->segment(2),array('add_ad','edit_ad'))){ ?>
 	<script src="<?=base_url('public/vendor/select2/select2.min.js')?>"></script>
+	<?php } ?>
+	
+	
+	<?php if(in_array($this->uri->segment(2),array('add_color','edit_color'))){ ?>
+	<script src="<?=base_url('public/js/bootstrap-colorpicker.js')?>"></script>
 	<?php } ?>
 	
 	<script src="<?=base_url('public/js/custom.js')?>"></script>

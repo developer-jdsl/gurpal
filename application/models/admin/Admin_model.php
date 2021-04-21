@@ -26,7 +26,7 @@ class Admin_model extends CI_Model {
    
    function get_business_cats()
   {
-	 $cats=$this->db->get_where(' tbl_business_category',array('is_deleted'=>0,'active'=>1));
+	 $cats=$this->db->get_where('tbl_business_category',array('is_deleted'=>0,'active'=>1));
 	   if($cats)
 	   {
 		  return $cats->result_array(); 
@@ -211,7 +211,7 @@ class Admin_model extends CI_Model {
    function get_brands()
    {
 	  
-	   $brands=$this->db->get_where('tbl_brands',array('active'=>'1'));
+	   $brands=$this->db->get_where('tbl_brands',array('is_deleted'=>'0'));
 	   if($brands)
 	   {
 		  return $brands->result_array(); 
@@ -311,7 +311,7 @@ class Admin_model extends CI_Model {
    
     function get_gst()
    {
-	   $gst=$this->db->get_where('tbl_gst',array('active'=>1));
+	   $gst=$this->db->get_where('tbl_gst',array('is_deleted'=>1));
 	   if($gst)
 	   {
 		  return $gst->result_array(); 
@@ -403,7 +403,7 @@ class Admin_model extends CI_Model {
    
    function get_color()
    {
-	   $color=$this->db->get_where('tbl_color',array('active'=>1));
+	   $color=$this->db->get_where('tbl_color',array('is_deleted'=>1));
 	   if($color)
 	   {
 		  return $color->result_array(); 
@@ -492,7 +492,7 @@ class Admin_model extends CI_Model {
    
     function get_size()
    {
-	   $size=$this->db->get_where('tbl_size',array('active'=>1));
+	   $size=$this->db->get_where('tbl_size',array('is_deleted'=>0));
 	   if($size)
 	   {
 		  return $size->result_array(); 
@@ -576,7 +576,7 @@ class Admin_model extends CI_Model {
    
    
    
-       /* 
+   /* 
    #######################################
    ADMIN PRODUCTS MODULE 
    #######################################
@@ -594,7 +594,7 @@ class Admin_model extends CI_Model {
 		$this->db->join('tbl_admin as a','p.fk_admin_id=a.pk_admin_id','left');
 		if($this->session->user_type=='admin')
 		{
-			$this->db->where(array('p.active'=>1,'p.is_deleted'=>0,'p.fk_admin_id'=>$this->session->pk_admin_id));
+			$this->db->where(array('p.is_deleted'=>0,'p.fk_admin_id'=>$this->session->pk_admin_id));
 		}
 		$colums=array('p.product_name','pc.category_name');
         
@@ -639,6 +639,7 @@ class Admin_model extends CI_Model {
 
      function products_count_all()
     {
+		$this->db->where('is_deleted',0);
         $this->db->from('tbl_products');
         return $this->db->count_all_results();
     }
@@ -1133,6 +1134,390 @@ class Admin_model extends CI_Model {
 	   return false;
    }
    
+    /* 
+   #######################################
+   ADMIN Service MODULE 
+   #######################################
+   */
+  
+  
+   
+    private function _get_services_query()
+    {
+        $this->db->select('s.*,b.category_name,a.admin_name');
+        $this->db->from('tbl_services as s');
+		$this->db->join('tbl_business_category as b','s.service_category=b.pk_category_id','left');
+		$this->db->join('tbl_admin as a','s.fk_admin_id=a.pk_admin_id','left');
+		if($this->session->user_type=='admin')
+		{
+			$this->db->where(array('p.is_deleted'=>0,'p.fk_admin_id'=>$this->session->pk_admin_id));
+		}
+		$colums=array('p.service_name','b.category_name');
+        
+        $i = 0;
+        foreach ($colums as $item) // loop column
+        {
+            if(@$_POST['search']['value']) // if datatable send POST for search
+            {
+                if($i===0) // first loop
+                {
+                    $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
+                    $this->db->like($item, $_POST['search']['value']);
+                }
+                else
+                {
+                    $this->db->or_like($item, @$_POST['search']['value']);
+                }
+                if(count($this->column) - 1 == $i) //last loop
+                    $this->db->group_end(); //close bracket
+            }
+            $column[$i] = $item; // set column array variable to order processing
+            $i++;
+        }
+      
+    }
+
+    function get_services()
+    {
+        $this->_get_services_query();
+        if($this->input->post('length') != -1)
+        $this->db->limit($this->input->post('length'), $this->input->post('start'));
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    function services_count_filtered()
+    {
+        $this->_get_products_query();
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+
+     function services_count_all()
+    {
+		$this->db->where('is_deleted',0);
+        $this->db->from('tbl_services');
+        return $this->db->count_all_results();
+    }
+	
+	
+
+	
+	function get_service_cats()
+	{
+		$results=$this->db->get_where('tbl_business_category',array('active'=>1,'is_deleted'=>0));
+		if($results)
+		{
+			return $results->result_array();
+		}
+		return false;
+	}
+   
+    function add_service($data=null)
+   {
+	   if($data)
+	   {  
+			
+		   $this->db->insert('tbl_services',$data);
+		   $id=$this->db->insert_id();
+		   $this->create_slug($id,'pk_service_id','tbl_services','service_slug',$data['service_name'],true);
+		   if($id)
+		   {
+				return array('status'=>true,'id'=>$id);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+     function check_service_id($id=null)
+   {
+	   if($id)
+	   {
+		  $return=$this->db->get_where('tbl_services',array('pk_service_id'=>$id)); 
+		  if($return)
+		  {
+			$return=$return->row_array();
+			if($return['pk_service_id'])
+			{
+				
+				return $return;
+			}
+		  }
+		   
+	   }
+	   
+	   return false;
+   }
+   
+    function edit_service($data=null,$id=null)
+   {
+	   if($data && $id)
+	   {
+		   $this->db->where(array('pk_service_id'=>$id));
+		   
+		   if($data['service_slug'])
+		   {
+			  $data['service_slug']= $this->create_slug($id,'pk_service_id','tbl_services','service_slug',$data['service_slug']);
+		   }
+		   else
+		   {
+			   $data['service_slug']= $this->create_slug($id,'pk_service_id','tbl_services','service_slug',$data['service_name']);
+		   }
+		   
+		   $id=$this->db->update('tbl_services',$data);
+		   
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+
+   
+   function remove_service($id)
+   {
+	   if($id)
+	   {
+		   $imgs=$this->db->get_where('tbl_services',array('pk_service_id'=>$id));
+		   if($imgs)
+		   {
+			   $imgs=$imgs->result_array();
+			   
+			   foreach($imgs as $img){
+				   if($img['service_banners']){
+				
+				unlink(".uploads/service/".$img['service_banners']);				
+				   }
+			   }
+			   
+		   }
+		   
+		   $this->db->where(array('pk_service_id'=>$id));
+		   $rid=$this->db->delete('tbl_services');
+		   
+		   
+		   
+		   if($rid)
+		   {
+				return true;
+		   }
+		   
+		   return false;
+	   }
+	   
+   }
+   
+    /* 
+   #######################################
+   ADMIN peoduct catgeory MODULE 
+   #######################################
+   */
+  
+   function get_procategory()
+   {
+	  
+	   $brands=$this->db->get_where('tbl_product_category',array('is_deleted'=>'0'));
+	   if($brands)
+	   {
+		  return $brands->result_array(); 
+	   }
+	   
+	   return null;
+	   
+   }
+   
+   function add_procategory($data=null)
+   {
+	   if($data)
+	   {
+		    
+		   $this->db->insert('tbl_product_category',$data);
+		   $id=$this->db->insert_id();
+		   $this->create_slug($id,'pk_category_id','tbl_product_category','category_slug',$data['category_name'],true);
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   function edit_procategory($id=null,$data=null)
+   {
+	   if($data && $id)
+	   {
+		   
+			if($data['category_slug'])
+			{
+				$data['category_slug']=$this->create_slug($id,'pk_category_id','tbl_product_category','category_slug',$data['category_slug'],false);
+			}
+			else
+			{
+				$data['category_slug']=$this->create_slug($id,'pk_category_id','tbl_product_category','category_slug',$data['category_name'],false);
+			}
+		  
+		   
+		   $this->db->where(array('pk_category_id'=>$id));
+		   $id=$this->db->update('tbl_product_category',$data);
+		   
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   function remove_procategory($id)
+   {
+	   if($id)
+	   {
+		   $this->db->where(array('pk_category_id'=>$id));
+		   $rid=$this->db->delete('tbl_product_category');
+		   
+		   if($rid)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   
+   function check_procategory_id($id=null)
+   {
+	   if($id)
+	   {
+		  $return=$this->db->get_where('tbl_product_category',array('pk_category_id'=>$id)); 
+		  if($return)
+		  {
+			$return=$return->row_array();
+			if($return['pk_category_id'])
+			{
+				
+				return $return;
+			}
+		  }
+		   
+	   }
+	   
+	   return false;
+   }
+  
+   /* 
+   #######################################
+   ADMIN business catgeory MODULE 
+   #######################################
+   */
+  
+   function get_bizcategory()
+   {
+	  
+	   $brands=$this->db->get_where('tbl_business_category',array('is_deleted'=>'0'));
+	   if($brands)
+	   {
+		  return $brands->result_array(); 
+	   }
+	   
+	   return null;
+	   
+   }
+   
+   function add_bizcategory($data=null)
+   {
+	   if($data)
+	   {
+		    
+		   $this->db->insert('tbl_business_category',$data);
+		   $id=$this->db->insert_id();
+		   $this->create_slug($id,'pk_category_id','tbl_business_category','category_slug',$data['category_name'],true);
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   function edit_bizcategory($id=null,$data=null)
+   {
+	   if($data && $id)
+	   {
+		   
+			if($data['category_slug'])
+			{
+				$data['category_slug']=$this->create_slug($id,'pk_category_id','tbl_business_category','category_slug',$data['category_slug'],false);
+			}
+			else
+			{
+				$data['category_slug']=$this->create_slug($id,'pk_category_id','tbl_business_category','category_slug',$data['category_name'],false);
+			}
+		  
+		   
+		   $this->db->where(array('pk_category_id'=>$id));
+		   $id=$this->db->update('tbl_business_category',$data);
+		   
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   function remove_bizcategory($id)
+   {
+	   if($id)
+	   {
+		   $this->db->where(array('pk_category_id'=>$id));
+		   $rid=$this->db->delete('tbl_business_category');
+		   
+		   if($rid)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   
+   function check_bizcategory_id($id=null)
+   {
+	   if($id)
+	   {
+		  $return=$this->db->get_where('tbl_business_category',array('pk_category_id'=>$id)); 
+		  if($return)
+		  {
+			$return=$return->row_array();
+			if($return['pk_category_id'])
+			{
+				
+				return $return;
+			}
+		  }
+		   
+	   }
+	   
+	   return false;
+   }
 
   
 }

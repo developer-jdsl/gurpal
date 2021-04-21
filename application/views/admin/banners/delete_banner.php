@@ -29,7 +29,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 									
                                         <div class="form-group">
 										<strong><?=keyword_value('are_you_sure','Are you sure you want to delete this record ?')?></strong><br>
-										<?=@$results['banner_name']?>
+									
+										<?php if(isset($results['banner_image'])){?>
+										   <img src="<?=base_url('uploads/banners/'.$results['banner_image'])?>" width="100%">
+										   <?php } ?>
                                         </div>
 										<input type="hidden" name="id" value="<?=@$results['pk_banner_id']?>">
                                         <button  type="submit" class="btn btn-primary btn-user btn-block">

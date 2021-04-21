@@ -35,6 +35,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
+					<a class="collapse-item" href="<?=base_url('admin/bizcategory')?>"><?=keyword_value('bizcategory','Business Categories')?></a>
+					<a class="collapse-item" href="<?=base_url('admin/procategory')?>"><?=keyword_value('procategory','Product Categories')?></a>
                         <a class="collapse-item" href="<?=base_url('admin/brands')?>"><?=keyword_value('brands','Brands')?></a>
 						<a class="collapse-item" href="<?=base_url('admin/banners')?>"><?=keyword_value('banners','Banners')?></a>
                         <!-- <a class="collapse-item" href="<?=base_url('admin/colors')?>"><?=keyword_value('color','Color')?></a> -->
@@ -56,14 +58,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </a>
                
             </li>
-				<?php if($this->session->user_type=='superadmin') { ?>
 			<li class="nav-item">
-                <a class="nav-link " href="<?=base_url('admin/ads')?>">
-                    <i class="fas fa-fw fa-shopping-cart"></i>
-                    <span><?=keyword_value('ads','ADS')?></span>
+                <a class="nav-link " href="<?=base_url('admin/services')?>">
+                    <i class="fas fa-fw fa-server"></i>
+                    <span><?=keyword_value('services','Services')?></span>
                 </a>
                
             </li>
+				<?php if($this->session->user_type=='superadmin') { ?>
+			<li class="nav-item">
+                <a class="nav-link " href="<?=base_url('admin/ads')?>">
+                    <i class="fas fa-fw fa-ad"></i>
+                    <span><?=keyword_value('ads','Ads')?></span>
+                </a>
+               
+            </li>
+		
 			
 				<?php } ?>
 			

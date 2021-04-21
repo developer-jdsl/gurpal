@@ -22,6 +22,15 @@ class Admin extends CI_Controller {
 		$this->load->view('admin/templates/footer');
 	}
 	
+	
+	public function logout()
+	{
+		$sses=array('pk_admin_id','user_type','user_data');
+		$this->session->unset_userdata($sses);
+		redirect('authentication/admin');
+		
+	}
+	
 
 	/* 
    #######################################
@@ -437,7 +446,6 @@ class Admin extends CI_Controller {
 			if($result['pk_city_id'])
 				
 				{
-		
 		
 				$this->data['results']=$result;
 				$this->load->view('admin/templates/header');
@@ -2726,5 +2734,1006 @@ class Admin extends CI_Controller {
 	}
 	
 	
+		/* 
+   #######################################
+   ADMIN PRODUCTS MODULE 
+   #######################################
+   */
+   
+   public function services()
+	{
+
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
+		$this->load->view('admin/services/services');
+		$this->load->view('admin/templates/footer');
+	}
+	
+	public function service_list()
+	{
+	
+      $list = $this->admin_model->get_services();
+      $data = array();
+      $no = $this->input->post('start');
+      foreach ($list as $ro) {
+      $no++;
+      $row = array();
+	  if($ro->service_banners){
+	  $row[] = '<img src="'.base_url('uploads/service/'.$ro->service_banners).'" width="100px"><br>'.$ro->service_name;
+	  }
+	else{
+		 $row[] = $ro->service_name;
+	}
+      $row[] = $ro->service_description;
+	  $row[] = $ro->service_pricing;
+      if($ro->active==1){$row[] = 'Active';} else{$row[] = 'Inactive';}
 		
+		 $row[] = form_open('admin/edit_service',array('class'=>'d-inline')).'
+				   <input type="hidden" name="id" value="'.$ro->pk_service_id.'"> 
+				   <button  class="btn btn-primary" type="submit">'.keyword_value('edit','Edit').'</button>
+				   </form>'.form_open('admin/delete_service',array('class'=>'d-inline')).'
+				   <input type="hidden" name="id" value="'.$ro->pk_service_id.'"> 
+				   <button class="btn btn-primary" type="submit">'.keyword_value('delete','Delete').'</button>
+				   </form>';
+      $data[] = $row;
+      }
+      $output = array(
+      "draw" => $this->input->post('draw'),
+      "recordsTotal" => $this->admin_model->services_count_all(),
+      "recordsFiltered" => $this->admin_model->services_count_filtered(),
+      "data" => $data,
+      );
+      //output to json format
+      echo json_encode($output);
+      }
+	  
+	  
+	  public function add_service()
+	{
+
+		
+		$this->form_validation->set_rules('service_name', 'Service Name', 'required',
+			array('required' =>  keyword_value('you_must_enter_service_name','You must Enter Service Name.'))
+		);
+		
+		$this->form_validation->set_rules('service_pricing', 'Service Pricing', 'required',
+			array('required' =>  keyword_value('you_must_enter_service_pricing','You must Select Service Pricing.'))
+		);
+		
+		$this->form_validation->set_rules('service_category', 'Service Category', 'required',
+			array('required' =>  keyword_value('you_must_enter_service_category','You must Select Service Category.'))
+		);
+		
+		$this->form_validation->set_rules('service_description', 'Service Description', 'required',
+			array('required' =>  keyword_value('you_must_enter_service_description','You must Enter Service Description.'))
+		);
+		
+		$this->form_validation->set_rules('fk_gst_id', 'GST Slab', 'required',
+			array('required' =>  keyword_value('you_must_enter_fk_gst_id','You must Select GST Slab.'))
+		);
+
+		
+		
+		  if ($this->form_validation->run() == FALSE)
+		{
+			$this->data['gst']=$this->admin_model->get_gst();
+			$this->data['categories']=$this->admin_model->get_service_cats();
+			
+			if($this->session->user_type=='superadmin')
+			{
+				$this->data['admins']=$this->admin_model->get_admins();
+				
+			}
+			
+			$this->load->view('admin/templates/header');
+			$this->load->view('admin/templates/sidebar');
+			$this->load->view('admin/templates/topbar');
+			$this->load->view('admin/services/add_service',$this->data);
+			$this->load->view('admin/templates/footer');
+	
+		}
+		else
+		{
+			$img=$err=null;
+			if(isset($_FILES["service_banner"]["name"]))  
+           {  
+                $config['upload_path'] = './uploads/service/';  
+                $config['allowed_types'] = 'jpg|jpeg|png|gif';  
+                $this->load->library('upload', $config);  
+                if(!$this->upload->do_upload("service_banner"))  
+                {  
+    
+				$err=$this->upload->display_errors();					
+                }  
+                else  
+                {  
+                     $imgdata = $this->upload->data();
+					  $img=$imgdata["file_name"];
+				
+                }  
+           }  
+		   
+			
+			$data['service_name']=$this->input->post('service_name');
+			$data['service_pricing']=$this->input->post('service_pricing');
+			$data['service_description']=$this->input->post('service_description');;
+			$data['service_features']=$this->input->post('service_features');
+			$data['meta_title']			=	$this->input->post('meta_title');
+			$data['meta_keywords']		=	$this->input->post('meta_keyword');
+			$data['meta_description']	=	$this->input->post('meta_description');
+			$data['ordering']			=	$this->input->post('ordering');
+			$data['fk_gst_id']			=	$this->input->post('fk_gst_id');
+			$data['fk_admin_id']		=	$this->input->post('cid')?$this->input->post('cid'):$this->session->pk_admin_id;
+			$data['service_category']	=	$this->input->post('service_category');
+			$data['active']				=	$this->input->post('active');
+			$data['created_by']			=	$this->session->pk_admin_id;
+			
+			if($img)
+			{
+				$data['service_banners']				=	$img;
+			}
+			
+			$return=$this->admin_model->add_service($data);
+		
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('service_added','service Added Successfully'));
+				redirect('admin/services');
+			
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('service_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/add_service');
+			}
+		}
+				
+	
+	}
+	
+	
+	
+	public function edit_service()
+	{
+		$id=$this->input->post('id');
+		if($id)
+		{
+			
+			
+			$result=$this->admin_model->check_service_id($id);
+			$this->data['gst']=$this->admin_model->get_gst();
+			$this->data['categories']=$this->admin_model->get_service_cats();
+	
+			if($result['pk_service_id'])
+				
+		{
+
+			
+			if($this->session->user_type=='superadmin')
+			{
+				$this->data['admins']=$this->admin_model->get_admins();
+			}
+		
+				$this->data['results']=$result;
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
+				$this->load->view('admin/services/edit_service',$this->data);
+				$this->load->view('admin/templates/footer');
+		
+				}
+				else
+				{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+					redirect('admin/services');
+				}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/services');
+		}
+	}
+	
+	
+	
+	public  function update_service()
+	{
+		
+		$id=$this->input->post('id');
+		if($id)
+		{
+			
+			
+		$this->form_validation->set_rules('service_name', 'Service Name', 'required',
+			array('required' =>  keyword_value('you_must_enter_service_name','You must Enter Service Name.'))
+		);
+		
+		$this->form_validation->set_rules('service_pricing', 'Service Pricing', 'required',
+			array('required' =>  keyword_value('you_must_enter_service_pricing','You must Select Service Pricing.'))
+		);
+		
+		$this->form_validation->set_rules('service_category', 'Service Category', 'required',
+			array('required' =>  keyword_value('you_must_enter_service_category','You must Select Service Category.'))
+		);
+		
+		$this->form_validation->set_rules('service_description', 'Service Description', 'required',
+			array('required' =>  keyword_value('you_must_enter_service_description','You must Enter Service Description.'))
+		);
+		
+		$this->form_validation->set_rules('fk_gst_id', 'GST Slab', 'required',
+			array('required' =>  keyword_value('you_must_enter_fk_gst_id','You must Select GST Slab.'))
+		);
+		
+		
+		 if ($this->form_validation->run() == FALSE)
+		{
+			
+
+			$this->data['gst']=$this->admin_model->get_gst();
+			$this->data['categories']=$this->admin_model->get_service_cats();
+
+			
+			
+			if($this->session->user_type=='superadmin')
+			{
+				$this->data['admins']=$this->admin_model->get_admins();
+				
+			}
+			
+	
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
+		$this->load->view('admin/services/edit_service',$this->data);
+		$this->load->view('admin/templates/footer');
+		
+		}
+		else
+		{
+			
+			$img=$err=null;
+			if(isset($_FILES["service_banner"]["name"]))  
+           {  
+                $config['upload_path'] = './uploads/service/';  
+                $config['allowed_types'] = 'jpg|jpeg|png|gif';  
+                $this->load->library('upload', $config);  
+                if(!$this->upload->do_upload("service_banner"))  
+                {  
+    
+				$err=$this->upload->display_errors();					
+                }  
+                else  
+                {  
+                     $imgdata = $this->upload->data();
+					  $img=$imgdata["file_name"];
+				
+                }  
+           }  
+		   
+		   
+		
+			$data['service_name']=$this->input->post('service_name');
+			$data['service_pricing']=$this->input->post('service_pricing');
+			$data['service_description']=$this->input->post('service_description');;
+			$data['service_features']=$this->input->post('service_features');
+			$data['service_slug']		=	$this->input->post('service_slug');
+			$data['meta_title']			=	$this->input->post('meta_title');
+			
+			$data['meta_keywords']		=	$this->input->post('meta_keyword');
+			$data['meta_description']	=	$this->input->post('meta_description');
+			$data['ordering']			=	$this->input->post('ordering');
+			$data['fk_gst_id']			=	$this->input->post('fk_gst_id');
+			$data['fk_admin_id']		=	$this->input->post('cid')?$this->input->post('cid'):$this->session->pk_admin_id;
+			$data['service_category']	=	$this->input->post('service_category');
+			$data['active']				=	$this->input->post('active');
+			if($img)
+			{
+				$data['service_banners']				=	$img;
+			}
+		
+
+			
+			
+			$return=$this->admin_model->edit_service($data,$id);
+			
+		
+		
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('service_updated','Service Updated Successfully'));
+				redirect('admin/services');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/services');
+			}
+			
+			
+		}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/services');
+		}
+		
+		
+		
+	}
+	
+	
+	
+	 
+	
+	public function delete_service()
+	{
+		
+		$id=$this->input->post('id');
+		if($id)
+		{
+			$result=$this->admin_model->check_service_id($id);
+	
+			if($result['pk_service_id'])
+				
+				{
+		
+		
+				$this->data['results']=$result;
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
+				$this->load->view('admin/services/delete_service',$this->data);
+				$this->load->view('admin/templates/footer');
+		
+				}
+				else
+				{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+					redirect('admin/services');
+				}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/services');
+		}
+		
+		
+	}
+	
+	public function remove_service()
+	{
+		$id=$this->input->post('id');
+		if($id)
+		{
+			
+			$return=$this->admin_model->remove_service($id);
+			
+			
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_deleted','Item Deleted Successfully'));
+				redirect('admin/services');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/services');
+			}
+		}
+		
+		else
+		{
+			$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/services');
+		}
+		
+	}  
+	
+	
+	/* 
+   #######################################
+   ADMIN Product Categories MODULE 
+   #######################################
+   */
+	
+	public function procategory()
+	{
+		is_superadmin();
+		$this->data['results']=$this->admin_model->get_procategory();
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
+		$this->load->view('admin/procategory/procategory',$this->data);
+		$this->load->view('admin/templates/footer');
+	}
+	
+	public function add_procategory()
+	{
+
+		is_superadmin();
+		$this->form_validation->set_rules('category_name', 'Category Name', 'required',
+			array('required' =>  keyword_value('you_must_enter_category_name','You must Enter Category Name.'))
+		);
+		
+		
+		
+		  if ($this->form_validation->run() == FALSE)
+		{
+			
+	        $this->data['procats']=$this->admin_model->get_procategory();
+			$this->load->view('admin/templates/header');
+			$this->load->view('admin/templates/sidebar');
+			$this->load->view('admin/templates/topbar');
+			$this->load->view('admin/procategory/add_procategory',$this->data);
+			$this->load->view('admin/templates/footer');
+	
+		}
+		else
+		{
+			$image=$error=null;
+			if($_FILES['category_image']["name"])
+			{
+			  $config['upload_path']   = './uploads/category/'; 
+			  $config['allowed_types'] = 'gif|jpg|png|jpeg'; 
+			  $config['max_size']      = 1024;
+			  $this->load->library('upload', $config);
+				   if ( ! $this->upload->do_upload('category_image')) {
+			 $error = implode('<br>',$this->upload->display_errors()); 
+		
+		  }else { 
+
+
+			$uploadedImage = $this->upload->data();
+			$image=$uploadedImage['file_name'];
+      } 
+			}
+			
+			$data['category_name']=$this->input->post('category_name');
+			$data['parent_category']=$this->input->post('parent_category');
+			$data['meta_title']=$this->input->post('meta_title');
+			$data['meta_keywords']=$this->input->post('meta_keywords');
+			$data['meta_description']=$this->input->post('meta_description');
+			$data['ordering']=$this->input->post('ordering');
+			
+			if($image)
+			{
+				$data['category_image']=$image;
+			}
+			$data['active']=$this->input->post('active');
+			$data['created_by']=$this->session->pk_admin_id;
+			
+			
+			$return=$this->admin_model->add_procategory($data);
+		
+			if($return['status']==true && !$error)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_added','Item Added Successfully'));
+				redirect('admin/procategory');
+			}
+			else if($return['status']==true && $error)
+			{
+				$this->session->set_flashdata('msg', $error);
+				redirect('admin/procategory');
+				
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/procategory');
+			}
+		}
+				
+	
+	}
+	
+	public function edit_procategory()
+	{
+		is_superadmin();
+		$id=$this->input->post('id');
+		if($id)
+		{
+			
+			
+			$result=$this->admin_model->check_procategory_id($id);
+	
+			if($result['pk_category_id'])
+				
+				{
+		
+				$this->data['results']=$result;
+				$this->data['procats']=$this->admin_model->get_procategory();
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
+				$this->load->view('admin/procategory/edit_procategory',$this->data);
+				$this->load->view('admin/templates/footer');
+		
+				}
+				else
+				{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+					redirect('admin/procategory');
+				}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/procategory');
+		}
+	}
+	
+	
+	public function update_procategory()
+	{
+		is_superadmin();
+		$id=$this->input->post('id');
+		if($id)
+		{
+			$this->load->library('upload');
+			
+		$this->form_validation->set_rules('category_name', 'Category Name', 'required',
+			array('required' =>  keyword_value('you_must_enter_category_name','You must Enter Category Name.'))
+		);
+		
+		 if ($this->form_validation->run() == FALSE)
+		{
+	$this->data['procats']=$this->admin_model->get_procategory();
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
+		$this->load->view('admin/procategory/edit_procategory',$this->data);
+		$this->load->view('admin/templates/footer');
+		
+		}
+		else
+		{
+			
+			$image=$error=null;
+			if($_FILES['category_image']["name"])
+			{
+			  $config['upload_path']   = './uploads/category/'; 
+			  $config['allowed_types'] = 'gif|jpg|png|jpeg'; 
+			  $config['max_size']      = 1024;
+			  $this->load->library('upload', $config);
+				   if ( ! $this->upload->do_upload('category_image')) {
+			 $error = implode('<br>',$this->upload->display_errors()); 
+		
+		  }else { 
+
+
+			$uploadedImage = $this->upload->data();
+			$image=$uploadedImage['file_name'];
+      } 
+			}
+			
+			$data['category_name']=$this->input->post('category_name');
+			$data['category_slug']=$this->input->post('category_slug');
+			$data['parent_category']=$this->input->post('parent_category');
+			$data['meta_title']=$this->input->post('meta_title');
+			$data['meta_keywords']=$this->input->post('meta_keywords');
+			$data['meta_description']=$this->input->post('meta_description');
+			$data['ordering']=$this->input->post('ordering');
+			
+			if($image)
+			{
+				$data['category_image']=$image;
+			}
+			$data['active']=$this->input->post('active');
+			
+		
+			
+			$return=$this->admin_model->edit_procategory($id,$data);
+		
+			if($return['status']==true && !$error)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_updated','Item Updated Successfully'));
+				redirect('admin/procategory');
+			}
+			else if($return['status']==true && $error)
+			{
+				$this->session->set_flashdata('msg', $error);
+				redirect('admin/procategory');
+				
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/procategory');
+			}
+			
+			
+		}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/procategory');
+		}
+		
+		
+		
+	}
+	
+	public function delete_procategory()
+	{
+		is_superadmin();
+		$id=$this->input->post('id');
+		if($id)
+		{
+			$result=$this->admin_model->check_procategory_id($id);
+	
+			if($result['pk_category_id'])
+				
+				{
+		
+		
+				$this->data['results']=$result;
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
+				$this->load->view('admin/procategory/delete_procategory',$this->data);
+				$this->load->view('admin/templates/footer');
+		
+				}
+				else
+				{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+					redirect('admin/procategory');
+				}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/procategory');
+		}
+		
+		
+	}
+	
+	public function remove_procategory()
+	{
+		is_superadmin();
+		$id=$this->input->post('id');
+		if($id)
+		{
+			
+			$return=$this->admin_model->remove_procategory($id);
+			
+			
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_deleted','Item Deleted Successfully'));
+				redirect('admin/procategory');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/procategory');
+			}
+		}
+		
+		else
+		{
+			$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/procategory');
+		}
+		
+	}
+	
+	
+	/* 
+   #######################################
+   ADMIN Busniess Categories MODULE 
+   #######################################
+   */
+	
+	public function bizcategory()
+	{
+		is_superadmin();
+		$this->data['results']=$this->admin_model->get_bizcategory();
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
+		$this->load->view('admin/bizcategory/bizcategory',$this->data);
+		$this->load->view('admin/templates/footer');
+	}
+	
+	public function add_bizcategory()
+	{
+
+		is_superadmin();
+		$this->form_validation->set_rules('category_name', 'Category Name', 'required',
+			array('required' =>  keyword_value('you_must_enter_category_name','You must Enter Category Name.'))
+		);
+		
+		
+		
+		  if ($this->form_validation->run() == FALSE)
+		{
+			
+	        $this->data['procats']=$this->admin_model->get_bizcategory();
+			$this->load->view('admin/templates/header');
+			$this->load->view('admin/templates/sidebar');
+			$this->load->view('admin/templates/topbar');
+			$this->load->view('admin/bizcategory/add_bizcategory',$this->data);
+			$this->load->view('admin/templates/footer');
+	
+		}
+		else
+		{
+			$image=$error=null;
+			if($_FILES['category_image']["name"])
+			{
+			  $config['upload_path']   = './uploads/category/'; 
+			  $config['allowed_types'] = 'gif|jpg|png|jpeg'; 
+			  $config['max_size']      = 1024;
+			  $this->load->library('upload', $config);
+				   if ( ! $this->upload->do_upload('category_image')) {
+			 $error = implode('<br>',$this->upload->display_errors()); 
+		
+		  }else { 
+
+
+			$uploadedImage = $this->upload->data();
+			$image=$uploadedImage['file_name'];
+      } 
+			}
+			
+			$data['category_name']=$this->input->post('category_name');
+			$data['parent_category']=$this->input->post('parent_category');
+			$data['meta_title']=$this->input->post('meta_title');
+			$data['meta_keywords']=$this->input->post('meta_keywords');
+			$data['meta_description']=$this->input->post('meta_description');
+			$data['ordering']=$this->input->post('ordering');
+			
+			if($image)
+			{
+				$data['category_image']=$image;
+			}
+			$data['active']=$this->input->post('active');
+			$data['created_by']=$this->session->pk_admin_id;
+			
+			
+			$return=$this->admin_model->add_bizcategory($data);
+		
+			if($return['status']==true && !$error)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_added','Item Added Successfully'));
+				redirect('admin/bizcategory');
+			}
+			else if($return['status']==true && $error)
+			{
+				$this->session->set_flashdata('msg', $error);
+				redirect('admin/bizcategory');
+				
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/bizcategory');
+			}
+		}
+				
+	
+	}
+	
+	public function edit_bizcategory()
+	{
+		is_superadmin();
+		$id=$this->input->post('id');
+		if($id)
+		{
+			
+			
+			$result=$this->admin_model->check_bizcategory_id($id);
+	
+			if($result['pk_category_id'])
+				
+				{
+		
+				$this->data['results']=$result;
+				$this->data['procats']=$this->admin_model->get_bizcategory();
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
+				$this->load->view('admin/bizcategory/edit_bizcategory',$this->data);
+				$this->load->view('admin/templates/footer');
+		
+				}
+				else
+				{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+					redirect('admin/bizcategory');
+				}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/bizcategory');
+		}
+	}
+	
+	
+	public function update_bizcategory()
+	{
+		is_superadmin();
+		$id=$this->input->post('id');
+		if($id)
+		{
+			$this->load->library('upload');
+			
+		$this->form_validation->set_rules('category_name', 'Category Name', 'required',
+			array('required' =>  keyword_value('you_must_enter_category_name','You must Enter Category Name.'))
+		);
+		
+		 if ($this->form_validation->run() == FALSE)
+		{
+	$this->data['procats']=$this->admin_model->get_bizcategory();
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
+		$this->load->view('admin/bizcategory/edit_bizcategory',$this->data);
+		$this->load->view('admin/templates/footer');
+		
+		}
+		else
+		{
+			
+			$image=$error=null;
+			if($_FILES['category_image']["name"])
+			{
+			  $config['upload_path']   = './uploads/category/'; 
+			  $config['allowed_types'] = 'gif|jpg|png|jpeg'; 
+			  $config['max_size']      = 1024;
+			  $this->load->library('upload', $config);
+				   if ( ! $this->upload->do_upload('category_image')) {
+			 $error = implode('<br>',$this->upload->display_errors()); 
+		
+		  }else { 
+
+
+			$uploadedImage = $this->upload->data();
+			$image=$uploadedImage['file_name'];
+      } 
+			}
+			
+			$data['category_name']=$this->input->post('category_name');
+			$data['category_slug']=$this->input->post('category_slug');
+			$data['parent_category']=$this->input->post('parent_category');
+			$data['meta_title']=$this->input->post('meta_title');
+			$data['meta_keywords']=$this->input->post('meta_keywords');
+			$data['meta_description']=$this->input->post('meta_description');
+			$data['ordering']=$this->input->post('ordering');
+			
+			if($image)
+			{
+				$data['category_image']=$image;
+			}
+			$data['active']=$this->input->post('active');
+			
+		
+			
+			$return=$this->admin_model->edit_bizcategory($id,$data);
+		
+			if($return['status']==true && !$error)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_updated','Item Updated Successfully'));
+				redirect('admin/bizcategory');
+			}
+			else if($return['status']==true && $error)
+			{
+				$this->session->set_flashdata('msg', $error);
+				redirect('admin/bizcategory');
+				
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/bizcategory');
+			}
+			
+			
+		}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/bizcategory');
+		}
+		
+		
+		
+	}
+	
+	public function delete_bizcategory()
+	{
+		is_superadmin();
+		$id=$this->input->post('id');
+		if($id)
+		{
+			$result=$this->admin_model->check_bizcategory_id($id);
+	
+			if($result['pk_category_id'])
+				
+				{
+		
+		
+				$this->data['results']=$result;
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
+				$this->load->view('admin/bizcategory/delete_bizcategory',$this->data);
+				$this->load->view('admin/templates/footer');
+		
+				}
+				else
+				{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+					redirect('admin/bizcategory');
+				}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/bizcategory');
+		}
+		
+		
+	}
+	
+	public function remove_bizcategory()
+	{
+		is_superadmin();
+		$id=$this->input->post('id');
+		if($id)
+		{
+			
+			$return=$this->admin_model->remove_bizcategory($id);
+			
+			
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_deleted','Item Deleted Successfully'));
+				redirect('admin/bizcategory');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/bizcategory');
+			}
+		}
+		
+		else
+		{
+			$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/bizcategory');
+		}
+		
+	}
+	
+	
+	
+	
 }

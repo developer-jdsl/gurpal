@@ -32,7 +32,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         </div>
                                         <div class="form-group">
                                         <label><?=keyword_value('color_value','Color Value')?></label>
-                                            <input type="text" name="color_value" class="form-control form-control-user" required>
+                                            <input type="text" name="color_value" id="color_value" class="form-control form-control-user" autocomplete="off" required>
                                         </div>
                                         <div class="form-group">
                                         <label><?=keyword_value('status','Status')?></label>

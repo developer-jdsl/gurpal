@@ -7,8 +7,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800"><?=keyword_value('delete_size','Delete Size')?></h1>
-					<a href="<?=base_url('admin/size')?>" class="btn btn-primary text-right"><?=keyword_value('back','Back')?></a>
+                    <h1 class="h3 mb-2 text-gray-800"><?=keyword_value('delete_business_cat','Delete Business Category')?></h1>
+					
+					<a href="<?=base_url('admin/bizcategory')?>" class="btn btn-primary text-right"><?=keyword_value('back','Back')?></a>
 					<?php if($msg=$this->session->flashdata('msg')){?>
 						  <div class="alert alert-primary alert-dismissible fade show" role="alert">
 						  <?=$msg?>
@@ -24,13 +25,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <div class="card-body">
                             <?php echo validation_errors();?>
 
-									<?php echo form_open('admin/remove_size'); ?>
+									<?php echo form_open('admin/remove_bizcategory'); ?>
 									
                                         <div class="form-group">
 										<strong><?=keyword_value('are_you_sure','Are you sure you want to delete this record ?')?></strong><br>
-										<?=@$results['size_name']?>
+										<?=@$results['category_name']?>
                                         </div>
-										<input type="hidden" name="id" value="<?=@$results['pk_size_id']?>">
+										<input type="hidden" name="id" value="<?=@$results['pk_category_id']?>">
                                         <button  type="submit" class="btn btn-primary btn-user btn-block">
                                             <?=keyword_value('delete','Yes ,Delete')?>
                                         </button>

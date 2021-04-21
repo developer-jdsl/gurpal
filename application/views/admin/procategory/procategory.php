@@ -7,8 +7,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800"><?=keyword_value('color','Color')?>  <a	
-                            href="<?=base_url('admin/add_color')?>" class="btn btn-primary text-right">Add Color</a></h1>
+                    <h1 class="h3 mb-2 text-gray-800"><?=keyword_value('product_cats','Product Categories')?>  <a	
+                            href="<?=base_url('admin/add_procategory')?>" class="btn btn-primary text-right"><?=keyword_value('add_category','Add Category')?></a></h1>
 					<?php if($msg=$this->session->flashdata('msg')){?>
 						  <div class="alert alert-primary alert-dismissible fade show" role="alert">
 						  <?=$msg?>
@@ -24,8 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th><?=keyword_value('color_name','Color Name')?></th>
-											<th><?=keyword_value('color','Color')?></th>
+                                            <th><?=keyword_value('category_name','Category Name')?></th>
                                             <th><?=keyword_value('status','Status')?></th>
                                             <th><?=keyword_value('action','Action')?></th>
                                             
@@ -33,28 +32,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                           <th><?=keyword_value('color','Color Name')?></th>
-										   <th><?=keyword_value('color','Color')?></th>
+                                              <th><?=keyword_value('category_name','Category Name')?></th>
                                             <th><?=keyword_value('status','Status')?></th>
                                             <th><?=keyword_value('action','Action')?></th>
+                                            
                                         </tr>
                                     </tfoot>
                                     <tbody>
                                         
                                            <?php foreach($results as $row){ ?>
 										   <tr>
-										   <td><?=$row['color_name']?></td>
-										     <td><div style="width:50px;height:50px;background:<?=$row['color_value']?>"></div></td>
+										   <td><?php if($row['category_image']){?>
+										   <img src="<?=base_url('uploads/category/'.$row['category_image'])?>" width="50px">
+										   <?php } ?>
+										   <?=$row['category_name']?></td>
+										  
 										   <td><?=($row['active']==1)?'Active':'Inactive';?></td>
 										   <td>
-											<?php echo form_open('admin/edit_color',array('class'=>'d-inline')); ?>
-										   <input type="hidden" name="id" value="<?=$row['pk_color_id']?>"> 
+											<?php echo form_open('admin/edit_procategory',array('class'=>'d-inline')); ?>
+										   <input type="hidden" name="id" value="<?=$row['pk_category_id']?>"> 
 										   <button  class="btn btn-primary" type="submit"><?=keyword_value('edit','Edit')?></button>
 										   </form>
 										   
 									
-										   <?php echo form_open('admin/delete_color',array('class'=>'d-inline')); ?>
-										   <input type="hidden" name="id" value="<?=$row['pk_color_id']?>"> 
+										   <?php echo form_open('admin/delete_procategory',array('class'=>'d-inline')); ?>
+										   <input type="hidden" name="id" value="<?=$row['pk_category_id']?>"> 
 										   <button class="btn btn-primary" type="submit"><?=keyword_value('delete','Delete')?></button>
 										   </form>
 										 </td>

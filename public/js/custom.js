@@ -146,8 +146,12 @@ $('.remove_gallery_ajax').click(function(){
 
 if($("select").hasClass("select2"))
 {
-	
 	$('.select2').select2();
+}
+
+if($("#color_value").length)
+{
+	$('#color_value').colorpicker();
 }
 
 

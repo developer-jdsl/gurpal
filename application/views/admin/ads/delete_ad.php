@@ -29,7 +29,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 									
                                         <div class="form-group">
 										<strong><?=keyword_value('are_you_sure','Are you sure you want to delete this record ?')?></strong><br>
-										<?=@$results['advertisement_text']?>
+									
+										
+										<?php if($results['display_type']=='image'){?>
+										<img src="<?=base_url('uploads/adverts/'.$results['advertisement_banner'])?>" width="150" >
+										<?php }?>
+										
+										<?php if($results['display_type']=='video'){?>
+												<video width="150" height="100" controls>
+												  <source src="<?=base_url('uploads/adverts/'.$results['advertisement_banner'])?>" type="video/mp4">
+												  Your browser does not support the video tag.
+												</video>
+										<?php }?>
                                         </div>
 										<input type="hidden" name="id" value="<?=@$results['pk_advertisement_id']?>">
                                         <button  type="submit" class="btn btn-primary btn-user btn-block">
