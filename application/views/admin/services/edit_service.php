@@ -86,10 +86,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 											
 										<div class="col-md-6">
 										
-										 <div class="form-group">
-										<label><?=keyword_value('service_pricing','Service Pricing')?></label>
-											<input type="text" name="service_pricing" class="form-control form-control-user" value="<?=$results['service_pricing']?>" required>
-										</div>  
+										
 										
 										<div class="form-group">
 										<label><?=keyword_value('category','Category')?></label>
@@ -144,6 +141,105 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 												
 												
 												
+											</div>
+											
+											
+											<div class="col-md-12">
+											<h3><?=keyword_value('service_price_variation','Service Price variation')?></h3>
+											<?php if($pricing) { ?>
+	 <table class="table table-bordered"  width="100%">
+	  <thead>
+                                        <tr>
+                                            <th><?=keyword_value('variation','Variation')?></th>
+                                            <th><?=keyword_value('subvariation','Sub Variation')?></th>
+                                            <th><?=keyword_value('original_price','Original Price')?></th>
+                                            <th><?=keyword_value('discount_price','Discount Price')?></th>
+											<th><?=keyword_value('make_default','Make Default')?></th>
+											<th><?=keyword_value('actions','Actions')?></th>
+                                        </tr>
+                                    </thead>
+									
+									<tbody>
+									<?php foreach($pricing as $row) { ?>
+										<tr data-id="<?=$row['pk_pricing_id']?>">
+											<td>
+											<input type="name" class="form-control form-control-user update_service_fields" data-id="<?=$row['pk_pricing_id']?>" data-table="service_pricing" data-cname="Variation" data-column="service_variation" value="<?=$row['service_variation']?>">
+							
+											</td>
+											<td>
+											<input type="name"  class="form-control form-control-user update_service_fields" data-id="<?=$row['pk_pricing_id']?>" data-table="service_pricing" data-cname="Subvariation" data-column="service_subvariation" value="<?=$row['service_subvariation']?>">
+											</td>
+											<td>
+											<input type="number"  class="form-control form-control-user update_service_fields" value="<?=$row['original_price']?>"  data-cname="Original Price"  data-id="<?=$row['pk_pricing_id']?>" data-table="service_pricing" data-column="original_price" style="width:100px" min="0">
+											</td>
+											<td>
+											<input type="number"  class="form-control form-control-user update_service_fields" value="<?=$row['discount_price']?>"  data-cname="Discount Price" data-id="<?=$row['pk_pricing_id']?>" data-table="service_pricing" data-column="discount_price" style="width:100px"  min="0">
+											</td>
+											
+											<td>
+											<input type="radio"  class="form-control form-control-user update_default_service" value="<?=$row['pk_pricing_id']?>"  data-table="service_pricing" data-column="is_default" style="width:20px" <?php if($row['is_default']==1){ echo 'checked';} ?>>
+											</td>
+											<td>
+											<a href="javascript:void(0);" data-id="<?=$row['pk_pricing_id']?>" data-flag="<?=$row['is_default']?>" class="btn btn-danger btn-circle btn-sm remove_pricing_ajax">
+												<i class="fas fa-trash"></i>
+											</a>
+											</td>
+										</tr>
+										
+									<?php } ?>
+									</tbody>
+                                    <tfoot>
+                                          <tr>
+                                            <th><?=keyword_value('variation','Variation')?></th>
+                                            <th><?=keyword_value('subvariation','Sub Variation')?></th>
+                                            <th><?=keyword_value('original_price','Original Price')?></th>
+                                            <th><?=keyword_value('discount_price','Discount Price')?></th>
+                    
+											<th><?=keyword_value('make_default','Make Default')?></th>
+											<th><?=keyword_value('actions','Actions')?></th>
+                                        </tr>
+                                    </tfoot>
+	 </table>
+	 <?php } ?>
+	 
+											
+											 <table class="table table-bordered"  width="100%">
+									  <thead>
+                                        <tr>
+                               
+                                            <th><?=keyword_value('service_variation','Variation')?></th>
+                                            <th><?=keyword_value('service_subvariation','Sub Variation')?></th>
+                                            <th><?=keyword_value('original_price','Original Price')?></th>
+                                            <th><?=keyword_value('discount_price','Discount Price')?></th>
+                   
+											<th><?=keyword_value('actions','Actions')?></th>
+                                        </tr>
+                                    </thead>
+									<tbody>
+										<tr>
+											
+											<td><input type="name" name="service_variation[]" class="form-control form-control-user"></td>
+											<td><input type="name" name="service_subvariation[]" class="form-control form-control-user"></td>
+											<td><input type="number" name="original_price[]" class="form-control form-control-user" style="width:100px" min="0"></td>
+											<td><input type="number" name="discount_price[]" class="form-control form-control-user" style="width:100px"  min="0"></td>
+											
+											<td><a href="javascript:void(0);"  class="btn btn-info btn-circle btn-sm add-service">
+												<i class="fas fa-plus"></i>
+											</a>
+										 </td>
+										</tr>
+									</tbody>
+                                    <tfoot>
+                                         <tr>
+                                            <th><?=keyword_value('service_variation','Variation')?></th>
+                                            <th><?=keyword_value('service_subvariation','Sub Variation')?></th>
+                                            <th><?=keyword_value('original_price','Original Price')?></th>
+                                            <th><?=keyword_value('discount_price','Discount Price')?></th>
+                             
+											<th><?=keyword_value('actions','Actions')?></th>
+                                        </tr>
+                                    </tfoot>
+										</table>
 											</div>
 										</div>
 										

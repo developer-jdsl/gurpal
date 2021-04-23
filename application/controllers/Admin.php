@@ -1978,6 +1978,26 @@ class Admin extends CI_Controller {
 		
 	}
 	
+		public function update_service_ajax()
+	{
+		$id=$this->input->post('id');
+		$table=$this->input->post('table');
+		$column=$this->input->post('column');
+		$value=$this->input->post('value');
+		
+		if(@$id && @$table && @$column)
+		{
+			
+			$chk=$this->admin_model->update_service_ajax($id,$table,$column,$value);
+			echo $chk;
+		
+			
+		}
+		
+		echo false;
+		
+	}
+	
 	 public function product_ajax_upload()  
       {  
 		$id=$this->input->post('id');
@@ -2038,6 +2058,30 @@ class Admin extends CI_Controller {
 		  
 	  }
 	  
+	  	  public function service_ajax_default()
+	  {
+		  
+		$id=$this->input->post('id');
+		$table=$this->input->post('table');
+		$column=$this->input->post('column');
+		
+		if(@$id && @$table)
+			
+			{
+			
+				$id=$this->admin_model->update_service_default($id,$table);
+				if($id)
+				{
+					echo json_encode(array('status'=>true)); 
+					return true;
+				}
+				
+			}
+				echo json_encode(array('status'=>false));  
+		  
+		  
+	  }
+	  
 	  	  public function remove_gallery_ajax()
 	  {
 		  
@@ -2048,6 +2092,29 @@ class Admin extends CI_Controller {
 			{
 			
 				$id=$this->admin_model->remove_gallery_ajax($id);
+				if($id)
+				{
+					echo json_encode(array('status'=>true)); 
+					return true;
+				}
+				
+			}
+				echo json_encode(array('status'=>false));  
+		  
+		  
+	  }
+	  
+	  
+	    public function remove_pricing_ajax()
+	  {
+		  
+		$id=$this->input->post('id');
+		
+		if(@$id)
+			
+			{
+			
+				$id=$this->admin_model->remove_pricing_ajax($id);
 				if($id)
 				{
 					echo json_encode(array('status'=>true)); 
@@ -2736,7 +2803,7 @@ class Admin extends CI_Controller {
 	
 		/* 
    #######################################
-   ADMIN PRODUCTS MODULE 
+   ADMIN services MODULE 
    #######################################
    */
    
@@ -2765,8 +2832,9 @@ class Admin extends CI_Controller {
 	else{
 		 $row[] = $ro->service_name;
 	}
+	$row[] = $ro->discount_price.' Onwards	';
       $row[] = $ro->service_description;
-	  $row[] = $ro->service_pricing;
+	  
       if($ro->active==1){$row[] = 'Active';} else{$row[] = 'Inactive';}
 		
 		 $row[] = form_open('admin/edit_service',array('class'=>'d-inline')).'
@@ -2797,9 +2865,12 @@ class Admin extends CI_Controller {
 			array('required' =>  keyword_value('you_must_enter_service_name','You must Enter Service Name.'))
 		);
 		
+		/*
 		$this->form_validation->set_rules('service_pricing', 'Service Pricing', 'required',
 			array('required' =>  keyword_value('you_must_enter_service_pricing','You must Select Service Pricing.'))
 		);
+		
+		*/
 		
 		$this->form_validation->set_rules('service_category', 'Service Category', 'required',
 			array('required' =>  keyword_value('you_must_enter_service_category','You must Select Service Category.'))
@@ -2856,7 +2927,7 @@ class Admin extends CI_Controller {
 		   
 			
 			$data['service_name']=$this->input->post('service_name');
-			$data['service_pricing']=$this->input->post('service_pricing');
+			//$data['service_pricing']=$this->input->post('service_pricing');
 			$data['service_description']=$this->input->post('service_description');;
 			$data['service_features']=$this->input->post('service_features');
 			$data['meta_title']			=	$this->input->post('meta_title');
@@ -2875,6 +2946,43 @@ class Admin extends CI_Controller {
 			}
 			
 			$return=$this->admin_model->add_service($data);
+			
+			if(@$return['id'])
+			{
+				
+			$service_variation		=	$this->input->post('service_variation');
+			$service_subvariation	=	$this->input->post('service_subvariation');
+			$org_price				=	$this->input->post('original_price');
+			$dis_price				=	$this->input->post('discount_price');
+			//$quantity				=	$this->input->post('quantity');
+			
+			if(count($org_price)>0)
+			{
+			foreach($org_price as $key=>$value)
+			{
+				if($value)
+				{
+				 $insert_data[]  = array(
+				    'fk_service_id' => $return['id'],
+                    'service_variation' => $service_variation[$key],
+					'service_subvariation'=>$service_subvariation[$key],
+                    'original_price' => $value,
+                    'discount_price' => $dis_price[$key],
+					//'quantity' => $quantity[$key]
+                );
+				
+				}
+				
+			}
+			}
+			
+			
+				if(!empty($insert_data))
+				{
+					$this->admin_model->pricing_service($insert_data);
+				}
+
+			}
 		
 			if($return['status']==true)
 			{
@@ -2905,6 +3013,7 @@ class Admin extends CI_Controller {
 			$result=$this->admin_model->check_service_id($id);
 			$this->data['gst']=$this->admin_model->get_gst();
 			$this->data['categories']=$this->admin_model->get_service_cats();
+			$this->data['pricing']=$this->admin_model->get_service_pricing($id);
 	
 			if($result['pk_service_id'])
 				
@@ -2952,10 +3061,11 @@ class Admin extends CI_Controller {
 			array('required' =>  keyword_value('you_must_enter_service_name','You must Enter Service Name.'))
 		);
 		
+		/*
 		$this->form_validation->set_rules('service_pricing', 'Service Pricing', 'required',
 			array('required' =>  keyword_value('you_must_enter_service_pricing','You must Select Service Pricing.'))
 		);
-		
+		*/
 		$this->form_validation->set_rules('service_category', 'Service Category', 'required',
 			array('required' =>  keyword_value('you_must_enter_service_category','You must Select Service Category.'))
 		);
@@ -3017,7 +3127,7 @@ class Admin extends CI_Controller {
 		   
 		
 			$data['service_name']=$this->input->post('service_name');
-			$data['service_pricing']=$this->input->post('service_pricing');
+			//$data['service_pricing']=$this->input->post('service_pricing');
 			$data['service_description']=$this->input->post('service_description');;
 			$data['service_features']=$this->input->post('service_features');
 			$data['service_slug']		=	$this->input->post('service_slug');
@@ -3034,13 +3144,41 @@ class Admin extends CI_Controller {
 			{
 				$data['service_banners']				=	$img;
 			}
-		
-
 			
+			
+			$service_variation=$this->input->post('service_variation');
+			$service_subvariation=$this->input->post('service_subvariation');
+			$org_price=$this->input->post('original_price');
+			$dis_price=$this->input->post('discount_price');
+			//$quantity=$this->input->post('quantity');
+
 			
 			$return=$this->admin_model->edit_service($data,$id);
 			
-		
+			if(count($org_price)>0)
+			{
+			foreach($org_price as $key=>$value)
+			{
+				if($value)
+				{
+				 $insert_data[]  = array(
+				    'fk_service_id' => $id,
+                    'service_variation' => $service_variation[$key],
+					'service_subvariation'=>$service_subvariation[$key],
+                    'original_price' => $value,
+                    'discount_price' => $dis_price[$key],
+					//'quantity' => $quantity[$key]
+                );
+				
+				}
+				
+			}
+			}
+			
+			if(!empty($insert_data))
+			{
+				$this->admin_model->pricing_service($insert_data);
+			}
 		
 			if($return['status']==true)
 			{
@@ -3732,6 +3870,260 @@ class Admin extends CI_Controller {
 		}
 		
 	}
+	
+	/* 
+   #######################################
+   ADMINS MODULE 
+   #######################################
+   */
+	
+	public function admins()
+	{
+		is_superadmin();
+		$this->data['results']=$this->admin_model->get_admins_profile();
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
+		$this->load->view('admin/admins/admins',$this->data);
+		$this->load->view('admin/templates/footer');
+	}
+	
+	public function add_admin()
+	{
+
+		is_superadmin();
+		$this->form_validation->set_rules('admin_name', 'Admin Name', 'required',
+			array('required' =>  keyword_value('enter_admin_name','You must enter Admin Name.'))
+		);
+		
+		$this->form_validation->set_rules('admin_mobile', 'Admin Mobile', 'trim|required|is_unique[tbl_admin.admin_mobile]',
+			array('required' =>  keyword_value('enter_admin_mobile','Please enter admin mobile.'))
+		);
+		
+		$this->form_validation->set_rules('admin_email', 'Admin Email', 'trim|required|valid_email|is_unique[tbl_admin.admin_email]',
+			array('required' =>  keyword_value('enter_admin_email','Please Enter admin email.'))
+		);
+		
+		
+		
+		  if ($this->form_validation->run() == FALSE)
+		{
+			
+	
+			$this->load->view('admin/templates/header');
+			$this->load->view('admin/templates/sidebar');
+			$this->load->view('admin/templates/topbar');
+			$this->load->view('admin/admins/add_admin');
+			$this->load->view('admin/templates/footer');
+	
+		}
+		else
+		{
+			
+			$data['admin_name']=$this->input->post('admin_name');
+			$data['admin_mobile']=$this->input->post('admin_mobile');
+			$data['admin_email']=$this->input->post('admin_email');
+			$data['active']=$this->input->post('active');
+			
+			$return=$this->admin_model->add_admin($data);
+		
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_added','Admin Created Successfully'));
+				redirect('admin/admins');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/admins/');
+			}
+		}
+				
+	
+	}
+	
+	public function edit_admin()
+	{
+		is_superadmin();
+		$id=$this->input->post('id');
+		if($id)
+		{
+			$result=$this->admin_model->check_admin_id($id);
+			if($result['pk_admin_id'])
+				{
+				$this->data['results']=$result;
+				$this->data['cats']=$this->admin_model->get_business_cats();
+				$this->data['states']=$this->admin_model->get_states();
+				$this->data['cities']=$this->admin_model->get_cities();
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
+				$this->load->view('admin/admins/edit_admin',$this->data);
+				$this->load->view('admin/templates/footer');
+		
+				}
+				else
+				{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+					redirect('admin/admins');
+				}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/admins');
+		}
+	}
+	
+	
+	public  function update_admin()
+	{
+		is_superadmin();
+		$id=$this->input->post('id');
+		if($id)
+		{	
+		$this->form_validation->set_rules('admin_name', 'Admin Name', 'required',
+			array('required' =>  keyword_value('enter_admin_name','You must enter Admin Name.'))
+		);
+		
+		$this->form_validation->set_rules('admin_mobile', 'Admin Mobile', 'trim|required',
+			array('required' =>  keyword_value('enter_admin_mobile','Please enter admin mobile.'))
+		);
+		
+		$this->form_validation->set_rules('admin_email', 'Admin Email', 'trim|required|valid_email',
+			array('required' =>  keyword_value('enter_admin_email','Please Enter admin email.'))
+		);
+		
+		 if ($this->form_validation->run() == FALSE)
+		{
+	
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
+		$this->load->view('admin/admins/edit_admin',$this->data);
+		$this->load->view('admin/templates/footer');
+		
+		}
+		else
+		{
+	
+			$data1['admin_name']=$this->input->post('admin_name');
+			$data1['admin_mobile']=$this->input->post('admin_mobile');
+			$data1['admin_email']=$this->input->post('admin_email');
+			$data1['active']=$this->input->post('active');
+			
+			
+			//$data2['profile_name']=$this->input->post('profile_name');
+			$data2['profile_categories']=implode(',',$this->input->post('profile_categories'));
+			//$data2['profile_contact']=$this->input->post('profile_contact');
+			//$data2['profile_address']=$this->input->post('profile_address');
+			//$data2['profile_banner']=$this->input->post('profile_banner');
+			//$data2['profile_type']=$this->input->post('profile_type');
+			$data2['profile_states']=implode(',',$this->input->post('profile_states'));
+			$data2['profile_cities']=implode(',',$this->input->post('profile_cities'));
+
+			
+			
+		
+			
+			$return=$this->admin_model->edit_admin($id,$data1);
+			$this->admin_model->edit_adminprofile($id,$data2);
+		
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_updated','Admin Updated Successfully'));
+				redirect('admin/admins');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/admins');
+			}
+			
+			
+		}
+		
+		}
+		else
+		{
+			$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/admins');
+		}
+		
+		
+		
+	}
+	
+	public function delete_admin()
+	{
+		is_superadmin();
+		$id=$this->input->post('id');
+		if($id)
+		{
+			$result=$this->admin_model->check_admin_id($id);
+	
+			if($result['pk_admin_id'])
+				
+				{
+		
+		
+				$this->data['results']=$result;
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
+				$this->load->view('admin/admins/delete_admin',$this->data);
+				$this->load->view('admin/templates/footer');
+		
+				}
+				else
+				{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+					redirect('admin/admins');
+				}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/admins');
+		}
+		
+		
+	}
+	
+	public function remove_admin()
+	{
+		is_superadmin();
+		$id=$this->input->post('id');
+		if($id)
+		{
+			
+			$return=$this->admin_model->remove_admin($id);
+		
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_deleted','Item Deleted Successfully'));
+				redirect('admin/admins');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/admins');
+			}
+		}
+		
+		else
+		{
+			$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/admins');
+		}
+		
+	}
+	
 	
 	
 	

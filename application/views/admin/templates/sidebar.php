@@ -73,9 +73,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </a>
                
             </li>
+			
+				<li class="nav-item">
+                <a class="nav-link " href="<?=base_url('admin/admins')?>">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span><?=keyword_value('admins','Admins')?></span>
+                </a>
+               
+            </li>
 		
 			
 				<?php } ?>
+				
+				<li class="nav-item">
+                <a class="nav-link " href="<?=base_url('admin/logout')?>">
+                    <i class="fas fa-fw fa-sign-out-alt"></i>
+                    <span><?=keyword_value('lohout','Logout')?></span>
+                </a>
+               
+            </li>
 			
           
 

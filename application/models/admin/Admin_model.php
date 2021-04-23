@@ -311,7 +311,7 @@ class Admin_model extends CI_Model {
    
     function get_gst()
    {
-	   $gst=$this->db->get_where('tbl_gst',array('is_deleted'=>1));
+	   $gst=$this->db->get_where('tbl_gst',array('is_deleted'=>0));
 	   if($gst)
 	   {
 		  return $gst->result_array(); 
@@ -650,7 +650,7 @@ class Admin_model extends CI_Model {
 		
 		if($this->session->user_type=='admin')
 		{
-		$this->db->select('p.product_name,pp.product_image,pp.sdiscount_price,pp.original_price');
+		$this->db->select('p.product_name,pp.product_image,pp.discount_price,pp.original_price');
         $this->db->from('tbl_products as p');
 		$this->db->join('tbl_product_pricing as pp','p.pk_product_id=pp.fk_product_id','inner');
 		$this->db->where(array('pp.is_default'=>1,'p.active'=>1,'is_deleted'=>0,'p.fk_admin_id'=>$this->session->pk_admin_id));
@@ -670,6 +670,20 @@ class Admin_model extends CI_Model {
 		$this->db->select('pk_admin_id,admin_name');
 		$this->db->from('tbl_admin');
 		$this->db->where(array('active'=>1,'is_super'=>0,'is_deleted'=>0));
+		$results=$this->db->get();	
+		if($results)
+		{
+			return $results->result_array();
+		}
+		return false;
+	}
+	
+		function get_admins_profile()
+	{
+		$this->db->select('a.pk_admin_id,a.admin_name,a.active,a.admin_email,a.admin_mobile,p.*');
+		$this->db->from('tbl_admin as a');
+		$this->db->join('tbl_admin_profile as p','a.pk_admin_id=p.fk_admin_id','left');
+		$this->db->where(array('a.active'=>1,'a.is_super'=>0,'a.is_deleted'=>0));
 		$results=$this->db->get();	
 		if($results)
 		{
@@ -824,6 +838,29 @@ class Admin_model extends CI_Model {
 	   
    }
    
+   
+    function pricing_service($insert_data=null)
+   {
+	  
+		   
+	   if($insert_data)
+	   {
+		    $chk=$this->db->get_where('tbl_service_pricing',array('is_default'=>1));
+		   if($chk->num_rows()==0)
+		   {
+			  $insert_data[0]['is_default']=1; 
+		   }
+		   
+		   foreach($insert_data as $data)
+		   
+		   {
+		  $this->db->insert('tbl_service_pricing',$data);
+		   }
+		  
+	   }
+	   
+   }
+   
    function update_product_ajax($id,$table,$column,$value)
    {
 	   
@@ -836,6 +873,20 @@ class Admin_model extends CI_Model {
 	  return false;
 	   
    }
+   
+      function update_service_ajax($id,$table,$column,$value)
+   {
+	   
+	 $this->db->where(array('pk_pricing_id'=>$id));
+	 $id=$this->db->update('tbl_'.$table,array($column=>$value));
+	 if($id)
+	 {
+		 return true;
+	 }
+	  return false;
+	   
+   }
+   
    
    function update_product_default($id,$table)
    {
@@ -853,6 +904,23 @@ class Admin_model extends CI_Model {
 	   
    }
    
+   
+      
+   function update_service_default($id,$table)
+   {
+	 $this->db->update('tbl_'.$table,array('is_default'=>0));
+	 
+	 $this->db->where(array('pk_pricing_id'=>$id));
+	 $id=$this->db->update('tbl_'.$table,array('is_default'=>1));
+	 
+	 if($id)
+	 {
+		 return true;
+	 }
+	  return false;
+		
+	   
+   }
       function remove_gallery_ajax($id)
    {
 	   if($id)
@@ -870,7 +938,7 @@ class Admin_model extends CI_Model {
 			   
 		   }
 		   
-		   $this->db->where(array('fk_products_id'=>$id));
+		   $this->db->where(array('fk_product_id'=>$id));
 		   $rid=$this->db->delete('tbl_product_pricing');
 		   
 		
@@ -884,6 +952,26 @@ class Admin_model extends CI_Model {
 	   
    }
    
+   
+         function remove_pricing_ajax($id)
+   {
+	   if($id)
+	   {
+		  
+		   
+		   $this->db->where(array('fk_service_id'=>$id));
+		   $rid=$this->db->delete('tbl_service_pricing');
+		   
+		
+		   if($rid)
+		   {
+				return true;
+		   }
+		   
+		   return false;
+	   }
+	   
+   }
    
     function create_slug($id=null,$key=null,$table=null,$column=null,$name=null,$insert=false)
 {
@@ -1012,7 +1100,7 @@ class Admin_model extends CI_Model {
    {
 	   if($id)
 	   {
-		  $return=$this->db->get_where('tbl_advertisement	',array('pk_advertisement_id'=>$id)); 
+		  $return=$this->db->get_where('tbl_advertisement',array('pk_advertisement_id'=>$id)); 
 		  if($return)
 		  {
 			$return=$return->row_array();
@@ -1144,15 +1232,23 @@ class Admin_model extends CI_Model {
    
     private function _get_services_query()
     {
-        $this->db->select('s.*,b.category_name,a.admin_name');
+        $this->db->select('s.*,b.category_name,a.admin_name,p.discount_price');
         $this->db->from('tbl_services as s');
+		$this->db->join('tbl_service_pricing as p','s.pk_service_id=p.fk_service_id','inner');
 		$this->db->join('tbl_business_category as b','s.service_category=b.pk_category_id','left');
 		$this->db->join('tbl_admin as a','s.fk_admin_id=a.pk_admin_id','left');
 		if($this->session->user_type=='admin')
 		{
-			$this->db->where(array('p.is_deleted'=>0,'p.fk_admin_id'=>$this->session->pk_admin_id));
+			$this->db->where(array('s.is_deleted'=>0,'s.fk_admin_id'=>$this->session->pk_admin_id,'p.is_default'=>1));
 		}
-		$colums=array('p.service_name','b.category_name');
+		
+		else
+			
+		{
+			$this->db->where(array('p.is_default'=>1));
+		}
+	
+		$colums=array('s.service_name','b.category_name');
         
         $i = 0;
         foreach ($colums as $item) // loop column
@@ -1201,7 +1297,15 @@ class Admin_model extends CI_Model {
     }
 	
 	
-
+	function get_service_pricing($id)
+	{
+		$results=$this->db->get_where('tbl_service_pricing',array('fk_service_id'=>$id));
+		if($results)
+		{
+			return $results->result_array();
+		}
+		return false;
+	}
 	
 	function get_service_cats()
 	{
@@ -1519,5 +1623,91 @@ class Admin_model extends CI_Model {
 	   return false;
    }
 
+   /* 
+   #######################################
+   ADMINs MODULE 
+   #######################################
+   */
+  
+
+function add_admin($data=null)
+   {
+	   
+	   
+	   if($data)
+	   {
+		    
+		   $this->db->insert('tbl_admin',$data);
+		   $id=$this->db->insert_id();
+		   
+		   $this->db->insert('tbl_admin_profile',array('fk_admin_id'=>$id));
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   
+      function check_admin_id($id=null)
+   {
+	   if($id)
+	   {
+		$this->db->select('a.pk_admin_id,a.admin_name,a.active,a.admin_email,a.admin_mobile,p.*');
+		$this->db->from('tbl_admin as a');
+		$this->db->join('tbl_admin_profile as p','a.pk_admin_id=p.fk_admin_id','left');
+		$this->db->where(array('a.is_super'=>0,'a.is_deleted'=>0,'a.pk_admin_id'=>$id));
+		$results=$this->db->get();	
+		if($results)
+		{
+			return $results->row_array();
+		}
+		
+	   }
+	   
+	   return false;
+   }
+   
+   
+   function edit_admin($id=null,$data=null)
+   {
+	   if($data && $id)
+	   {
+		   
+		   $this->db->where(array('pk_admin_id'=>$id));
+		   $id=$this->db->update('tbl_admin',$data);
+		   
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   
+   function edit_adminprofile($id=null,$data=null)
+   {
+	   if($data && $id)
+	   {
+		   
+		   $this->db->where(array('fk_admin_id'=>$id));
+		   $id=$this->db->update('tbl_admin_profile',$data);
+		   
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
   
 }

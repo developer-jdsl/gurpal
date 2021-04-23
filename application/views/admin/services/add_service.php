@@ -85,10 +85,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 											
 										<div class="col-md-6">
 										
-										 <div class="form-group">
-										<label><?=keyword_value('service_pricing','Service Pricing')?></label>
-											<input type="text" name="service_pricing" class="form-control form-control-user" value="<?=set_value('service_pricing')?>" required>
-										</div> 
 										<div class="form-group">
 										<label><?=keyword_value('category','Category')?></label>
 										<select name="service_category" class="form-control form-control-user">
@@ -136,13 +132,52 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 												
 												
 											</div>
+											
+											<div class="col-md-12">
+											
+											<h3><?=keyword_value('service_price_variation','Service Price variation')?></h3>
+											
+											
+	 
+									  <table class="table table-bordered"  width="100%">
+									  <thead>
+                                        <tr>
+                               
+                                            <th><?=keyword_value('service_variation','Variation')?></th>
+                                            <th><?=keyword_value('service_subvariation','Sub Variation')?></th>
+                                            <th><?=keyword_value('original_price','Original Price')?></th>
+                                            <th><?=keyword_value('discount_price','Discount Price')?></th>
+
+											<th><?=keyword_value('actions','Actions')?></th>
+                                        </tr>
+                                    </thead>
+									<tbody>
+										<tr>
+											
+											<td><input type="name" name="service_variation[]" class="form-control form-control-user" placeholder="Ex. Per Day"></td>
+											<td><input type="name" name="service_subvariation[]" class="form-control form-control-user" placeholder="Ex. 1-4 Person "></td>
+											<td><input type="number" name="original_price[]" class="form-control form-control-user" style="width:100px" min="0"  placeholder="Ex.2200"></td>
+											<td><input type="number" name="discount_price[]" class="form-control form-control-user" style="width:100px"  min="0"  placeholder="Ex.1500"></td>
+											<td><a href="javascript:void(0);"  class="btn btn-info btn-circle btn-sm add-service">
+												<i class="fas fa-plus"></i>
+											</a>
+										 </td>
+										</tr>
+									</tbody>
+                                    <tfoot>
+                                         <tr>
+                                            <th><?=keyword_value('service_variation','Variation')?></th>
+                                            <th><?=keyword_value('service_subvariation','Sub Variation')?></th>
+                                            <th><?=keyword_value('original_price','Original Price')?></th>
+                                            <th><?=keyword_value('discount_price','Discount Price')?></th>
+                                           
+											<th><?=keyword_value('actions','Actions')?></th>
+                                        </tr>
+                                    </tfoot>
+										</table>
+											
+											</div>
 										</div>
-										
-										
-										
-										
-                                     
-                                  
                                         <button  type="submit" class="btn btn-primary btn-user btn-block">
                                             <?=keyword_value('submit','Submit')?>
                                         </button>
