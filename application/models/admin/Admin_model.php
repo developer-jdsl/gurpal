@@ -484,7 +484,7 @@ class Admin_model extends CI_Model {
 	   return false;
    }
    
-      /* 
+   /* 
    #######################################
    ADMIN SIZE MODULE 
    #######################################
@@ -1630,7 +1630,7 @@ class Admin_model extends CI_Model {
    */
   
 
-function add_admin($data=null)
+function add_admin($data=null,$data2=null)
    {
 	   
 	   
@@ -1640,7 +1640,7 @@ function add_admin($data=null)
 		   $this->db->insert('tbl_admin',$data);
 		   $id=$this->db->insert_id();
 		   
-		   $this->db->insert('tbl_admin_profile',array('fk_admin_id'=>$id));
+		   $this->db->insert('tbl_admin_profile',array('fk_admin_id'=>$id,'profile_package'=>$data2['profile_package']));
 		   if($id)
 		   {
 				return array('status'=>true);
@@ -1708,6 +1708,109 @@ function add_admin($data=null)
 	   }
 	   
    }
+   
+   
+   /* 
+   #######################################
+   ADMIN SIZE MODULE 
+   #######################################
+   */ 
+   
+    function get_packages()
+   {
+	   $package=$this->db->get_where('tbl_packages',array('is_deleted'=>0));
+	   if($package)
+	   {
+		  return $package->result_array(); 
+	   }
+	   
+	   return null;
+	   
+   }
+   
+       function get_packages_active()
+   {
+	   $package=$this->db->get_where('tbl_packages',array('is_deleted'=>0,'active'=>1));
+	   if($package)
+	   {
+		  return $package->result_array(); 
+	   }
+	   
+	   return null;
+	   
+   }
+   
+   function add_package($data=null)
+   {
+	   if($data)
+	   {
+		   $this->db->insert('tbl_packages',$data);
+		   $id=$this->db->insert_id();
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   function edit_package($id=null ,$data=null)
+   {
+	   if($data && $id)
+	   {
+		   $this->db->where(array('pk_package_id'=>$id));
+		   $id=$this->db->update('tbl_packages',$data);
+		   
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   function remove_package($id)
+   {
+	   if($id)
+	   {
+		   $this->db->where(array('pk_package_id'=>$id));
+		   $rid=$this->db->update('tbl_packages',array('active'=>0,'is_deleted'=>1));
+		   
+		   if($rid)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+   
+   function check_package_id($id=null)
+   {
+	   if($id)
+	   {
+		  $return=$this->db->get_where('tbl_packages',array('pk_package_id'=>$id)); 
+		  if($return)
+		  {
+			$return=$return->row_array();
+			if($return['pk_package_id'])
+			{
+				
+				return $return;
+			}
+		  }
+		   
+	   }
+	   
+	   return false;
+   }
+   
    
   
 }

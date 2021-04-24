@@ -44,6 +44,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                             <input type="email" name="admin_email" class="form-control form-control-user" required>
                                         </div>
 										
+										<div class="form-group">
+										<label><?=keyword_value('package','Packages')?></label>
+										<select name="profile_package" class="form-control form-control-user">
+										<?php foreach($packages as $single) { ?>
+										<option value="<?=$single['pk_package_id']?>"> <?=$single['package_name']?></option>
+										<?php } ?>
+										</select>
+										</div>
+										
                                         <div class="form-group">
 										<label><?=keyword_value('status','Status')?></label>
 										<select name="active" class="form-control form-control-user">

@@ -49,4 +49,51 @@ class Authentication_model extends CI_Model {
 	   return $return_array;
 	   
    }
+   
+   
+   public function update_email_otp($id,$otp)
+   {
+	    $time=strtotime("+15 minutes",time());
+		$this->db->where('pk_admin_id',$id);
+		$this->db->update('tbl_admin',array('otp'=>$otp,'otp_validity'=>$time));
+	   
+   }
+   
+   
+   public function get_otpdetails($otp)
+   {
+	 $det=$this->db->get_where('tbl_admin',array('otp'=>$otp));  
+	 if($det)
+	 {
+		 return $det->row_array();
+	 }
+	 
+	 return false;
+	   
+   }
+   
+   public function verify($id)
+   
+   {
+	   $this->db->where('pk_admin_id',$id);
+	   return $this->db->update('tbl_admin',array('is_verified'=>1,'otp'=>'','otp_validity'=>''));
+	   
+   }
+   
+   
+   public function register($data)
+   {
+	   $this->db->insert('tbl_admin',$data);
+	   $id=$this->db->insert_id();
+	   $data2['fk_admin_id']=$id;
+	   $data2['profile_package']=1; //free package
+	   if($id)
+	   {
+		$this->db->insert('tbl_admin_profile',$data2);   
+		return array('status'=>true);
+		   
+	   }
+	   
+	   return array('status'=>false);
+   }
 }

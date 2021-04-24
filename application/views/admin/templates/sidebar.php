@@ -74,6 +74,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                
             </li>
 			
+			<li class="nav-item">
+                <a class="nav-link " href="<?=base_url('admin/packages')?>">
+                    <i class="fas fa-fw fa-gift"></i>
+                    <span><?=keyword_value('packages','Packages')?></span>
+                </a>
+               
+            </li>
+			
 				<li class="nav-item">
                 <a class="nav-link " href="<?=base_url('admin/admins')?>">
                     <i class="fas fa-fw fa-user"></i>

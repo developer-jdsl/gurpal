@@ -40,11 +40,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 										<label><?=keyword_value('admin_email','Admin Email')?></label>
                                             <input type="email" name="admin_email" class="form-control form-control-user" value="<?=@$results['admin_email']?>" required>
                                         </div>
+										
+										<div class="form-group">
+										<label><?=keyword_value('package','Packages')?></label>
+										<select name="profile_package" class="form-control form-control-user">
+										<?php foreach($packages as $single) { ?>
+										<option value="<?=$single['pk_package_id']?>" <?php if($results['profile_package']==$single['pk_package_id']){ echo 'selected'; } ?> > <?=$single['package_name']?></option>
+										<?php } ?>
+										</select>
+										</div>
+										
+										
 										<?php $catarr=explode(',',@$results['profile_categories']) ?>
 										<div class="form-group">
 										<label><?=keyword_value('category','Category')?></label>
 										<select name="profile_categories[]" class="form-control form-control-user select2" multiple>
-										<option value=""></option>
+				
 										<?php foreach($cats as $row) { ?>
 										<option value="<?=$row['pk_category_id']?>" <?php if(in_array($row['pk_category_id'],$catarr)) { echo 'selected';} ?> ><?=$row['category_name']?></option>
 										<?php } ?>
@@ -56,7 +67,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 										<div class="form-group">
 										<label><?=keyword_value('profile_cities','Visible Cities')?></label>
 										<select name="profile_cities[]" class="form-control form-control-user select2" multiple>
-										<option value=""></option>
+							
 										<?php foreach($cities as $row) { ?>
 										<option value="<?=$row['pk_city_id']?>" <?php if(in_array($row['pk_city_id'],$cityarr)) { echo 'selected';} ?> ><?=$row['city_name']?></option>
 										<?php } ?>
@@ -69,7 +80,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 										<div class="form-group">
 										<label><?=keyword_value('profile_states','Visible States')?></label>
 										<select name="profile_states[]" class="form-control form-control-user select2" multiple>
-										<option value=""></option>
+					
 										<?php foreach($states as $row) { ?>
 										<option value="<?=$row['pk_state_id']?>" <?php if(in_array($row['pk_state_id'],$statearr)) { echo 'selected';} ?> ><?=$row['state_name']?></option>
 										<?php } ?>

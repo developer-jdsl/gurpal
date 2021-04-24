@@ -207,3 +207,36 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </ul>
 
                 </nav>
+				
+				<div class="container-fluid">
+				<?php if(@$this->session->user_data->is_verified==0 && !@$this->session->flashdata('msg_info')){  ?>
+				<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				  <?=keyword_value('verify_account','Please verify you account by clicking on the link sent to your registered mail.If your account is not verfied your listing would not be visible to public<br>If you didn\'t recieved the email check your spam/junk folder or <a href="'.base_url('verify_email/resend').'" class="alert-link">Resend Verification Email</a>')?>
+				  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				  </button>
+				</div>
+				<?php	}?>
+				
+				
+				<?php if(@$this->session->flashdata('msg_info')){ ?>
+					<div class="alert alert-info alert-dismissible fade show" role="alert">
+				  <?=$this->session->flashdata('msg_info')?>
+				  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				  </button>
+				</div>
+				
+				<?php } ?>
+				
+				
+				<?php if(@$this->session->flashdata('msg_success')){ ?>
+					<div class="alert alert-success alert-dismissible fade show" role="alert">
+				  <?=$this->session->flashdata('msg_success')?>
+				  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				  </button>
+				</div>
+				
+				<?php } ?>
+				</div>

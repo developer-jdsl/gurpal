@@ -3909,11 +3909,11 @@ class Admin extends CI_Controller {
 		  if ($this->form_validation->run() == FALSE)
 		{
 			
-	
+			$this->data['packages']=$this->admin_model->get_packages_active();
 			$this->load->view('admin/templates/header');
 			$this->load->view('admin/templates/sidebar');
 			$this->load->view('admin/templates/topbar');
-			$this->load->view('admin/admins/add_admin');
+			$this->load->view('admin/admins/add_admin',$this->data);
 			$this->load->view('admin/templates/footer');
 	
 		}
@@ -3925,7 +3925,9 @@ class Admin extends CI_Controller {
 			$data['admin_email']=$this->input->post('admin_email');
 			$data['active']=$this->input->post('active');
 			
-			$return=$this->admin_model->add_admin($data);
+			$data2['profile_package']=$this->input->post('profile_package');
+			
+			$return=$this->admin_model->add_admin($data,$data2);
 		
 			if($return['status']==true)
 			{
@@ -3956,6 +3958,7 @@ class Admin extends CI_Controller {
 				$this->data['cats']=$this->admin_model->get_business_cats();
 				$this->data['states']=$this->admin_model->get_states();
 				$this->data['cities']=$this->admin_model->get_cities();
+				$this->data['packages']=$this->admin_model->get_packages_active();
 				$this->load->view('admin/templates/header');
 				$this->load->view('admin/templates/sidebar');
 				$this->load->view('admin/templates/topbar');
@@ -4023,7 +4026,7 @@ class Admin extends CI_Controller {
 			//$data2['profile_type']=$this->input->post('profile_type');
 			$data2['profile_states']=implode(',',$this->input->post('profile_states'));
 			$data2['profile_cities']=implode(',',$this->input->post('profile_cities'));
-
+			$data2['profile_package']=$this->input->post('profile_package');
 			
 			
 		
@@ -4120,6 +4123,271 @@ class Admin extends CI_Controller {
 		{
 			$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
 			redirect('admin/admins');
+		}
+		
+	}
+	
+	
+	
+		/* 
+   #######################################
+   ADMIN PACKAGE MODULE 
+   #######################################
+   */
+	
+	public function packages()
+	{
+		
+		$this->data['results']=$this->admin_model->get_packages();
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
+		$this->load->view('admin/packages/packages',$this->data);
+		$this->load->view('admin/templates/footer');
+	}
+	
+	public function add_package()
+	{
+		
+		$this->form_validation->set_rules('package_name', 'Package Name', 'required',
+			array('required' =>  keyword_value('you_must_enter_package_name','You must enter %s.'))
+		);
+		
+		
+		$this->form_validation->set_rules('package_validity', 'Package Validity', 'required',
+			array('required' =>  keyword_value('you_must_enter_package_validity','You must enter %s.'))
+		);
+		
+		
+		$this->form_validation->set_rules('package_products', 'Package Products', 'required',
+			array('required' =>  keyword_value('you_must_enter_package_products','You must enter %s.'))
+		);
+		
+		
+		$this->form_validation->set_rules('package_services', 'Package Services', 'required',
+			array('required' =>  keyword_value('you_must_enter_package_services','You must enter %s.'))
+		);
+		
+		
+		  if ($this->form_validation->run() == FALSE)
+		{
+			
+			$this->load->view('admin/templates/header');
+			$this->load->view('admin/templates/sidebar');
+			$this->load->view('admin/templates/topbar');
+			$this->load->view('admin/packages/add_package');
+			$this->load->view('admin/templates/footer');
+	
+		}
+		else
+		{
+			$data['package_name']=$this->input->post('package_name');
+			$data['package_description']=$this->input->post('package_description');
+			$data['package_validity']=$this->input->post('package_validity');
+			$data['package_products']=$this->input->post('package_products');
+			$data['package_services	']=$this->input->post('package_services');
+			$data['show_price']=$this->input->post('show_price');
+			$data['show_features']=$this->input->post('show_features');
+			$data['active']=$this->input->post('active');
+			
+		
+			
+			$return=$this->admin_model->add_package($data);
+		
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_added','Package Added Successfully'));
+				redirect('admin/packages');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/packages');
+			}
+		}
+				
+	
+	}
+	
+	public function edit_package()
+	{
+		$id=$this->input->post('id');
+		if($id)
+		{
+			$result=$this->admin_model->check_package_id($id);
+	
+			if($result['pk_package_id'])
+				
+				{
+		
+		
+					$this->data['results']=$result;
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
+				$this->load->view('admin/packages/edit_package',$this->data);
+				$this->load->view('admin/templates/footer');
+		
+				}
+				else
+				{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+					redirect('admin/packages');
+				}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/packages');
+		}
+	}
+	
+	
+	public  function update_package()
+	{
+		
+		$id=$this->input->post('id');
+		if($id)
+		{
+			
+		$this->form_validation->set_rules('package_name', 'Package Name', 'required',
+			array('required' =>  keyword_value('you_must_enter_package_name','You must enter %s.'))
+		);
+		
+		
+		$this->form_validation->set_rules('package_validity', 'Package Validity', 'required',
+			array('required' =>  keyword_value('you_must_enter_package_validity','You must enter %s.'))
+		);
+		
+		
+		$this->form_validation->set_rules('package_products', 'Package Products', 'required',
+			array('required' =>  keyword_value('you_must_enter_package_products','You must enter %s.'))
+		);
+		
+		
+		$this->form_validation->set_rules('package_services', 'Package Services', 'required',
+			array('required' =>  keyword_value('you_must_enter_package_services','You must enter %s.'))
+		);
+		
+		
+		
+		 if ($this->form_validation->run() == FALSE)
+		{
+			
+		$this->data['results']=$result;
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
+		$this->load->view('admin/packages/edit_package',$this->data);
+		$this->load->view('admin/templates/footer');
+		
+		}
+		else
+		{
+			
+			$data['package_name']=$this->input->post('package_name');
+			$data['package_description']=$this->input->post('package_description');
+			$data['package_validity']=$this->input->post('package_validity');
+			$data['package_products']=$this->input->post('package_products');
+			$data['package_services	']=$this->input->post('package_services');
+			$data['show_price']=$this->input->post('show_price');
+			$data['show_features']=$this->input->post('show_features');
+			$data['active']=$this->input->post('active');
+		
+			
+			$return=$this->admin_model->edit_package($id,$data);
+		
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_updated','Package Updated Successfully'));
+				redirect('admin/packages');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/packages');
+			}
+			
+			
+		}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/packages');
+		}
+		
+		
+		
+	}
+	
+	public function delete_package()
+	{
+		
+		$id=$this->input->post('id');
+		if($id)
+		{
+			$result=$this->admin_model->check_package_id($id);
+	
+			if($result['pk_package_id'])
+				
+				{
+		
+		
+				$this->data['results']=$result;
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
+				$this->load->view('admin/packages/delete_package',$this->data);
+				$this->load->view('admin/templates/footer');
+		
+				}
+				else
+				{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+					redirect('admin/packages');
+				}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/packages');
+		}
+		
+		
+	}
+	
+	public function remove_package()
+	{
+		$id=$this->input->post('id');
+		if($id)
+		{
+			
+			$return=$this->admin_model->remove_package($id);
+			
+			
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_deleted','Item Deleted Successfully'));
+				redirect('admin/packages');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/packages');
+			}
+		}
+		
+		else
+		{
+			$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/packages');
 		}
 		
 	}

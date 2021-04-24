@@ -61,12 +61,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         </button>
                                     </form>
                                     <hr>
-                                    <div class="text-center">
-                                        <a class="small" href="#"><?=keyword_value('forgot_password','Forgot Password?')?></a>
-                                    </div>
-                                    <div class="text-center">
-                                        <a class="small" href="#"><?=keyword_value('create_an_account','Create an Account!')?></a>
-                                    </div>
+                                   <div class="text-center">
+                                <a class="small" href="<?=base_url('authentication/forgot_password')?>">Forgot Password?</a>
+                            </div>
+                            <div class="text-center">
+                                <a class="small" href="<?=base_url('register/admin')?>">Create Account</a>
+                            </div>
                                 </div>
                             </div>
                         </div>
