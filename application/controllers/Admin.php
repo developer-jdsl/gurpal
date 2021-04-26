@@ -1486,7 +1486,15 @@ class Admin extends CI_Controller {
       foreach ($list as $ro) {
       $no++;
       $row = array();
-	  $row[] = '<img src="'.base_url('uploads/product/'.$ro->product_image).'" width="100px">';
+	  if($ro->product_image)
+	  {
+		$row[] = '<img src="'.base_url('uploads/product/'.$ro->product_image).'" width="100px">';
+		
+	  }
+	  else
+	  {
+		 $row[] = 'No Image'; 
+	  }
       $row[] = $ro->product_name;
 	  $row[] = $ro->discount_price?$ro->discount_price:$ro->original_price;
 	  $row[] = $ro->quantity;
@@ -1514,7 +1522,14 @@ class Admin extends CI_Controller {
 	  
 	  public function add_product()
 	{
-
+		
+		if($this->session->user_type=='admin' && !can_add_products())
+			
+			{
+				$this->session->set_flashdata('msg','You have reached your package limit. Upgrade to add more');
+				redirect('admin/products');
+				
+			}
 		
 		$this->form_validation->set_rules('product_name', 'Product Name', 'required',
 			array('required' =>  keyword_value('you_must_enter_product_name','You must Enter Product Name.'))
@@ -1535,7 +1550,6 @@ class Admin extends CI_Controller {
 		$this->form_validation->set_rules('fk_gst_id', 'GST Slab', 'required',
 			array('required' =>  keyword_value('you_must_enter_fk_gst_id','You must Select GST Slab.'))
 		);
-
 		
 		
 		  if ($this->form_validation->run() == FALSE)
@@ -1594,8 +1608,8 @@ class Admin extends CI_Controller {
 			$this->data['cross']=$this->admin_model->get_cross_products();
 			$this->data['gst']=$this->admin_model->get_gst();
 			$this->data['categories']=$this->admin_model->get_product_cats();
-			$this->data['colors']=$this->admin_model->get_color();
-			$this->data['sizes']=$this->admin_model->get_size();
+			$this->data['colors']=$this->admin_model->get_color(true);
+			$this->data['sizes']=$this->admin_model->get_size(true);
 	
 			if($result['pk_product_id'])
 				
@@ -1653,8 +1667,8 @@ class Admin extends CI_Controller {
 			$this->data['cross']=$this->admin_model->get_cross_products();
 			$this->data['gst']=$this->admin_model->get_gst();
 			$this->data['categories']=$this->admin_model->get_product_cats();
-			$this->data['colors']=$this->admin_model->get_color();
-			$this->data['sizes']=$this->admin_model->get_size();
+			$this->data['colors']=$this->admin_model->get_color(true);
+			$this->data['sizes']=$this->admin_model->get_size(true);
 	
 			if($result['pk_product_id'])
 				
@@ -2859,6 +2873,14 @@ class Admin extends CI_Controller {
 	  
 	  public function add_service()
 	{
+
+			if($this->session->user_type=='admin' && !can_add_services())
+			
+			{
+				$this->session->set_flashdata('msg','You have reached your package limit. Upgrade to add more');
+				redirect('admin/services');
+				
+			}
 
 		
 		$this->form_validation->set_rules('service_name', 'Service Name', 'required',
@@ -4129,7 +4151,7 @@ class Admin extends CI_Controller {
 	
 	
 	
-		/* 
+   /* 
    #######################################
    ADMIN PACKAGE MODULE 
    #######################################
@@ -4184,6 +4206,7 @@ class Admin extends CI_Controller {
 			$data['package_name']=$this->input->post('package_name');
 			$data['package_description']=$this->input->post('package_description');
 			$data['package_validity']=$this->input->post('package_validity');
+			$data['package_category']=$this->input->post('package_category');
 			$data['package_products']=$this->input->post('package_products');
 			$data['package_services	']=$this->input->post('package_services');
 			$data['show_price']=$this->input->post('show_price');
@@ -4293,6 +4316,7 @@ class Admin extends CI_Controller {
 			$data['package_products']=$this->input->post('package_products');
 			$data['package_services	']=$this->input->post('package_services');
 			$data['show_price']=$this->input->post('show_price');
+			$data['package_category']=$this->input->post('package_category');
 			$data['show_features']=$this->input->post('show_features');
 			$data['active']=$this->input->post('active');
 		
@@ -4393,7 +4417,144 @@ class Admin extends CI_Controller {
 	}
 	
 	
+	/* 
+   #######################################
+   PROFILE MODULE 
+   #######################################
+   */
+	
+	public function profile()
+	{
+		$id=$this->session->pk_admin_id;
+		if($id)
+		{
+			$result=$this->admin_model->check_admin_id($id);
+			if($result['pk_admin_id'])
+				{
+				$this->data['results']=$result;
+				$this->data['cats']=$this->admin_model->get_business_cats();
+				$this->data['states']=$this->admin_model->get_states();
+				$this->data['cities']=$this->admin_model->get_cities();
+				$this->data['packages']=$this->admin_model->get_packages_active();
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
+				$this->load->view('admin/profile/profile',$this->data);
+				$this->load->view('admin/templates/footer');
+		
+				}
+				else
+				{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+					redirect('admin');
+				}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin');
+		}
+	}
 	
 	
+	public  function update_profile()
+	{
+
+		$id=$this->session->pk_admin_id;
+		if($id)
+		{	
+		$this->form_validation->set_rules('admin_name', 'Admin Name', 'required',
+			array('required' =>  keyword_value('enter_admin_name','You must enter Admin Name.'))
+		);
+		
+		$this->form_validation->set_rules('admin_mobile', 'Admin Mobile', 'trim|required',
+			array('required' =>  keyword_value('enter_admin_mobile','Please enter admin mobile.'))
+		);
+		
+		$this->form_validation->set_rules('admin_email', 'Admin Email', 'trim|required|valid_email',
+			array('required' =>  keyword_value('enter_admin_email','Please Enter admin email.'))
+		);
+		
+		 if ($this->form_validation->run() == FALSE)
+		{
 	
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
+		$this->load->view('admin/profile/profile',$this->data);
+		$this->load->view('admin/templates/footer');
+		
+		}
+		else
+		{
+			
+			$image=$error=null;
+			if($_FILES['profile_banner']["name"])
+			{
+			  $config['upload_path']   = './uploads/banners/'; 
+			  $config['allowed_types'] = 'gif|jpg|png|jpeg'; 
+			  $config['max_size']      = 1024;
+			  $this->load->library('upload', $config);
+				   if ( ! $this->upload->do_upload('profile_banner')) {
+			 $error = implode('<br>',$this->upload->display_errors()); 
+		
+		  }else { 
+
+
+			$uploadedImage = $this->upload->data();
+			$image=$uploadedImage['file_name'];
+      } 
+			}
+			
+			
+	
+			$data1['admin_name']=$this->input->post('admin_name');
+			$data1['admin_mobile']=$this->input->post('admin_mobile');
+			$data1['admin_email']=$this->input->post('admin_email');
+			$data1['active']=$this->input->post('active');
+			
+			
+			$data2['profile_name']=$this->input->post('profile_name');
+			$data2['profile_categories']=implode(',',$this->input->post('profile_categories'));
+			$data2['profile_contact']=$this->input->post('profile_contact');
+			$data2['profile_address']=$this->input->post('profile_address');
+			if($image)
+			{
+				$data2['profile_banner']=$image;
+			}
+			//$data2['profile_type']=$this->input->post('profile_type');
+			$data2['profile_states']=implode(',',$this->input->post('profile_states'));
+			$data2['profile_cities']=implode(',',$this->input->post('profile_cities'));
+			//$data2['profile_package']=$this->input->post('profile_package');
+			
+			
+		
+			
+			$return=$this->admin_model->edit_admin($id,$data1);
+			$this->admin_model->edit_adminprofile($id,$data2);
+		
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_updated','Admin Updated Successfully'));
+				redirect('admin/profile');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/profile');
+			}
+			
+		}
+		
+		}
+		else
+		{
+			$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/profile');
+		}
+	
+	}
+
 }

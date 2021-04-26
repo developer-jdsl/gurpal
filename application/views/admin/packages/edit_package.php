@@ -51,6 +51,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                               
                                         </div>
 										
+										<div class="form-group">
+                                        <label><?=keyword_value('package_category','Category Limit(-1 for unlimited)')?></label>
+                                            <input type="number" name="package_category" class="form-control form-control-user" value="<?=$results['package_category']?>" required>
+                                        </div>
+										
 										  <div class="form-group">
                                         <label><?=keyword_value('package_products','Product Limit(-1 for unlimited)')?></label>
                                             <input type="number" name="package_products" class="form-control form-control-user" value="<?=$results['package_products']?>" required>

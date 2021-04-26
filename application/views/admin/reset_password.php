@@ -12,7 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Login</title>
+    <title>Forgot Password</title>
 
     <!-- Custom fonts for this template-->
     <link href="<?=base_url('public/vendor/fontawesome-free/css/all.min.css')?>" rel="stylesheet" type="text/css">
@@ -40,9 +40,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4"><?=keyword_value('admin_login','Admin Login')?></h1>
+                                        <h1 class="h4 text-gray-900 mb-4"><?=keyword_value('reset_password','Reset Password')?></h1>
                                     </div>
-                                      <?php echo validation_errors();
+										<?php echo validation_errors();
 										if(!empty($this->session->flashdata('msg'))){ ?>
 											<div class="alert alert-info alert-dismissible fade show" role="alert">
 											  <?=$this->session->flashdata('msg')?>
@@ -52,26 +52,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 											</div>
 											
 											<?php } ?>
-
-									<?php echo form_open('authentication/admin'); ?>
+									<?php echo form_open('authentication/reset_password/'.$id); ?>
 									
                                         <div class="form-group">
-                                            <input type="email" name="email" class="form-control form-control-user"
-                                                id="email" aria-describedby="emailHelp"
-                                                placeholder="<?=keyword_value('enter_email','Enter Email Address...')?>" required>
+                                            <input type="password" name="password" class="form-control form-control-user" placeholder="<?=keyword_value('enter_pass','Enter Password')?>" required>
                                         </div>
-                                        <div class="form-group">
-                                            <input type="password" name="password" class="form-control form-control-user"
-                                                id="password" placeholder="<?=keyword_value('password','Password')?>" required>
+										
+										 <div class="form-group">
+                                            <input type="password" name="cpassword" class="form-control form-control-user" placeholder="<?=keyword_value('enter_cpass','Confirm Password')?>" required>
                                         </div>
-                                  
+										
                                         <button  type="submit" class="btn btn-primary btn-user btn-block">
-                                            <?=keyword_value('login','Login')?>
+                                            <?=keyword_value('submit','Submit')?>
                                         </button>
                                     </form>
                                     <hr>
                                    <div class="text-center">
-                                <a class="small" href="<?=base_url('authentication/forgot_password')?>">Forgot Password?</a>
+                                <a class="small" href="<?=base_url('authentication/admin')?>">Login </a>
                             </div>
                             <div class="text-center">
                                 <a class="small" href="<?=base_url('register/admin')?>">Create Account</a>

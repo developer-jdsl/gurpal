@@ -96,7 +96,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 										 ?>
 												 <div class="form-group">
 										<label><?=keyword_value('cross_sell','Cross Sell')?></label>
-										<select name="cross_sell" class="form-control form-control-user" multiple>
+										<select name="cross_sell" class="form-control form-control-user select2" multiple>
 										<?php if(@$cross) { 
 										foreach($cross as $row) { ?>
 										<option value="<?=$row['pk_product_id']?>" <?php if(in_array($row['pk_product_id'],$arrr)) { echo 'selected'; } ?> ><?=$row['product_name']?></option>

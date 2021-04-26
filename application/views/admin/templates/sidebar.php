@@ -93,10 +93,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			
 				<?php } ?>
 				
+				<?php if($this->session->user_type!='superadmin') { ?>
+				<li class="nav-item">
+                <a class="nav-link " href="<?=base_url('admin/profile')?>">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span><?=keyword_value('profile','Profile')?></span>
+                </a>
+               
+            </li>
+				<?php } ?>
+				
 				<li class="nav-item">
                 <a class="nav-link " href="<?=base_url('admin/logout')?>">
                     <i class="fas fa-fw fa-sign-out-alt"></i>
-                    <span><?=keyword_value('lohout','Logout')?></span>
+                    <span><?=keyword_value('logout','Logout')?></span>
                 </a>
                
             </li>

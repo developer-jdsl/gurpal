@@ -401,9 +401,14 @@ class Admin_model extends CI_Model {
    */ 
    
    
-   function get_color()
+   function get_color($active=false)
    {
-	   $color=$this->db->get_where('tbl_color',array('is_deleted'=>1));
+	   $data['is_deleted']=0;
+	   if($active)
+	   {
+		 $data['active']=1;  
+	   }
+	   $color=$this->db->get_where('tbl_color',$data);
 	   if($color)
 	   {
 		  return $color->result_array(); 
@@ -490,9 +495,14 @@ class Admin_model extends CI_Model {
    #######################################
    */ 
    
-    function get_size()
+    function get_size($active=false)
    {
-	   $size=$this->db->get_where('tbl_size',array('is_deleted'=>0));
+	   $data=array('is_deleted'=>0);
+	   if($active)
+	   {
+		   $data['active']=1;
+	   }
+	   $size=$this->db->get_where('tbl_size',$data);
 	   if($size)
 	   {
 		  return $size->result_array(); 
@@ -501,6 +511,7 @@ class Admin_model extends CI_Model {
 	   return null;
 	   
    }
+   
    
    function add_size($data=null)
    {
@@ -826,7 +837,7 @@ class Admin_model extends CI_Model {
    {
 	   if($insert_data)
 	   {
-		   $chk=$this->db->get_where('tbl_product_pricing',array('is_default'=>1));
+		   $chk=$this->db->get_where('tbl_product_pricing',array('is_default'=>1,'fk_product_id'=>$insert_data['fk_product_id']));
 		   if($chk->num_rows()==0)
 		   {
 			  $insert_data[0]['is_default']=1; 
@@ -845,7 +856,7 @@ class Admin_model extends CI_Model {
 		   
 	   if($insert_data)
 	   {
-		    $chk=$this->db->get_where('tbl_service_pricing',array('is_default'=>1));
+		    $chk=$this->db->get_where('tbl_service_pricing',array('is_default'=>1,'fk_service_id'=>$insert_data['fk_service_id']));
 		   if($chk->num_rows()==0)
 		   {
 			  $insert_data[0]['is_default']=1; 

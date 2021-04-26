@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Register</title>
+    <title>Register</title>
 
     <!-- Custom fonts for this template-->
     <link href="<?=base_url('public/vendor/fontawesome-free/css/all.min.css')?>" rel="stylesheet" type="text/css">
@@ -36,7 +36,16 @@
 							<div class="text-center">
 							<h1 class="h4 text-gray-900 mb-4"><?=keyword_value('admin_regsiter','Admin Register')?></h1>
 							</div>
-							<?php echo validation_errors(); if(!empty($this->session->flashdata('msg'))){echo $this->session->flashdata('msg');}?>
+							 <?php echo validation_errors();
+								if(!empty($this->session->flashdata('msg'))){ ?>
+									<div class="alert alert-info alert-dismissible fade show" role="alert">
+									  <?=$this->session->flashdata('msg')?>
+									  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									  </button>
+									</div>
+									
+											<?php } ?>
 
 							<?php echo form_open('register/admin'); ?>
                                 <div class="form-group row">

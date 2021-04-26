@@ -26,6 +26,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         <tr>
                                             <th><?=keyword_value('package_name','Package Name')?></th>
 											<th><?=keyword_value('validity','Validity')?></th>
+											<th><?=keyword_value('categories','Categories')?></th>
 											<th><?=keyword_value('products','Products')?></th>
 											<th><?=keyword_value('services','Services')?></th>
 											<th><?=keyword_value('price','Price')?></th>
@@ -38,6 +39,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         <tr>
                                             <th><?=keyword_value('package_name','Package Name')?></th>
 											<th><?=keyword_value('validity','Validity')?></th>
+											<th><?=keyword_value('categories','Categories')?></th>
 											<th><?=keyword_value('products','Products')?></th>
 											<th><?=keyword_value('services','Services')?></th>
 											<th><?=keyword_value('price','Price')?></th>
@@ -55,6 +57,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 										   <tr>
 										   <td><?=$row['package_name']?></td>
 										    <td><?=$validity[$row['package_validity']]?></td>
+											<td><?=$row['package_category']?> </td>
 											<td><?=$row['package_products']?> </td>
 											<td><?=$row['package_services']?> </td>
 											<td><?php if($row['show_price']==1){ echo '<i class="fas fa-fw fa-check"></i>';}else{ echo '<i class="fas fa-fw fa-times"></i>';} ?> </td>

@@ -87,7 +87,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 										 <?php if($this->session->user_type=='admin') { ?>
 												 <div class="form-group">
 										<label><?=keyword_value('cross_sell','Cross Sell')?></label>
-										<select name="cross_sell" class="form-control form-control-user" multiple>
+										<select name="cross_sell" class="form-control form-control-user select2" multiple>
 										<?php foreach($cross as $row) { ?>
 										<option value="<?=$row['pk_product_id']?>"><?=$row['product_name']?></option>
 										<?php } ?>

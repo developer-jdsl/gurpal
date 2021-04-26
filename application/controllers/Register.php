@@ -84,18 +84,16 @@ class Register extends CI_Controller {
 		if(@$this->session->user_data->admin_email)
 		{
 			$this->load->helper('string');
-			$this->load->library('email');
 			$random=random_string('alnum',30);
 			$this->authentication_model->update_email_otp($this->session->pk_admin_id,$random);
 			
 			
+			$email['to']=$this->session->user_data->admin_email;
+			$email['subject']='Verification link for gurpal';
+			$email['message']='Your Verfication link is '.base_url('verify_email/verify/'.$random);
+			$ret=sendemail($data);
 			
-			$this->email->from('email@example.com', 'Identification');
-			$this->email->to($this->session->user_data->admin_email);
-			$this->email->subject('Verification link for gurpal');
-			$this->email->message('Your Verfication link is '.base_url('verify_email/verify/'.$random));
-			
-			 if($this->email->send())
+			 if($ret)
 			{
 				$this->session->set_flashdata('msg_info','Verification link Send Successfully. Link will be valid for 15 mins'); 	 
 			}

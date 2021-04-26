@@ -96,4 +96,65 @@ class Authentication_model extends CI_Model {
 	   
 	   return array('status'=>false);
    }
+   
+   
+   public function send_reset_link($email)
+   {
+	   $return=array('status'=>false,'msg'=>'NA');
+	   $result=$this->db->select('pk_admin_id')->from('tbl_admin')->where(array('admin_email'=>$email,'is_super'=>0,'active'=>1,'is_deleted'=>0))->get();
+	   if($result)
+	   {
+		   $result=$result->row_array();
+		   $this->load->helper('string');
+		   $random=random_string('alnum',30);
+		   $this->update_email_otp($result['pk_admin_id'],$random);
+		   
+		   	$email['to']=$result['admin_email'];
+			$email['subject']='Password reset link for gurpal';
+			$email['message']='Your Password reset link is '.base_url('authentication/reset_password/'.$random);
+			$ret=sendemail($data);
+			if($ret)
+			{
+				$return['status']=true;
+				$return['msg']=keyword_value('reset_link_success','Password reset link sent to your registered email. Link is valid for 15 mins ');
+			}
+			
+			else
+			{
+				 $return['msg']=keyword_value('try_again','Please try again after sometime ');
+			}
+		   
+	   }
+	   else
+	   {
+		   $return['msg']=keyword_value('email_dont_exists','Email doesn\'t exists or your account is inactive/deleted');
+		   
+	   }
+	   
+	   return $return;
+   }
+   
+   public function check_reset_hash($hash)
+   
+   {
+	   $return=array('status'=>false,'msg'=>'NA');
+	 $result=$this->db->get_where('tbl_admin',array('otp'=>$hash,'active'=>1,'is_deleted'=>0));  
+	 if($result)
+	 {
+		 $result=$result->row_array();
+		 return $result;
+		 
+	 }
+	   
+	  return array('pk_admin_is'=>NULL);
+   }
+   
+   public function set_reset_password($id,$pass)
+   {
+	   $this->db->where('pk_admin_id',$id);
+	   return $this->db->update('tbl_admin',array('admin_password'=>$pass));
+	  
+   }
+   
+
 }

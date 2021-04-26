@@ -248,6 +248,23 @@ if($("select").hasClass("select2"))
 	$('.select2').select2();
 }
 
+
+
+if($("select").hasClass("select_2"))
+{
+	if(vars[0].max_cat!='-1')
+	{
+		$('.select_2').select2({maximumSelectionLength: vars[0].max_cat});
+	}
+	else
+	{
+		$('.select_2').select2();
+	}
+	
+}
+
+
+
 if($("#color_value").length)
 {
 	$('#color_value').colorpicker();

@@ -53,7 +53,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <!-- Custom scripts for all pages-->
     <script src="<?=base_url('public/js/sb-admin-2.min.js')?>"></script>
 	
-	<?php if(in_array($this->uri->segment(2),array('add_ad','edit_ad','edit_admin'))){ ?>
+	<?php if(in_array($this->uri->segment(2),array('add_ad','edit_ad','edit_admin','profile','add_product','edit_product'))){ ?>
 	<script src="<?=base_url('public/vendor/select2/select2.min.js')?>"></script>
 	<?php } ?>
 	

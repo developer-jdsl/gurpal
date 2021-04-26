@@ -18,6 +18,7 @@ class Home extends CI_Controller {
 		$this->data['advertisements']=$this->home_model->get_advertisements('home','left_sidebar');
 		
 		echo '<h1 align="center">Homepage</h1>';
+		//	var_dump($this->session);
 		
 	}
 }
