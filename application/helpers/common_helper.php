@@ -4,6 +4,7 @@ function keyword_value($key,$value)
 {
 	return $value;
 }
+
 function is_superadmin()
 {
 	$CI = & get_instance();
@@ -167,6 +168,21 @@ function sendemail($data)
 	}
 	
 	return false;
+}
+
+function get_email_template($tid=null)
+{
+	if($tid)
+	{
+		$CI = & get_instance();	
+		$ret=$CI->db->get_where('tbl_email_templates',array('template_id'=>$tid));
+		if($ret)
+		{
+			return $ret->row_array();
+		}
+	}
+	
+	return '';
 }
     
 	

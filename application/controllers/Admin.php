@@ -4159,7 +4159,7 @@ class Admin extends CI_Controller {
 	
 	public function packages()
 	{
-		
+		is_superadmin();
 		$this->data['results']=$this->admin_model->get_packages();
 		$this->load->view('admin/templates/header');
 		$this->load->view('admin/templates/sidebar');
@@ -4553,6 +4553,117 @@ class Admin extends CI_Controller {
 		{
 			$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
 			redirect('admin/profile');
+		}
+	
+	}
+	
+	
+	/* 
+   #######################################
+   EMAILS MODULE 
+   #######################################
+   */
+   
+   	public function emails()
+	{
+		is_superadmin();
+		$this->data['results']=$this->admin_model->get_email_templates();
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
+		$this->load->view('admin/emails/emails',$this->data);
+		$this->load->view('admin/templates/footer');
+	}
+	
+	public function edit_email()
+	{
+		$id=$this->input->post('id');
+		if($id)
+		{
+			$result=$this->admin_model->check_email_id($id);
+			if($result['pk_template_id'])
+				{
+				$this->data['results']=$result;
+				$this->load->view('admin/templates/header');
+				$this->load->view('admin/templates/sidebar');
+				$this->load->view('admin/templates/topbar');
+				$this->load->view('admin/emails/edit_email',$this->data);
+				$this->load->view('admin/templates/footer');
+		
+				}
+				else
+				{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+					redirect('admin');
+				}
+		
+		}
+		else
+		{
+					$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin');
+		}
+	}
+	
+	
+	public  function update_email()
+	{
+
+		$id=$this->input->post('id');
+		if($id)
+		{	
+		$this->form_validation->set_rules('template_name', 'Template Name', 'required',
+			array('required' =>  keyword_value('enter_template_name','You must enter Template Name.'))
+		);
+		
+		$this->form_validation->set_rules('template', 'Email Template', 'required',
+			array('required' =>  keyword_value('enter_admin_template','Please enter Email Template.'))
+		);
+		
+		 if ($this->form_validation->run() == FALSE)
+		{
+	
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
+		$this->load->view('admin/emails/edit_email',$this->data);
+		$this->load->view('admin/templates/footer');
+		
+		}
+		else
+		{
+			
+
+			
+			
+	
+			$data1['template_name']=$this->input->post('template_name');
+			$data1['template_subject']=$this->input->post('template_subject');
+			$data1['template']=$this->input->post('template');
+			
+			
+			
+			$return=$this->admin_model->edit_email($id,$data1);
+		
+			if($return['status']==true)
+			{
+				$this->session->set_flashdata('msg', keyword_value('item_updated','Email template Updated Successfully'));
+				redirect('admin/emails');
+			}
+			else
+			{
+				
+				$this->session->set_flashdata('msg', keyword_value('item_not_added','Action was not Successfull, Please try again'));
+				redirect('admin/emails');
+			}
+			
+		}
+		
+		}
+		else
+		{
+			$this->session->set_flashdata('msg', keyword_value('invalid_action','Invalid Action'));
+			redirect('admin/emails');
 		}
 	
 	}

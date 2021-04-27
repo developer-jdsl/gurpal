@@ -45,6 +45,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<a class="collapse-item" href="<?=base_url('admin/gst')?>"><?=keyword_value('gst','Gst')?></a>
 						<a class="collapse-item" href="<?=base_url('admin/color')?>"><?=keyword_value('color','Color')?></a>
 						<a class="collapse-item" href="<?=base_url('admin/size')?>"><?=keyword_value('size','Size')?></a>
+						<a class="collapse-item" href="<?=base_url('admin/emails')?>"><?=keyword_value('email_template','Email Templates')?></a>
                         
                     </div>
                 </div>

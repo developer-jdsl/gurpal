@@ -263,6 +263,18 @@ if($("select").hasClass("select_2"))
 	
 }
 
+if($("textarea").hasClass("editor"))
+{
+
+  ClassicEditor
+        .create( document.querySelector( '.editor' ) )
+        .catch( error => {
+            console.error( error );
+        } );
+	
+}
+
+
 
 
 if($("#color_value").length)

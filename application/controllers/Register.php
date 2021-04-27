@@ -85,13 +85,20 @@ class Register extends CI_Controller {
 		{
 			$this->load->helper('string');
 			$random=random_string('alnum',30);
+			$vlink=base_url('verify_email/verify/'.$random);
 			$this->authentication_model->update_email_otp($this->session->pk_admin_id,$random);
-			
-			
+			$template=get_email_template('business_register');
+			$ret=false;
+			if($template)
+			{
+			$find = array("{{LOGO}}","{{SITE_URL}}","{{SITE_NAME}}","{{ADMIN_NAME}}","{{VERIFY_LINK}}");
+			$replace = array(LOGO,base_url(),SITE_NAME,$this->session->user_data->admin_name,$vlink);
 			$email['to']=$this->session->user_data->admin_email;
-			$email['subject']='Verification link for gurpal';
-			$email['message']='Your Verfication link is '.base_url('verify_email/verify/'.$random);
-			$ret=sendemail($data);
+			$email['subject']=$template['template_subject'];
+			$email['message']=str_replace($find,$replace,$template['template']);
+			$ret=sendemail($email);
+			}
+		
 			
 			 if($ret)
 			{
@@ -101,6 +108,8 @@ class Register extends CI_Controller {
 			{
 				$this->session->set_flashdata('msg_info','Verification link not sent. Please Try after sometime.'); 	 
 			}
+			
+			
 			
 			redirect('admin');
 	

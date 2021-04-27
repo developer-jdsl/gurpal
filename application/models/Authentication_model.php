@@ -108,10 +108,15 @@ class Authentication_model extends CI_Model {
 		   $this->load->helper('string');
 		   $random=random_string('alnum',30);
 		   $this->update_email_otp($result['pk_admin_id'],$random);
+		   $rlink=base_url('authentication/reset_password/'.$random);
+		   $template=get_email_template('admin_forgot');
 		   
-		   	$email['to']=$result['admin_email'];
-			$email['subject']='Password reset link for gurpal';
-			$email['message']='Your Password reset link is '.base_url('authentication/reset_password/'.$random);
+		   	$data['to']=$result['admin_email'];
+			$data['subject']= $template['subject'];
+			$find = array("{{LOGO}}","{{SITE_URL}}","{{SITE_NAME}}","{{ADMIN_NAME}}","{{VERIFY_LINK}}");
+			$replace = array(LOGO,base_url(),SITE_NAME,$result['admin_name'],$rlink);
+			$data['message']=str_replace($find,$replace,$template['template']);
+			
 			$ret=sendemail($data);
 			if($ret)
 			{

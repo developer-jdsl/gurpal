@@ -1723,7 +1723,7 @@ function add_admin($data=null,$data2=null)
    
    /* 
    #######################################
-   ADMIN SIZE MODULE 
+   ADMIN Package MODULE 
    #######################################
    */ 
    
@@ -1822,6 +1822,78 @@ function add_admin($data=null,$data2=null)
 	   return false;
    }
    
+     
+   /* 
+   #######################################
+   ADMIN Emails MODULE 
+   #######################################
+   */  
    
+    function get_email_templates()
+   {
+	   $emails=$this->db->get('tbl_email_templates');
+	   if($emails)
+	   {
+		  return $emails->result_array(); 
+	   }
+	   
+	   return null;
+	   
+   }
+   
+      function check_email_id($id=null)
+   {
+	   if($id)
+	   {
+		  $return=$this->db->get_where('tbl_email_templates',array('pk_template_id'=>$id)); 
+		  if($return)
+		  {
+			$return=$return->row_array();
+			if($return['pk_template_id'])
+			{
+				
+				return $return;
+			}
+		  }
+		   
+	   }
+	   
+	   return false;
+   }
+   
+   
+    function edit_email($id=null ,$data=null)
+   {
+	   if($data && $id)
+	   {
+		   $this->db->where(array('pk_template_id'=>$id));
+		   $id=$this->db->update('tbl_email_templates',$data);
+		   
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
+   
+       function delete_email($id=null)
+   {
+	   if($id)
+	   {
+		   $this->db->where(array('pk_template_id'=>$id));
+		   $id=$this->db->delete('tbl_email_templates');
+		   
+		   if($id)
+		   {
+				return array('status'=>true);
+		   }
+		   
+		   return array('status'=>false);
+	   }
+	   
+   }
   
 }
