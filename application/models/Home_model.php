@@ -27,6 +27,23 @@ class Home_model extends CI_Model {
 		
 	}
 	
+	
+	function get_services()
+	{
+		
+		 $this->db->select('s.*,b.category_name,p.discount_price,p.original_price');
+        $this->db->from('tbl_services as s');
+		$this->db->join('tbl_service_pricing as p','s.pk_service_id=p.fk_service_id','inner');
+		$this->db->join('tbl_business_category as b','s.service_category=b.pk_category_id','left');
+		$this->db->where(array('s.active'=>1,'s.is_deleted'=>0,'p.is_default'=>1));
+		$records=$this->db->get();
+		if($records->num_rows()>0)
+		{
+			return $records->result_array();
+		}
+		
+		return false;
+	}
 	function get_banners($type=null)
 	{
 		$where=array('active'=>1);
@@ -83,6 +100,29 @@ class Home_model extends CI_Model {
 		return false;
 		
 	}
+	
+	
+	
+		function get_service_cats()
+	{
+		$results=$this->db->get_where('tbl_business_category',array('active'=>1,'is_deleted'=>0));
+		if($results)
+		{
+			return $results->result_array();
+		}
+		return false;
+	}
+	
+		function get_product_cats()
+	{
+		$results=$this->db->get_where('tbl_product_category',array('active'=>1,'is_deleted'=>0));
+		if($results)
+		{
+			return $results->result_array();
+		}
+		return false;
+	}
+   
 	
 	
 }

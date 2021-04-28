@@ -1250,7 +1250,7 @@ class Admin_model extends CI_Model {
    
     private function _get_services_query()
     {
-        $this->db->select('s.*,b.category_name,a.admin_name,p.discount_price');
+        $this->db->select('s.*,b.category_name,a.admin_name,p.discount_price,p.original_price');
         $this->db->from('tbl_services as s');
 		$this->db->join('tbl_service_pricing as p','s.pk_service_id=p.fk_service_id','inner');
 		$this->db->join('tbl_business_category as b','s.service_category=b.pk_category_id','left');

@@ -1649,18 +1649,13 @@ class Admin extends CI_Controller {
 				redirect('admin/products/add_product');
 			}
 		}
-				
-	
 	}
-	
-	
 	
 	public function edit_product()
 	{
 		$id=$this->input->post('id');
 		if($id)
 		{
-			
 			
 			$result=$this->admin_model->check_product_id($id);
 			$this->data['brands']=$this->admin_model->get_brands();
@@ -1671,10 +1666,8 @@ class Admin extends CI_Controller {
 			$this->data['sizes']=$this->admin_model->get_size(true);
 	
 			if($result['pk_product_id'])
-				
-				{
-					
-					
+			{
+		
 			$this->data['brands']=$this->admin_model->get_brands();
 			$this->data['cross']=$this->admin_model->get_cross_products();
 			$this->data['gst']=$this->admin_model->get_gst(true);

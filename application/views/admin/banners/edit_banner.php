@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <div class="card-body">
                             <?php echo validation_errors();?>
 
-									<?php echo form_open_multipart('admin/add_banner'); ?>
+									<?php echo form_open_multipart('admin/update_banner'); ?>
 									
 									
 									<?php if(isset($results['banner_image'])){?>
