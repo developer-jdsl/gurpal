@@ -309,9 +309,14 @@ class Admin_model extends CI_Model {
    #######################################
    */
    
-    function get_gst()
+    function get_gst($active=false)
    {
-	   $gst=$this->db->get_where('tbl_gst',array('is_deleted'=>0));
+	   $data=array('is_deleted'=>0);
+	   if($active)
+	   {
+		$data['active']=1;	
+	   }
+	   $gst=$this->db->get_where('tbl_gst',$data);
 	   if($gst)
 	   {
 		  return $gst->result_array(); 
@@ -320,6 +325,8 @@ class Admin_model extends CI_Model {
 	   return null;
 	   
    }
+   
+   
 
    function add_gst($data=null)
    {

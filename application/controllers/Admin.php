@@ -1606,7 +1606,7 @@ class Admin extends CI_Controller {
 			$result=$this->admin_model->check_product_id($id);
 			$this->data['brands']=$this->admin_model->get_brands();
 			$this->data['cross']=$this->admin_model->get_cross_products();
-			$this->data['gst']=$this->admin_model->get_gst();
+			$this->data['gst']=$this->admin_model->get_gst(true);
 			$this->data['categories']=$this->admin_model->get_product_cats();
 			$this->data['colors']=$this->admin_model->get_color(true);
 			$this->data['sizes']=$this->admin_model->get_size(true);
@@ -1616,7 +1616,7 @@ class Admin extends CI_Controller {
 				{
 			$this->data['brands']=$this->admin_model->get_brands();
 			$this->data['cross']=$this->admin_model->get_cross_products();
-			$this->data['gst']=$this->admin_model->get_gst();
+			$this->data['gst']=$this->admin_model->get_gst(true);
 			$this->data['categories']=$this->admin_model->get_product_cats();
 			$this->data['gallery']=$this->admin_model->get_product_gallery($id);
 			
@@ -1665,7 +1665,7 @@ class Admin extends CI_Controller {
 			$result=$this->admin_model->check_product_id($id);
 			$this->data['brands']=$this->admin_model->get_brands();
 			$this->data['cross']=$this->admin_model->get_cross_products();
-			$this->data['gst']=$this->admin_model->get_gst();
+			$this->data['gst']=$this->admin_model->get_gst(true);
 			$this->data['categories']=$this->admin_model->get_product_cats();
 			$this->data['colors']=$this->admin_model->get_color(true);
 			$this->data['sizes']=$this->admin_model->get_size(true);
@@ -1677,7 +1677,7 @@ class Admin extends CI_Controller {
 					
 			$this->data['brands']=$this->admin_model->get_brands();
 			$this->data['cross']=$this->admin_model->get_cross_products();
-			$this->data['gst']=$this->admin_model->get_gst();
+			$this->data['gst']=$this->admin_model->get_gst(true);
 			$this->data['categories']=$this->admin_model->get_product_cats();
 			$this->data['gallery']=$this->admin_model->get_product_gallery($id);
 			
@@ -2910,7 +2910,7 @@ class Admin extends CI_Controller {
 		
 		  if ($this->form_validation->run() == FALSE)
 		{
-			$this->data['gst']=$this->admin_model->get_gst();
+			$this->data['gst']=$this->admin_model->get_gst(true);
 			$this->data['categories']=$this->admin_model->get_service_cats();
 			
 			if($this->session->user_type=='superadmin')
@@ -3033,7 +3033,7 @@ class Admin extends CI_Controller {
 			
 			
 			$result=$this->admin_model->check_service_id($id);
-			$this->data['gst']=$this->admin_model->get_gst();
+			$this->data['gst']=$this->admin_model->get_gst(true);
 			$this->data['categories']=$this->admin_model->get_service_cats();
 			$this->data['pricing']=$this->admin_model->get_service_pricing($id);
 	
@@ -3105,7 +3105,7 @@ class Admin extends CI_Controller {
 		{
 			
 
-			$this->data['gst']=$this->admin_model->get_gst();
+			$this->data['gst']=$this->admin_model->get_gst(true);
 			$this->data['categories']=$this->admin_model->get_service_cats();
 
 			
@@ -4632,10 +4632,6 @@ class Admin extends CI_Controller {
 		}
 		else
 		{
-			
-
-			
-			
 	
 			$data1['template_name']=$this->input->post('template_name');
 			$data1['template_subject']=$this->input->post('template_subject');
