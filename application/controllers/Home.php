@@ -47,6 +47,18 @@ class Home extends CI_Controller {
 	}
 	
 	
+	public function cart()
+	{
+		$this->data['cart']	=	get_cart_data();
+		$this->load->view('public/templates/header',$this->data);
+		$this->load->view('public/cart',$this->data);
+		$this->load->view('public/templates/footer',$this->data);
+
+	}		
+	
+
+	
+	
 	
 	
 }

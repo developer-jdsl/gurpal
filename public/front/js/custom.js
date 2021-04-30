@@ -304,11 +304,11 @@ $(document).ready(function() {
 
      // footer always on bottom
     var docHeight = $(window).height();
-   var footerHeight = $('#main-footer').height();
-   var footerTop = $('#main-footer').position().top + footerHeight;
+   var footerHeight = $('#footer').height();
+   var footerTop = $('#footer').position().top + footerHeight;
    
    if (footerTop < docHeight) {
-    $('#main-footer').css('margin-top', (docHeight - footerTop) + 'px');
+    $('#footer').css('margin-top', (docHeight - footerTop) + 'px');
    }
 
 });
@@ -325,16 +325,6 @@ $('#popup-gallery').each(function() {
     });
 });
 
-// Lighbox gallery
-$('#popup-gallery').each(function() {
-    $(this).magnificPopup({
-        delegate: 'a.popup-gallery-image',
-        type: 'image',
-        gallery: {
-            enabled: true
-        }
-    });
-});
 
 // Lighbox image
 $('.popup-image').magnificPopup({
@@ -348,3 +338,198 @@ $(window).load(function() {
         });
     }
 });
+
+$('.size_li').click(function(){
+var id=$(this).data('id');
+$('.size_li').removeClass('active');
+$(this).addClass('active');
+
+$('.color_li').removeClass('active');
+$('.color_li').hide();
+$('[data-sizeid="'+id+'"]').show();
+$('.color_ul').find('li:visible:first').addClass('active');
+	
+});
+
+$('.color_li').click(function(){
+var id=$(this).data('id');
+$('.color_li').removeClass('active');
+$(this).addClass('active');
+	
+});
+
+$('.add_to_cart').click(function(){
+var size_id=$('.size_ul .active').data('id');
+var color_id=$('.color_ul .active').data('id');
+var product_id=$(this).data('pid');
+
+$.post(base_url+"product/add_to_cart",
+		{size_id: size_id,
+		 color_id:color_id,
+		 product_id:product_id},
+	 function(result){
+		 if(result && result!="fail")
+		 {
+			 $(".shopping-cart-box").html(result); 
+		 }
+		 else
+		 {
+			 alert('Product Currenlty Not Available');
+		 }
+     
+    });
+
+
+	
+});
+
+$(document).on('change', '#cart-quantity' ,function (e) {
+var qty=$(this).val();
+var pid=$(this).data('id');
+
+			$.post(base_url+"product/qty_update",   // url
+			  {pid:pid,qty:qty}, // data to be submit
+			   function(data, status, jqXHR) { // success callback
+			   var resp=JSON.parse(data);
+			
+			   
+			   if(resp.status=='success')
+			   {
+				
+					 $(".shopping-cart-box").html(resp.html); 
+					 $("#cart_gst").html('₹'+resp.gst); 
+					 $("#cart_subtotal").html('₹'+resp.subtotal); 
+					 $("#cart_total").html('₹'+resp.gtotal); 
+					 	 $("#td_subt").html('₹'+resp.subtotal); 
+			   }
+			   else
+		 {
+			 alert('Item can not be removed try again');
+		 }
+				}).done(function() { })
+				  .fail(function(jqxhr, settings, ex) { alert('failed, ' + ex); });
+	
+	
+});
+
+$('.cart-item-plus').click(function(){
+
+var qty=$('#cart-quantity').val();
+var pid=$('#cart-quantity').data('id');
+
+			$.post(base_url+"product/qty_update",   // url
+			  {pid:pid,qty:qty}, // data to be submit
+			   function(data, status, jqXHR) { // success callback
+			   var resp=JSON.parse(data);
+			
+			   
+			   if(resp.status=='success')
+			   {
+				
+					 $(".shopping-cart-box").html(resp.html); 
+					 $("#cart_gst").html('₹'+resp.gst); 
+					 $("#cart_subtotal").html('₹'+resp.subtotal); 
+					 $("#cart_total").html('₹'+resp.gtotal); 
+					 	 $("#td_subt").html('₹'+resp.subtotal); 
+			   }
+			   else
+		 {
+			 alert('Item can not be removed try again');
+		 }
+				}).done(function() { })
+				  .fail(function(jqxhr, settings, ex) { alert('failed, ' + ex); });
+
+
+	
+});
+
+$('.cart-item-minus').click(function(){
+if($('#cart-quantity').val()==0)
+{
+	$('#cart-quantity').val(1);
+}
+
+var qty=$('#cart-quantity').val();
+var pid=$('#cart-quantity').data('id');
+
+			$.post(base_url+"product/qty_update",   // url
+			  {pid:pid,qty:qty}, // data to be submit
+			   function(data, status, jqXHR) { // success callback
+			   var resp=JSON.parse(data);
+			
+			   
+			   if(resp.status=='success')
+			   {
+				
+					 $(".shopping-cart-box").html(resp.html); 
+					 $("#cart_gst").html('₹'+resp.gst); 
+					 $("#cart_subtotal").html('₹'+resp.subtotal); 
+					 $("#cart_total").html('₹'+resp.gtotal); 
+					 $("#td_subt").html('₹'+resp.subtotal); 
+					 
+			   }
+			   else
+		 {
+			 alert('Item can not be removed try again');
+		 }
+				}).done(function() { })
+				  .fail(function(jqxhr, settings, ex) { alert('failed, ' + ex); });
+
+
+	
+});
+
+
+
+$('.add_to_cart_list').click(function(){
+
+var pid=$(this).data('id');
+
+$.post(base_url+"product/add_to_cart_list",
+		{pid:pid},
+	 function(result){
+		 if(result && result!="fail")
+		 {
+			 $(".shopping-cart-box").html(result); 
+		 }
+		 else
+		 {
+			 alert('Product Currenlty Not Available');
+		 }
+     
+    });
+
+
+	
+});
+
+
+		 $('.cart-item-remove').click(function(){
+			var pid=$(this).data('id');
+			$.post(base_url+"product/remove_from_cart",   // url
+			   { pid: pid}, // data to be submit
+			   function(data, status, jqXHR) { // success callback
+			   var resp=JSON.parse(data);
+			
+			   
+			   if(resp.status=='success')
+			   {
+					 $("#"+pid).remove();
+					 $(".shopping-cart-box").html(resp.html); 
+					 $("#cart_gst").html('₹'+resp.gst); 
+					 $("#cart_subtotal").html('₹'+resp.subtotal); 
+					 $("#cart_total").html('₹'+resp.gtotal); 
+					 $("#td_subt").html('₹'+resp.subtotal); 
+			   }
+			   else
+		 {
+			 alert('Item can not be removed try again');
+		 }
+				}).done(function() { })
+				  .fail(function(jqxhr, settings, ex) { alert('failed, ' + ex); });
+
+
+			});
+			
+			
+

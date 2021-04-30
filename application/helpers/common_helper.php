@@ -184,6 +184,24 @@ function get_email_template($tid=null)
 	
 	return '';
 }
+
+function get_cart_data()
+{
+	$CI = & get_instance();	
+
+	if($CI->session->cart_data)
+	{
+		return $CI->session->cart_data;
+	}
+	
+	else
+	{
+		
+		return false;
+	}
+	
+	
+}
     
 	
 	

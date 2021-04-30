@@ -117,3 +117,19 @@
     color: #6e8cd7;
 }
 
+.variation_ul li{
+border-radius:50%;	
+border:1px solid black;	
+height:30px;
+width:30px;
+text-align:center;
+ line-height: 30px;
+}
+
+.size_li.active, .color_li.active{
+	border:1px solid red;
+}
+
+.cart-item-image img{
+	width:70px !important;
+}

@@ -161,15 +161,19 @@
 					<?php foreach($products as $product) { ?>
                         <div class="col-md-4">
                             <div class="product-thumb">
+							<a  href="<?=base_url('product/'.$product['product_slug'])?>">
                                 <header class="product-header">
                                     <img src="<?=base_url('uploads/product/'.$product['product_image'])?>" alt="<?=$product['product_name']?>" title="<?=$product['product_name']?>" />
-                                    <div class="product-quick-view">
-                                        <a class="fa fa-eye popup-text" href="#product-quick-view-dialog" data-effect="mfp-move-from-top" data-toggle="tooltip" data-placement="top" title="Quick View"></a>
+                                    
+									<div class="product-quick-view">
+                                       <!-- <a class="fa fa-eye popup-text" href="#product-quick-view-dialog" data-effect="mfp-move-from-top" data-toggle="tooltip" data-placement="top" title="Quick View"></a> -->
                                     </div>
+									
                                     <div class="product-secondary-image">
                                         <img src="<?=base_url('uploads/product/'.$product['product_image'])?>" alt="<?=$product['product_name']?>" title="<?=$product['product_name']?>" />
                                     </div>
                                 </header>
+								</a>
                                 <div class="product-inner">
                                     <ul class="icon-group icon-list-rating icon-list-non-rated" title="not rated yet">
                                         <li><i class="fa fa-star"></i>
@@ -183,7 +187,7 @@
                                         <li><i class="fa fa-star"></i>
                                         </li>
                                     </ul>
-                                    <h5 class="product-title"><?=$product['product_name']?></h5>
+                                    <h5 class="product-title"><a  href="<?=base_url('product/'.$product['product_slug'])?>"><?=$product['product_name']?></a></h5>
                                     <p class="product-desciption"><?=word_limiter($product['product_description'], 20);?></p>
                                     <div class="product-meta">
                                         <ul class="product-price-list">
@@ -203,10 +207,12 @@
 										<?php  } ?>
                                         </ul>
                                         <ul class="product-actions-list">
-                                            <li><a class="btn btn-sm" href="#"><i class="fa fa-shopping-cart"></i> To Cart</a>
+                                            <li><a class="btn btn-sm add_to_cart_list" href="javascript:void(0);" data-id="<?=$product['pk_price_id']?>" ><i class="fa fa-shopping-cart"></i> To Cart</a>
                                             </li>
-                                            <li><a class="btn btn-sm"><i class="fa fa-bars"></i> Details</a>
+											<?php if($product['product_slug']) { ?>
+                                            <li><a class="btn btn-sm" href="<?=base_url('product/'.$product['product_slug'])?>"><i class="fa fa-bars"></i> Details</a>
                                             </li>
+											<?php } ?>
                                         </ul>
                                     </div>
                                 </div>

@@ -42,7 +42,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-2">
-                        <a href="<?=base_url()?>" class="logo mt5">
+                        <a href="index.html" class="logo mt5">
                             <img src="<?=base_url('public/front/img/logo-small-dark.png')?>" alt="Image Alternative text" title="Image Title" />
                         </a>
                     </div>
