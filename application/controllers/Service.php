@@ -1,14 +1,15 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Product extends CI_Controller {
+class Service extends CI_Controller {
 	
 		public function __construct(){
 		parent::__construct();
-		 $this->load->model('product_model');
+		 $this->load->model('service_model');
 		 $this->load->model('home_model');
-		 $this->data['cities']			=	$this->home_model->get_cities();
-		  construct_init();
+		  $this->data['cities']			=	$this->home_model->get_cities();
+		   construct_init();
+		
  	}
 		 
 		function _remap($method,$args)
@@ -24,18 +25,18 @@ class Product extends CI_Controller {
      
     }
 	
-		public function index($slug)
+		public function index($slug,$args)
 	{
+		
 		if($slug)
 		{
-			
-		$tmp=$this->data['product']			=	$this->home_model->get_product_by_slug($slug);
-		
-		if($this->data['product'])
+		$city=@$args[0];
+		$tmp=$this->data['service']			=	$this->home_model->get_service_by_slug($slug,$city);
+		if($this->data['service'])
 		{
 		
-		$this->data['gallery']			=	$this->home_model->get_product_gallery($tmp['pk_product_id']);
-		$this->data['featured_products']=	$this->home_model->get_products();
+		$this->data['gallery']			=	$this->home_model->get_service_gallery($tmp['pk_service_id']);
+		$this->data['featured_services']=	$this->home_model->get_services();
 		//$this->data['services']		=	$this->home_model->get_services();
 		//$this->data['banners']		=	$this->home_model->get_banners();
 		$this->data['brands']			=	$this->home_model->get_brands();
@@ -44,7 +45,7 @@ class Product extends CI_Controller {
 		
 		$this->load->view('public/templates/header',$this->data);
 		$this->load->view('public/templates/sidebar',$this->data);
-		$this->load->view('public/single_product',$this->data);
+		$this->load->view('public/single_service',$this->data);
 		$this->load->view('public/templates/footer',$this->data);
 		}
 		else
@@ -69,10 +70,8 @@ class Product extends CI_Controller {
 		$cart_data=$cur_data=array();
 		$html=$html_li="";
 		$updated=0;
-		$data['pid']=$this->input->post('product_id');
-		$data['sid']=$this->input->post('size_id');
-		$data['cid']=$this->input->post('color_id');
-		$details=$this->product_model->get_variation_details($data);
+		$data['sid']=$this->input->post('service_id');
+		$details=$this->service_model->get_variation_details($data);
 		if($details)
 		{
 			if($this->session->cart_data)
@@ -81,7 +80,7 @@ class Product extends CI_Controller {
 				
 				foreach($cart_data as $key=>$cd)
 				{
-					if($cd['item_pid']==$details['pk_price_id'] && $cd['item_type']=='product')
+					if($cd['item_pid']==$details['pk_pricing_id'] && $cd['item_type']=='service')
 					{
 						$cart_data[$key]['item_qty']=$cd['item_qty']+1;	
 						$updated=1;
@@ -93,16 +92,16 @@ class Product extends CI_Controller {
 			}
 			if($updated==0)
 			{
-			$cur_data['item_name']=$details['product_name'];
-					$cur_data['item_slug']=base_url('product/'.$details['product_slug']);
-					$cur_data['item_image']=base_url('uploads/product/'.$details['product_image']);
-					$cur_data['item_type']='product';
+			$cur_data['item_name']=$details['service_name'];
+					$cur_data['item_slug']=base_url('city/'.$this->session->city.'/service/'.$details['service_slug']);
+					$cur_data['item_image']=base_url('uploads/service/'.$details['service_banners']);
+					$cur_data['item_type']='service';
 					$cur_data['item_qty']=1;
-						$cur_data['item_price']=($details['discount_price']>0)?$details['discount_price']:$details['original_price'];
+					$cur_data['item_price']=($details['discount_price']>0)?$details['discount_price']:$details['original_price'];
 					$cur_data['item_gstrate']=$details['gst_slab'];
 					$gst=number_format((((intval($details['gst_slab']))/100)*$cur_data['item_price']), 2, '.', '');
 					$cur_data['item_gstvalue']=$gst;
-					$cur_data['item_pid']=$details['pk_price_id'];
+					$cur_data['item_pid']=$details['pk_pricing_id'];
 					$cart_data[]=$cur_data;	
 			
 			}
@@ -154,7 +153,7 @@ class Product extends CI_Controller {
 		$html=$html_li="";
 		$updated=0;
 		$data['pid']=$this->input->post('pid');
-		$details=$this->product_model->get_variation_detail($data);
+		$details=$this->service_model->get_variation_detail($data);
 		if($details)
 		{
 			if($this->session->cart_data)
@@ -163,7 +162,7 @@ class Product extends CI_Controller {
 				
 				foreach($cart_data as $key=>$cd)
 				{
-					if($cd['item_pid']==$details['pk_price_id'] && $cd['item_type']=='product')
+					if($cd['item_pid']==$details['pk_pricing_id'] && $cd['item_type']=='service')
 					{
 						$cart_data[$key]['item_qty']=$cd['item_qty']+1;	
 						$updated=1;
@@ -175,16 +174,16 @@ class Product extends CI_Controller {
 			}
 			if($updated==0)
 			{
-			$cur_data['item_name']=$details['product_name'];
-					$cur_data['item_slug']=base_url('product/'.$details['product_slug']);
-					$cur_data['item_image']=base_url('uploads/product/'.$details['product_image']);
-					$cur_data['item_type']='product';
+					$cur_data['item_name']=$details['service_name'];
+					$cur_data['item_slug']=base_url('city/'.$this->session->city.'/service/'.$details['service_slug']);
+					$cur_data['item_image']=base_url('uploads/service/'.$details['service_banners']);
+					$cur_data['item_type']='service';
 					$cur_data['item_qty']=1;
-						$cur_data['item_price']=($details['discount_price']>0)?$details['discount_price']:$details['original_price'];
+					$cur_data['item_price']=($details['discount_price']>0)?$details['discount_price']:$details['original_price'];
 					$cur_data['item_gstrate']=$details['gst_slab'];
 					$gst=number_format((((intval($details['gst_slab']))/100)*$cur_data['item_price']), 2, '.', '');
 					$cur_data['item_gstvalue']=$gst;
-					$cur_data['item_pid']=$details['pk_price_id'];
+					$cur_data['item_pid']=$details['pk_pricing_id'];
 					$cart_data[]=$cur_data;	
 			
 			}
@@ -236,7 +235,7 @@ class Product extends CI_Controller {
 		$html=$html_li="";
 		$updated=$subt=$gst=0;
 		$data['pid']=$this->input->post('pid');
-		$details=$this->product_model->get_variation_detail($data);
+		$details=$this->service_model->get_variation_detail($data);
 		$st=array('status'=>'fail','html'=>'','subtotal'=>0,'gst'=>0,'gtotal'=>0,'shipping'=>0);
 		if($details)
 		{
@@ -246,12 +245,10 @@ class Product extends CI_Controller {
 				
 				foreach($cart_data as $key=>$cd)
 				{
-					if($cd['item_pid']==$data['pid'] && $cd['item_type']=='product')
+					if($cd['item_pid']==$data['pid'] && $cd['item_type']=='service')
 					{
 						unset($cart_data[$key]);
-						
-					
-						
+		
 					}
 					
 				}
@@ -301,78 +298,7 @@ class Product extends CI_Controller {
 			echo json_encode($st);
 	}
 	
-	
-	
-	public function qty_update()
-	
-	{
-		$cart_data=$cur_data=array();
-		$html=$html_li="";
-		$updated=$subt=$gst=0;
-		$data['pid']=$this->input->post('pid');
-		$qty=$this->input->post('qty');
-		$details=$this->product_model->get_variation_detail($data);
-		$st=array('status'=>'fail','html'=>'','subtotal'=>0,'gst'=>0,'gtotal'=>0,'shipping'=>0);
-		if($details)
-		{
-			if($this->session->cart_data)
-			{
-				$cart_data=$this->session->cart_data;
-				
-				foreach($cart_data as $key=>$cd)
-				{
-					if($cd['item_pid']==$data['pid'] && $cd['item_type']=='product')
-					{
-						$cart_data[$key]['item_qty']=$qty;
-						
-					}
-					
-				}
-				
-			}
-			
-			if($this->session->cart_data)
-			{
-				$this->session->cart_data=$cart_data;
-				$st['status']='success';
-			}
-			else
-			{
-				$this->session->set_userdata('cart_data',$cart_data);
-			}
-			
-			$html.='<ul class="shopping-cart-items">';
-			foreach($cart_data as $item) {
-            $html_li.= '<li>
-						<a href="'.$item['item_slug'].'">
-							<img src="'.$item['item_image'].'" alt="'.$item['item_name'].'" title="'.$item['item_name'].'">
-							<h5>'.$item['item_name'].'</h5><span class="shopping-cart-item-price">₹'.($item['item_qty']*$item['item_price']).'(x'.$item['item_qty'].')</span>
-						</a>
-					</li>';
-					$subt=$subt+($item['item_price']*$item['item_qty']);
-				    $gst=$gst+($item['item_gstvalue']*$item['item_qty']);
-			}
-                                      
-              $html.=$html_li.' </ul>';
-			  
-			if($html_li)
-			{
-			$html.=' <ul class="list-inline text-center">
-			<li><a href="'.base_url('cart').'"><i class="fa fa-shopping-cart"></i> View Cart</a></li>
-			<li><a href="'.base_url('checkout').'"><i class="fa fa-check-square"></i> Checkout</a></li>
-			</ul>';
-			}
-			
-			$st['html']=$html;
-			$st['gst']=$gst;
-			$st['subtotal']=$subt;
-			$st['gtotal']=$st['gst']+$st['subtotal'];
-			
-		
-		}
-		
-			echo json_encode($st);
-	}
+
 	
 	
 	

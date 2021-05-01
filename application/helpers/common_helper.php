@@ -202,8 +202,43 @@ function get_cart_data()
 	
 	
 }
+
+
+function  construct_init()
+{
+	
+	$CI = & get_instance();	
+	if(!$CI->session->city)
+	{
+		$r1=$CI->db->select('city_slug')->from('tbl_cities')->where(array('active'=>1,'is_deleted'=>0,'is_default'=>1))->get();
+		if($r1)
+		{
+			$r1=$r1->row_array();
+			$CI->session->set_userdata('city',$r1['city_slug']);
+			
+		}
+		
+		
+	}
+	
+}
     
 	
+	function  get_city_state_id($city_slug=null)
+	{
+		if($city_slug)
+		{
+			$CI = & get_instance();	
+				$r1=$CI->db->select('pk_city_id as cid,fk_state_id as sid')->from('tbl_cities')->where(array('active'=>1,'is_deleted'=>0,'city_slug'=>$city_slug))->get();
+				if($r1)
+				{
+					$r1=$r1->row_array();
+					return $r1;
+				}
+		}
+		return false;
+		
+	}
 	
      
 ?>

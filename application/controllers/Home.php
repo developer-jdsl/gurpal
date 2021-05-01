@@ -6,7 +6,8 @@ class Home extends CI_Controller {
 		public function __construct(){
 		parent::__construct();
 		 $this->load->model('home_model');
-		
+		 $this->data['cities']			=	$this->home_model->get_cities();
+		 construct_init();
  	}
 		 
 
@@ -56,7 +57,19 @@ class Home extends CI_Controller {
 
 	}		
 	
-
+	public function set_city()
+	{
+		$city=$this->input->post('city');
+		if($city)
+		{
+			$this->home_model->set_city($city);
+			echo 'true';
+		}
+		else
+		{
+			echo 'false';
+		}
+	}
 	
 	
 	

@@ -54,3 +54,5 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 $route['cart']='home/cart';
+
+$route['city/(:any)/service/(:any)']='service/$2/$1';

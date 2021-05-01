@@ -383,6 +383,58 @@ $.post(base_url+"product/add_to_cart",
 	
 });
 
+
+$('.service_single_select').change(function(){
+var id=$(this).val();
+var price=$(this).find(':selected').data('price');
+	$('.product-info-price').html(price);
+});
+
+
+$('.add_service').click(function(){
+
+var service_id=$(this).data('sid');
+
+$.post(base_url+"service/add_to_cart",
+		{service_id:service_id},
+	 function(result){
+		 if(result && result!="fail")
+		 {
+			 $(".shopping-cart-box").html(result); 
+		 }
+		 else
+		 {
+			 alert('Product Currenlty Not Available');
+		 }
+     
+    });
+
+});
+
+
+$('.add_service_list').click(function(){
+
+var pid=$(this).data('id');
+
+$.post(base_url+"service/add_to_cart_list",
+		{pid:pid},
+	 function(result){
+		 if(result && result!="fail")
+		 {
+			 $(".shopping-cart-box").html(result); 
+		 }
+		 else
+		 {
+			 alert('Product Currenlty Not Available');
+		 }
+     
+    });
+
+
+	
+});
+
+
 $(document).on('change', '#cart-quantity' ,function (e) {
 var qty=$(this).val();
 var pid=$(this).data('id');
@@ -503,10 +555,24 @@ $.post(base_url+"product/add_to_cart_list",
 	
 });
 
-
+$(document).ready(function() {
+    $('.select2').select2();
+	
+	$('.select2').on('change', function (e) {
+    var data = $(this).val();
+	$.post(base_url+"home/set_city",
+		{city:data},
+	 function(result){
+		 window.location.reload();
+     
+    });
+    
+});
+});
 		 $('.cart-item-remove').click(function(){
 			var pid=$(this).data('id');
-			$.post(base_url+"product/remove_from_cart",   // url
+			var type=$(this).data('type');
+			$.post(base_url+type+"/remove_from_cart",   // url
 			   { pid: pid}, // data to be submit
 			   function(data, status, jqXHR) { // success callback
 			   var resp=JSON.parse(data);
@@ -514,12 +580,20 @@ $.post(base_url+"product/add_to_cart_list",
 			   
 			   if(resp.status=='success')
 			   {
-					 $("#"+pid).remove();
+				   if(type=='product')
+				   {
+					  $("#"+pid).remove();  
+				   }
+				   else
+				   {
+					  $("#s"+pid).remove();   
+				   }
+					
 					 $(".shopping-cart-box").html(resp.html); 
 					 $("#cart_gst").html('₹'+resp.gst); 
 					 $("#cart_subtotal").html('₹'+resp.subtotal); 
 					 $("#cart_total").html('₹'+resp.gtotal); 
-					 $("#td_subt").html('₹'+resp.subtotal); 
+					
 			   }
 			   else
 		 {
@@ -530,6 +604,7 @@ $.post(base_url+"product/add_to_cart_list",
 
 
 			});
+			
 			
 			
 

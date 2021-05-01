@@ -400,11 +400,13 @@ class Admin extends CI_Controller {
 			
 			$data['fk_state_id']=$this->input->post('state_name');
 			$data['city_name']=$this->input->post('city_name');
+			$data['city_slug']=$this->input->post('city_slug');
 			$data['active']=$this->input->post('active');
 			$data['pk_city_id']=$id;
 			$data['meta_title']=$this->input->post('meta_title');
 			$data['meta_keywords']=$this->input->post('meta_keywords');
 			$data['meta_description']=$this->input->post('meta_description');
+			
 		
 			
 			$return=$this->admin_model->edit_city($data);

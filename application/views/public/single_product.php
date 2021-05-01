@@ -200,7 +200,7 @@
                                         </ul>
 										
                                         <ul class="product-actions-list">
-                                            <li><a class="btn btn-sm" href="#"><i class="fa fa-shopping-cart"></i> To Cart</a>
+                                            <li><a class="btn btn-sm add_to_cart_list" href="javascript:void(0);" data-id="<?=$product['pk_price_id']?>"><i class="fa fa-shopping-cart"></i> To Cart</a>
                                             </li>
                                            <?php if($product['product_slug']) { ?>
                                             <li><a class="btn btn-sm" href="<?=base_url('product/'.$product['product_slug'])?>"><i class="fa fa-bars"></i> Details</a>

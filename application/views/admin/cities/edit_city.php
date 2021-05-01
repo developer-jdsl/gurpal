@@ -52,6 +52,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 										
 										
 										 <div class="form-group">
+										<label><?=keyword_value('city_slug','City Slug')?></label>
+                                            <input type="text" name="city_slug" value="<?=@$results['city_slug']?>" class="form-control form-control-user" >
+                                        </div>
+										
+										 <div class="form-group">
 										<label><?=keyword_value('meta_title','Meta Title')?></label>
                                             <input type="text" name="meta_title" value="<?=@$results['meta_title']?>" class="form-control form-control-user" >
                                         </div>

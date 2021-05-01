@@ -22,7 +22,7 @@
     <!--[if lt IE 9]>
 	<link rel="stylesheet" type="text/css" href="css/ie.css" />
 <![endif]-->
-
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <!-- Your custom styles (blank file) -->
     <link rel="stylesheet" href="<?=base_url('public/front/css/mystyles.css')?>">
 <script> var base_url="<?=base_url()?>"; </script>
@@ -80,55 +80,7 @@
                         <div class="flexnav-menu-button" id="flexnav-menu-button">Menu</div>
                         <nav>
                             <ul class="nav nav-pills flexnav" id="flexnav" data-breakpoint="800">
-                                <li class="active"><a href="index.html">Home</a>
-                                    <ul>
-                                        <li class="active"><a href="index-shop-layout-1.html">Shop Layout</a>
-                                            <ul>
-                                                <li><a href="index-shop-layout-1.html">Layout 1</a>
-                                                </li>
-                                                <li><a href="index-shop-layout-2.html">Layout 2</a>
-                                                </li>
-                                                <li class="active"><a href="index-shop-layout-3.html">Layout 3</a>
-                                                </li>
-                                                <li><a href="index-shop-layout-4.html">Layout 4</a>
-                                                </li>
-                                                <li><a href="index-shop-layout-5.html">Layout 5</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="index-coupon-layout-1.html">Coupon Layout</a>
-                                            <ul>
-                                                <li><a href="index-coupon-layout-1.html">Layout 1</a>
-                                                </li>
-                                                <li><a href="index-coupon-layout-2.html">Layout 2</a>
-                                                </li>
-                                                <li><a href="index-coupon-layout-3.html">Layout 3</a>
-                                                </li>
-                                                <li><a href="index.html">Layout 4</a>
-                                                </li>
-                                                <li><a href="index-coupon-layout-5.html">Layout 5</a>
-                                                </li>
-                                                <li><a href="index-coupon-layout-6.html">Layout 6</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="index-header-layout-1.html">Headers</a>
-                                            <ul>
-                                                <li><a href="index-header-layout-1.html">Layout 1</a>
-                                                </li>
-                                                <li><a href="index-header-layout-2.html">Layout 2</a>
-                                                </li>
-                                                <li><a href="index-header-layout-3.html">Layout 3</a>
-                                                </li>
-                                                <li><a href="index-header-layout-4.html">Layout 4</a>
-                                                </li>
-                                                <li><a href="index-header-layout-5.html">Layout 5</a>
-                                                </li>
-                                                <li><a href="index-header-logged-user.html">Logged User</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
+                                <li class="active"><a href="<?=base_url()?>">Home</a>
                                 </li>
                                 <li><a href="category-page-shop.html">Category</a>
                                     <ul>
@@ -301,7 +253,7 @@
                     </div>
                     <div class="col-md-6">
                         <ul class="login-register">
-                            <li class="shopping-cart"><a href="page-cart.html"><i class="fa fa-shopping-cart"></i>My Cart</a>
+                            <li class="shopping-cart"><a href="<?=base_url('cart')?>"><i class="fa fa-shopping-cart"></i>My Cart</a>
                                 <div class="shopping-cart-box">
 								<?php $header_cart_data=get_cart_data();?>
                                     <ul class="shopping-cart-items">
@@ -322,9 +274,9 @@
                                     </ul>
 									<?php if(@$hflag==1) { ?>
                                     <ul class="list-inline text-center">
-                                        <li><a href="page-cart.html"><i class="fa fa-shopping-cart"></i> View Cart</a>
+                                        <li><a href="<?=base_url('cart')?>"><i class="fa fa-shopping-cart"></i> View Cart</a>
                                         </li>
-                                        <li><a href="page-checkout.html"><i class="fa fa-check-square"></i> Checkout</a>
+                                        <li><a href="<?=base_url('checkout')?>"><i class="fa fa-check-square"></i> Checkout</a>
                                         </li>
                                     </ul>
 									
@@ -444,7 +396,12 @@
                         <label><i class="fa fa-map-marker"></i><span>In</span>
                         </label>
                         <div class="search-area-division search-area-division-location">
-                            <input class="form-control" type="text" placeholder="Boston" />
+                    
+							<select class="form-control select2">
+							<?php foreach($cities as $city) { ?>
+							<option value="<?=$city['city_slug']?>" <?php if($this->session->city==$city['city_slug']) { echo 'selected'; } ?> > <?=$city['city_name']?></option>
+							<?php } ?>
+							</select>
                         </div>
                     </div>
                     <div class="col-md-1">

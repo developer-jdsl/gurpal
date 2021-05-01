@@ -137,6 +137,7 @@ class Admin_model extends CI_Model {
 	   {
 		   $this->db->insert('tbl_cities',array('city_name'=>$data['city_name'],'active'=>$data['active'],'fk_state_id'=>$data['fk_state_id'],'meta_title'=>$data['meta_title'],'meta_description'=>$data['meta_description'],'meta_keywords'=>$data['meta_keywords']));
 		   $id=$this->db->insert_id();
+		    $slug=$this->create_slug($id,'pk_city_id','tbl_cities','city_slug',$data['city_name'],true);
 		   if($id)
 		   {
 				return array('status'=>true);
@@ -151,8 +152,10 @@ class Admin_model extends CI_Model {
    {
 	   if($data)
 	   {
+		   	   $slug=!empty($data['city_slug'])?$data['city_slug']:$data['city_name'];
+		   $data['city_slug']=  $this->create_slug($data['pk_city_id'],'pk_city_id','tbl_cities','city_slug',$slug);
 		   $this->db->where(array('pk_city_id'=>$data['pk_city_id']));
-		   $id=$this->db->update('tbl_cities',array('city_name'=>$data['city_name'],'active'=>$data['active'],'fk_state_id'=>$data['fk_state_id'],'meta_title'=>$data['meta_title'],'meta_description'=>$data['meta_description'],'meta_keywords'=>$data['meta_keywords']));
+		   $id=$this->db->update('tbl_cities',array('city_name'=>$data['city_name'],'active'=>$data['active'],'fk_state_id'=>$data['fk_state_id'],'meta_title'=>$data['meta_title'],'meta_description'=>$data['meta_description'],'city_slug'=>$data['city_slug'],'meta_keywords'=>$data['meta_keywords']));
 		   
 		   if($id)
 		   {

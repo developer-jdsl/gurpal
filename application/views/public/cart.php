@@ -12,7 +12,7 @@
                         <tbody>
 						<?php 
 						$subt=$gst=0;foreach($cart as $row) { ?>
-                            <tr id="<?=$row['item_pid']?>">
+                            <tr id="<?php if($row['item_type']=='product'){ echo $row['item_pid'];}else { echo 's'.$row['item_pid'];}?>">
                                 <td class="cart-item-image">
                                     <a href="<?=$row['item_slug']?>">
                                         <img src="<?=$row['item_image']?>" alt="<?=$row['item_name']?>" title="<?=$row['item_name']?>" />
@@ -20,11 +20,13 @@
                                 </td>
                                 <td><a href="<?=$row['item_slug']?>"><?=$row['item_name']?></a>
                                 </td>
-                                <td class="cart-item-quantity"><i class="fa fa-minus cart-item-minus"></i>
-                                    <input type="text" name="cart-quantity" id="cart-quantity" min="1" data-id="<?=$row['item_pid']?>" class="cart-quantity" value="<?=$row['item_qty']?>" /><i class="fa fa-plus cart-item-plus"></i>
+                                <td class="cart-item-quantity">
+								<?php if($row['item_type']=='product'){ ?> <i class="fa fa-minus cart-item-minus"></i> <?php } ?>
+                                    <input type="text" name="cart-quantity" id="cart-quantity" min="1" data-id="<?=$row['item_pid']?>" class="cart-quantity" value="<?=$row['item_qty']?>" <?php if($row['item_type']!='product'){ echo 'disabled';} ?> />
+								<?php if($row['item_type']=='product'){ ?><i class="fa fa-plus cart-item-plus"></i> <?php } ?>
                                 </td>
                                 <td id="td_subt">₹<?=$row['item_price']*$row['item_qty']?></td>
-                                <td class="cart-item-remove" data-id="<?=$row['item_pid']?>">
+                                <td class="cart-item-remove" data-id="<?=$row['item_pid']?>" data-type="<?=$row['item_type']?>">
                                     <a class="fa fa-times" href="javascript:void(0);"></a>
                                 </td>
                             </tr>

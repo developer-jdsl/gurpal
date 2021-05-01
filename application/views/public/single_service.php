@@ -36,10 +36,9 @@
                     <div class="row">
                         <div class="col-md-7">
                             <div class="fotorama" data-nav="thumbs" data-allowfullscreen="1" data-thumbheight="150" data-thumbwidth="150">
-                                <img src="img/800x600.png" alt="Image Alternative text" title="Gamer Chick" />
-                                <img src="img/800x600.png" alt="Image Alternative text" title="AMaze" />
-                                <img src="img/800x600.png" alt="Image Alternative text" title="Urbex Esch/Lux with Laney and Laaaaag" />
-                                <img src="img/800x600.png" alt="Image Alternative text" title="Food is Pride" />
+						
+                                <img src="<?=base_url('uploads/service/'.$service['service_banners'])?>" alt="<?=$service['service_name']?>" title="<?=$service['service_name']?>" />
+                      
                             </div>
                         </div>
                         <div class="col-md-5">
@@ -56,18 +55,34 @@
                                     <li><i class="fa fa-star-half-empty"></i>
                                     </li>
                                 </ul>	<small><a href="#" class="text-muted">based on 8 reviews</a></small>
-                                <h3>New Glass Collection</h3>
-                                <p class="product-info-price">$150</p>
-                                <p class="text-smaller text-muted">Cum sociosqu nisi dis litora phasellus facilisis curae quis quam fringilla metus consectetur etiam montes eros cras vestibulum et sodales ullamcorper ante himenaeos eleifend amet elit diam tristique nostra quisque</p>
-                                <ul class="icon-list list-space product-info-list">
+                                <h3><?=$service['service_name']?></h3>
+								<?php if($service['discount_price']>0) { ?>
+								 <p class="product-info-price">₹<?=$service['discount_price']?></p>
+                                 <?php }  else  { ?>
+									 <p class="product-info-price">₹<?=$service['original_price']?></p>
+										<?php  } ?>
+                                <p class="text-smaller text-muted"><?=word_limiter($service['service_description'], 150);?></p>
+                                <!--
+								<ul class="icon-list list-space product-info-list">
                                     <li><i class="fa fa-check"></i>Netus mus</li>
                                     <li><i class="fa fa-check"></i>Enim ultricies</li>
                                     <li><i class="fa fa-check"></i>Ridiculus metus</li>
                                     <li><i class="fa fa-check"></i>Non adipiscing</li>
                                     <li><i class="fa fa-check"></i>Natoque mus</li>
                                 </ul>
+								-->
+								
+								<label>Choose :
+								 <select class="form-control service_single_select">
+								 <?php foreach($gallery as $gal) {  ?>
+								 <option value="<?=$gal['pk_pricing_id']?>" data-price="₹<?=$gal['discount_price']?$gal['discount_price']:$gal['original_price']?>" >₹<?=$gal['discount_price']?$gal['discount_price']:$gal['original_price']?> <?=$gal['service_variation']?> (<?=$gal['service_subvariation']?>)</option>
+								 <?php } ?>
+								 </select>
+								 
+								</label>
+								
                                 <ul class="list-inline">
-                                    <li><a href="#" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Add to cart</a>
+                                    <li><a href="javascript:void(0)" data-sid="<?=$service['pk_service_id']?>" class="add_service btn btn-primary"><i class="fa fa-shopping-cart"></i> Add to cart</a>
                                     </li>
                                     <li><a href="#" class="btn"><i class="fa fa-star"></i> To Wishlist</a>
                                     </li>
@@ -82,253 +97,40 @@
                             </li>
                             <li><a href="#tab-2" data-toggle="tab"><i class="fa fa-info"></i>Additional Information</a>
                             </li>
-                            <li><a href="#tab-3" data-toggle="tab"><i class="fa fa-truck"></i>Shipping & Payment</a>
+                           <!-- <li><a href="#tab-3" data-toggle="tab"><i class="fa fa-truck"></i>Shipping & Payment</a>
                             </li>
+							-->
                             <li><a href="#tab-4" data-toggle="tab"><i class="fa fa-comments"></i>Reviews</a>
                             </li>
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane fade in active" id="tab-1">
-                                <p>Faucibus nibh quisque curabitur feugiat amet etiam magnis pulvinar posuere lacinia nisi in nam sapien dignissim nullam at luctus luctus euismod dis bibendum dignissim pretium ipsum placerat mollis ridiculus porta torquent elit rutrum massa sagittis mi nibh semper vitae condimentum mus blandit montes dignissim malesuada facilisis bibendum mauris rutrum ullamcorper</p>
-                                <p>Platea euismod elit tristique vestibulum eleifend eget proin vulputate nascetur natoque iaculis himenaeos ac nunc facilisi dignissim ridiculus elementum litora ante netus purus habitant aliquet penatibus volutpat ultrices quam praesent</p>
-                                <p>Fermentum orci eu vivamus nec magna egestas curae condimentum urna pharetra lorem quam urna egestas ornare suscipit velit vestibulum tortor erat viverra magnis vehicula faucibus luctus turpis ac suscipit interdum</p>
+                               <?=$service['service_description']?>
                             </div>
                             <div class="tab-pane fade" id="tab-2">
-                                <table class="table table-striped mb0">
-                                    <tbody>
-                                        <tr>
-                                            <td>Weight</td>
-                                            <td>1.5kg</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Dimentions</td>
-                                            <td>10 x 20 x 30 cm</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Composition</td>
-                                            <td>100% Cotton</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Size & Fit</td>
-                                            <td>This style comes in a regular fit which fits true to size</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Other Info</td>
-                                            <td>Machine wash according to instructions on care label</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Size</td>
-                                            <td>Small, Medium, Large</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Color</td>
-                                            <td>Brown</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <?=$service['service_features']?>
                             </div>
                             <div class="tab-pane fade" id="tab-3">
                                 <p>Sapien sapien eget elementum elit mollis eu vehicula suspendisse vel hac vulputate proin erat facilisis habitasse libero cursus leo magnis consequat tortor parturient id fermentum dictum enim maecenas curabitur egestas</p>
                                 <p>Blandit ridiculus donec purus mattis praesent netus vitae hendrerit eu tellus nulla viverra varius cursus turpis egestas pellentesque arcu morbi justo turpis ornare ridiculus justo parturient mauris euismod nascetur hendrerit</p>
                             </div>
                             <div class="tab-pane fade" id="tab-4">
-                                <ul class="comments-list">
-                                    <li>
-                                        <!-- REVIEW -->
-                                        <article class="comment">
-                                            <div class="comment-author">
-                                                <img src="img/50x50.png" alt="Image Alternative text" title="Gamer Chick" />
-                                            </div>
-                                            <div class="comment-inner">
-                                                <ul class="icon-group icon-list-rating comment-review-rate" title="4/5 rating">
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star-o"></i>
-                                                    </li>
-                                                </ul><span class="comment-author-name">Bernadette Cornish</span>
-                                                <p class="comment-content">Metus nam scelerisque class est erat conubia rhoncus eu platea convallis dapibus etiam donec facilisi imperdiet lorem ornare nec ad netus hendrerit ligula curae sodales</p>
-                                            </div>
-                                        </article>
-                                    </li>
-                                    <li>
-                                        <!-- REVIEW -->
-                                        <article class="comment">
-                                            <div class="comment-author">
-                                                <img src="img/50x50.png" alt="Image Alternative text" title="Ana 29" />
-                                            </div>
-                                            <div class="comment-inner">
-                                                <ul class="icon-group icon-list-rating comment-review-rate" title="4/5 rating">
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star-o"></i>
-                                                    </li>
-                                                </ul><span class="comment-author-name">Joseph Watson</span>
-                                                <p class="comment-content">Mollis curabitur tincidunt consequat adipiscing potenti conubia elit senectus consequat vitae neque inceptos lorem orci vitae pretium hendrerit suspendisse quisque eros tempus</p>
-                                            </div>
-                                        </article>
-                                    </li>
-                                    <li>
-                                        <!-- REVIEW -->
-                                        <article class="comment">
-                                            <div class="comment-author">
-                                                <img src="img/50x50.png" alt="Image Alternative text" title="Afro" />
-                                            </div>
-                                            <div class="comment-inner">
-                                                <ul class="icon-group icon-list-rating comment-review-rate" title="5/5 rating">
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                </ul><span class="comment-author-name">Frank Mills</span>
-                                                <p class="comment-content">Elit magnis arcu lobortis nec orci a laoreet tristique primis ultrices</p>
-                                            </div>
-                                        </article>
-                                    </li>
-                                    <li>
-                                        <!-- REVIEW -->
-                                        <article class="comment">
-                                            <div class="comment-author">
-                                                <img src="img/50x50.png" alt="Image Alternative text" title="Bubbles" />
-                                            </div>
-                                            <div class="comment-inner">
-                                                <ul class="icon-group icon-list-rating comment-review-rate" title="5/5 rating">
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                </ul><span class="comment-author-name">Cyndy Naquin</span>
-                                                <p class="comment-content">Rhoncus tristique malesuada tristique imperdiet habitant netus sociosqu class vehicula magnis vestibulum pretium per</p>
-                                            </div>
-                                        </article>
-                                    </li>
-                                    <li>
-                                        <!-- REVIEW -->
-                                        <article class="comment">
-                                            <div class="comment-author">
-                                                <img src="img/50x50.png" alt="Image Alternative text" title="Me with the Uke" />
-                                            </div>
-                                            <div class="comment-inner">
-                                                <ul class="icon-group icon-list-rating comment-review-rate" title="5/5 rating">
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                </ul><span class="comment-author-name">Ava McDonald</span>
-                                                <p class="comment-content">Ullamcorper a montes ligula molestie lacus conubia leo senectus tempus ante porta vulputate dis euismod sagittis risus pretium</p>
-                                            </div>
-                                        </article>
-                                    </li>
-                                    <li>
-                                        <!-- REVIEW -->
-                                        <article class="comment">
-                                            <div class="comment-author">
-                                                <img src="img/50x50.png" alt="Image Alternative text" title="AMaze" />
-                                            </div>
-                                            <div class="comment-inner">
-                                                <ul class="icon-group icon-list-rating comment-review-rate" title="4/5 rating">
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star-o"></i>
-                                                    </li>
-                                                </ul><span class="comment-author-name">Carl Butler</span>
-                                                <p class="comment-content">Conubia parturient consequat netus inceptos dapibus platea potenti habitasse eros at fringilla nisl parturient netus ultrices eleifend mus commodo leo sociosqu platea vehicula himenaeos mattis etiam vestibulum pharetra</p>
-                                            </div>
-                                        </article>
-                                    </li>
-                                    <li>
-                                        <!-- REVIEW -->
-                                        <article class="comment">
-                                            <div class="comment-author">
-                                                <img src="img/50x50.png" alt="Image Alternative text" title="Chiara" />
-                                            </div>
-                                            <div class="comment-inner">
-                                                <ul class="icon-group icon-list-rating comment-review-rate" title="4/5 rating">
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star-o"></i>
-                                                    </li>
-                                                </ul><span class="comment-author-name">Keith Churchill</span>
-                                                <p class="comment-content">In vivamus nisi nisi lobortis scelerisque quis nisl ligula torquent mattis consectetur netus commodo senectus primis natoque quisque cursus molestie odio primis massa conubia magnis</p>
-                                            </div>
-                                        </article>
-                                    </li>
-                                    <li>
-                                        <!-- REVIEW -->
-                                        <article class="comment">
-                                            <div class="comment-author">
-                                                <img src="img/50x50.png" alt="Image Alternative text" title="Andrea" />
-                                            </div>
-                                            <div class="comment-inner">
-                                                <ul class="icon-group icon-list-rating comment-review-rate" title="4/5 rating">
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star"></i>
-                                                    </li>
-                                                    <li><i class="fa fa-star-o"></i>
-                                                    </li>
-                                                </ul><span class="comment-author-name">Carl Butler</span>
-                                                <p class="comment-content">Dolor dictumst cras nullam integer libero eget rutrum semper gravida blandit dictumst justo litora lacinia diam pharetra tristique litora</p>
-                                            </div>
-                                        </article>
-                                    </li>
-                                </ul><a class="popup-text btn btn-primary" href="#review-dialog" data-effect="mfp-zoom-out"><i class="fa fa-pencil"></i> Add a review</a>
+                              
+								<a class="popup-text btn btn-primary" href="#review-dialog" data-effect="mfp-zoom-out"><i class="fa fa-pencil"></i> Add a review</a>
                             </div>
                         </div>
                     </div>
                     <div class="gap"></div>
-                    <h3>Related Porducts</h3>
+                    <h3>Related Services</h3>
                     <div class="gap gap-mini"></div>
                     <div class="row row-wrap">
+					
+					<?php $fp=0;
+					foreach($featured_services as $service) { if($fp<3) { ?>
                         <div class="col-md-4">
                             <div class="product-thumb">
                                 <header class="product-header">
-                                    <img src="img/800x600.png" alt="Image Alternative text" title="the best mode of transport here in maldives" />
+                                    <img src="<?=base_url('uploads/service/'.$service['service_banners'])?>" alt="<?=$service['service_name']?>" title="<?=$service['service_name']?>" />
                                 </header>
                                 <div class="product-inner">
                                     <ul class="icon-group icon-list-rating icon-list-non-rated" title="not rated yet">
@@ -343,96 +145,45 @@
                                         <li><i class="fa fa-star"></i>
                                         </li>
                                     </ul>
-                                    <h5 class="product-title">Finshing in Maldives</h5>
-                                    <p class="product-desciption">Nam luctus fringilla consectetur dui mattis torquent diam</p>
+                                    <h5 class="product-title"><a  href="<?=base_url('service/'.$service['service_slug'])?>"><?=$service['service_name']?></a></h5>
+                                    <p class="product-desciption"><?=word_limiter($service['service_description'], 20);?></p>
                                     <div class="product-meta">
-                                        <ul class="product-price-list">
-                                            <li><span class="product-price">$169</span>
+                        
+                                            <ul class="product-price-list">
+										<?php if($service['original_price']>0 && $service['discount_price']>0) { ?>
+                                             <li><span class="product-price">₹<?=$service['discount_price']?></span>
                                             </li>
+                                          
+										   <li><span class="product-old-price">₹<?=$service['original_price']?></span>
+                                            </li>
+										<?php } else if($service['original_price']>0) {?>
+										   <li><span class="product-price">₹<?=$service['original_price']?></span>
+                                            </li>
+										<?php  } else if($service['discount_price']>0) { ?>
+										
+										  <li><span class="product-price">₹<?=$service['discount_price']?></span>
+                                            </li>
+										<?php  } ?>
                                         </ul>
+										
                                         <ul class="product-actions-list">
-                                            <li><a class="btn btn-sm" href="#"><i class="fa fa-shopping-cart"></i> To Cart</a>
+                                            <li><a class="btn btn-sm add_service_list" href="javascript:void(0);" data-id="<?=$service['pk_pricing_id']?>><i class="fa fa-shopping-cart"></i> To Cart</a>
                                             </li>
-                                            <li><a class="btn btn-sm"><i class="fa fa-bars"></i> Details</a>
+                                           <?php if($service['service_slug']) { ?>
+                                            <li><a class="btn btn-sm" href="<?=base_url('city/'.$this->session->city.'/service/'.$service['service_slug'])?>"><i class="fa fa-bars"></i> Details</a>
                                             </li>
+											<?php } ?>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="product-thumb">
-                                <header class="product-header">
-                                    <img src="img/800x600.png" alt="Image Alternative text" title="Ana 29" />
-                                </header>
-                                <div class="product-inner">
-                                    <ul class="icon-group icon-list-rating" title="4.4/5 rating">
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star-half-empty"></i>
-                                        </li>
-                                    </ul>
-                                    <h5 class="product-title">Hot Summer Collection</h5>
-                                    <p class="product-desciption">Nam luctus fringilla consectetur dui mattis torquent diam</p>
-                                    <div class="product-meta">
-                                        <ul class="product-price-list">
-                                            <li><span class="product-price">$187</span>
-                                            </li>
-                                        </ul>
-                                        <ul class="product-actions-list">
-                                            <li><a class="btn btn-sm" href="#"><i class="fa fa-shopping-cart"></i> To Cart</a>
-                                            </li>
-                                            <li><a class="btn btn-sm"><i class="fa fa-bars"></i> Details</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="product-thumb">
-                                <header class="product-header">
-                                    <img src="img/800x600.png" alt="Image Alternative text" title="Gamer Chick" />
-                                </header>
-                                <div class="product-inner">
-                                    <ul class="icon-group icon-list-rating" title="4.4/5 rating">
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star-half-empty"></i>
-                                        </li>
-                                    </ul>
-                                    <h5 class="product-title">Playstation Accessories</h5>
-                                    <p class="product-desciption">Nam luctus fringilla consectetur dui mattis torquent diam</p>
-                                    <div class="product-meta">
-                                        <ul class="product-price-list">
-                                            <li><span class="product-price">$210</span>
-                                            </li>
-                                        </ul>
-                                        <ul class="product-actions-list">
-                                            <li><a class="btn btn-sm" href="#"><i class="fa fa-shopping-cart"></i> To Cart</a>
-                                            </li>
-                                            <li><a class="btn btn-sm"><i class="fa fa-bars"></i> Details</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+					<?php } $fp++;}?>
+       
                     </div>
                     <div class="gap gap-small"></div>
                 </div>
             </div>
+			</div>
 
    

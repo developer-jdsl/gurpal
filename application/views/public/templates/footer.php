@@ -57,10 +57,10 @@
                               <a href="#" title="#"> <img src="<?=base_url('public/frontend/assets/images/payment/mst-icon.png')?>" class="img-responsive" alt=""> </a>
                            </li>
                            <li>
-                              <a href="#" title="#"> <img src="<?=base_url('public/frontend/assets/images/payment/mstr-icon.png')?>assets/images/payment/mstr-icon.png" class="img-responsive" alt=""> </a>
+                              <a href="#" title="#"> <img src="<?=base_url('public/frontend/assets/images/payment/mstr-icon.png')?>" class="img-responsive" alt=""> </a>
                            </li>
                            <li>
-                              <a href="#" title="#"> <img src="<?=base_url('public/frontend/assets/images/payment/paypal-icon.png')?>assets/images/payment/paypal-icon.png" class="img-responsive" alt=""> </a>
+                              <a href="#" title="#"> <img src="<?=base_url('public/frontend/assets/images/payment/paypal-icon.png')?>" class="img-responsive" alt=""> </a>
                            </li>
                         </ul>
                      </div>
@@ -93,6 +93,7 @@
         <script src="<?=base_url('public/front/js/owl-carousel.js')?>"></script>
         <script src="<?=base_url('public/front/js/masonry.js')?>"></script>
         <script src="<?=base_url('public/front/js/nicescroll.js')?>"></script>
+		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
         <!-- Custom scripts -->
         <script src="<?=base_url('public/front/js/custom.js')?>"></script>

@@ -90,7 +90,8 @@
                     <div class="row row-wrap">
 					
 					<?php //var_dump($services);?>
-					<?php foreach($services as $service) { ?>
+					<?php if($services)
+					{foreach($services as $service) { ?>
 					
 					                        <div class="col-md-4">
                             <div class="product-thumb">
@@ -137,9 +138,9 @@
                        
                                         </ul>
                                         <ul class="product-actions-list">
-                                            <li><a class="btn btn-sm" href="#"><i class="fa fa-shopping-cart"></i> To Cart</a>
+                                            <li><a class="btn btn-sm add_service_list" data-id="<?=$service['pk_pricing_id']?>" href="javascript:void(0);"><i class="fa fa-shopping-cart"></i> To Cart</a>
                                             </li>
-                                            <li><a class="btn btn-sm"><i class="fa fa-bars"></i> Details</a>
+                                            <li><a class="btn btn-sm" href="<?=base_url('city/'.$this->session->city.'/service/'.$service['service_slug'])?>"><i class="fa fa-bars"></i> Details</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -147,7 +148,10 @@
                             </div>
                         </div>
 					
-					<?php } ?>
+					<?php } } else {?>
+					
+					<p align="center">No services found in your city.</p>
+					<?php }?>
 
                  </div>
  

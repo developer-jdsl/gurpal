@@ -71,12 +71,46 @@ class Home_model extends CI_Model {
 	
 	function get_services()
 	{
+		$cdata=get_city_state_id($this->session->city);
 		
-		 $this->db->select('s.*,b.category_name,p.discount_price,p.original_price');
+		$this->db->select('s.*,b.category_name,p.*,ap.profile_states,ap.profile_cities');
         $this->db->from('tbl_services as s');
 		$this->db->join('tbl_service_pricing as p','s.pk_service_id=p.fk_service_id','inner');
 		$this->db->join('tbl_business_category as b','s.service_category=b.pk_category_id','left');
+		$this->db->join('tbl_admin as a','s.fk_admin_id=a.pk_admin_id','left');
+		$this->db->join('tbl_admin_profile as ap','ap.fk_admin_id=a.pk_admin_id','left');
 		$this->db->where(array('s.active'=>1,'s.is_deleted'=>0,'p.is_default'=>1));
+			$this->db->group_start();
+				
+				  if(@$cdata['sid'] && @$cdata['cid'])
+				 {
+				  $this->db->like('ap.profile_states',$cdata['sid'], 'before');   
+				  $this->db->or_like('ap.profile_states',$cdata['sid'], 'after');   
+				  $this->db->or_like('ap.profile_states', $cdata['sid'], 'none');    
+				  $this->db->or_like('ap.profile_states',$cdata['sid'], 'both');  
+					$this->db->or_like('ap.profile_cities',$cdata['cid'], 'before');  
+					$this->db->or_like('ap.profile_cities',$cdata['cid'], 'after');  
+					$this->db->or_like('ap.profile_cities',$cdata['cid'], 'none');  
+					$this->db->or_like('ap.profile_cities',$cdata['cid'], 'both');  
+				 }
+				 
+				 else  if(@$cdata['sid'] && !@$cdata['cid'])
+				 {
+				  $this->db->like('ap.profile_states',$cdata['sid'], 'before');   
+				  $this->db->like('ap.profile_states',$cdata['sid'], 'after');   
+				  $this->db->like('ap.profile_states', $cdata['sid'], 'none');    
+				  $this->db->like('ap.profile_states',$cdata['sid'], 'both');  
+				 }
+				 else if(!@$cdata['sid'] && @$cdata['cid'])
+					 
+					 {
+				 $this->db->like('ap.profile_cities',$cdata['sid'], 'before');   
+				  $this->db->like('ap.profile_cities',$cdata['sid'], 'after');   
+				  $this->db->like('ap.profile_cities', $cdata['sid'], 'none');    
+				  $this->db->like('ap.profile_cities',$cdata['sid'], 'both');   
+						 
+					 }
+			$this->db->group_end();
 		$records=$this->db->get();
 		if($records->num_rows()>0)
 		{
@@ -85,6 +119,78 @@ class Home_model extends CI_Model {
 		
 		return false;
 	}
+	
+	function get_service_by_slug($slug,$city)
+	{
+		$cdata=get_city_state_id($city);
+		$this->db->select('s.*,b.category_name,p.*,ap.profile_states,ap.profile_cities');
+        $this->db->from('tbl_services as s');
+		$this->db->join('tbl_service_pricing as p','s.pk_service_id=p.fk_service_id','inner');
+		$this->db->join('tbl_business_category as b','s.service_category=b.pk_category_id','left');
+		$this->db->join('tbl_admin as a','s.fk_admin_id=a.pk_admin_id','left');
+		$this->db->join('tbl_admin_profile as ap','ap.fk_admin_id=a.pk_admin_id','left');
+		$this->db->where(array('s.active'=>1,'s.is_deleted'=>0,'s.service_slug'=>$slug));
+		
+		$this->db->group_start();
+				
+				  if(@$cdata['sid'] && @$cdata['cid'])
+				 {
+				  $this->db->like('ap.profile_states',$cdata['sid'], 'before');   
+				  $this->db->or_like('ap.profile_states',$cdata['sid'], 'after');   
+				  $this->db->or_like('ap.profile_states', $cdata['sid'], 'none');    
+				  $this->db->or_like('ap.profile_states',$cdata['sid'], 'both');  
+					$this->db->or_like('ap.profile_cities',$cdata['cid'], 'before');  
+					$this->db->or_like('ap.profile_cities',$cdata['cid'], 'after');  
+					$this->db->or_like('ap.profile_cities',$cdata['cid'], 'none');  
+					$this->db->or_like('ap.profile_cities',$cdata['cid'], 'both');  
+				 }
+				 
+				 else  if(@$cdata['sid'] && !@$cdata['cid'])
+				 {
+				  $this->db->like('ap.profile_states',$cdata['sid'], 'before');   
+				  $this->db->like('ap.profile_states',$cdata['sid'], 'after');   
+				  $this->db->like('ap.profile_states', $cdata['sid'], 'none');    
+				  $this->db->like('ap.profile_states',$cdata['sid'], 'both');  
+				 }
+				 else if(!@$cdata['sid'] && @$cdata['cid'])
+					 
+					 {
+				 $this->db->like('ap.profile_cities',$cdata['sid'], 'before');   
+				  $this->db->like('ap.profile_cities',$cdata['sid'], 'after');   
+				  $this->db->like('ap.profile_cities', $cdata['sid'], 'none');    
+				  $this->db->like('ap.profile_cities',$cdata['sid'], 'both');   
+						 
+					 }
+			$this->db->group_end();
+			
+		$records=$this->db->get();
+		if($records->num_rows()>0)
+		{
+			return $records->row_array();
+		}
+		
+		return false;	
+		
+	}
+	
+	
+	function get_service_gallery($id)
+	{
+		$this->db->select('s.*');
+	    $this->db->from('tbl_service_pricing as s');
+		$this->db->where(array('s.fk_service_id'=>$id));
+		$records=$this->db->get();
+	
+		if($records->num_rows())
+		{
+			return $records->result_array();
+		}
+		
+		return false;	
+		
+	}
+	
+	
 	function get_banners($type=null)
 	{
 		$where=array('active'=>1);
@@ -162,6 +268,32 @@ class Home_model extends CI_Model {
 			return $results->result_array();
 		}
 		return false;
+	}
+	
+	function get_cities()
+	{
+		$results=$this->db->get_where('tbl_cities',array('active'=>1,'is_deleted'=>0));
+		if($results)
+		{
+			return $results->result_array();
+		}
+		return false;
+	}
+	
+	
+	function set_city($city)
+	
+	{
+		if($this->session->city)
+		{
+			$this->session->city=$city;
+		}
+		
+		else
+			{
+				$this->session->set_userdata('city',$city);
+				
+			}
 	}
    
 	
