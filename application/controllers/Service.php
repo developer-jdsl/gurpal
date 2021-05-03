@@ -10,7 +10,7 @@ class Service extends CI_Controller {
 		  $this->data['cities']			=	$this->home_model->get_cities();
 		   construct_init();
 		  $this->load->library('Ajax_pagination');
-		$this->per_page=1;
+		$this->per_page=18;
 		
  	}
 		 
