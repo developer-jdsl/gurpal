@@ -240,5 +240,17 @@ function  construct_init()
 		
 	}
 	
-     
+	
+	function get_service_category_slug($category)
+	{
+		$CI = & get_instance();	
+		$row=$CI->db->get_where('tbl_business_category',array('active'=>1,'is_deleted'=>0,'category_slug'=>$category));
+		if($row)
+		{
+			return $row->row_array();
+		}
+		
+		return false;
+
+	}		
 ?>

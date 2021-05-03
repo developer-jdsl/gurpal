@@ -84,10 +84,10 @@ class Home_model extends CI_Model {
 				
 				  if(@$cdata['sid'] && @$cdata['cid'])
 				 {
-				  $this->db->like('ap.profile_states',$cdata['sid'], 'before');   
-				  $this->db->or_like('ap.profile_states',$cdata['sid'], 'after');   
-				  $this->db->or_like('ap.profile_states', $cdata['sid'], 'none');    
-				  $this->db->or_like('ap.profile_states',$cdata['sid'], 'both');  
+					$this->db->like('ap.profile_states',$cdata['sid'], 'before');   
+					$this->db->or_like('ap.profile_states',$cdata['sid'], 'after');   
+					$this->db->or_like('ap.profile_states', $cdata['sid'], 'none');    
+					$this->db->or_like('ap.profile_states',$cdata['sid'], 'both');  
 					$this->db->or_like('ap.profile_cities',$cdata['cid'], 'before');  
 					$this->db->or_like('ap.profile_cities',$cdata['cid'], 'after');  
 					$this->db->or_like('ap.profile_cities',$cdata['cid'], 'none');  
@@ -96,21 +96,22 @@ class Home_model extends CI_Model {
 				 
 				 else  if(@$cdata['sid'] && !@$cdata['cid'])
 				 {
-				  $this->db->like('ap.profile_states',$cdata['sid'], 'before');   
-				  $this->db->like('ap.profile_states',$cdata['sid'], 'after');   
-				  $this->db->like('ap.profile_states', $cdata['sid'], 'none');    
-				  $this->db->like('ap.profile_states',$cdata['sid'], 'both');  
+					$this->db->like('ap.profile_states',$cdata['sid'], 'before');   
+					$this->db->or_like('ap.profile_states',$cdata['sid'], 'after');   
+					$this->db->or_like('ap.profile_states', $cdata['sid'], 'none');    
+					$this->db->or_like('ap.profile_states',$cdata['sid'], 'both');  
 				 }
 				 else if(!@$cdata['sid'] && @$cdata['cid'])
 					 
 					 {
 				 $this->db->like('ap.profile_cities',$cdata['sid'], 'before');   
-				  $this->db->like('ap.profile_cities',$cdata['sid'], 'after');   
-				  $this->db->like('ap.profile_cities', $cdata['sid'], 'none');    
-				  $this->db->like('ap.profile_cities',$cdata['sid'], 'both');   
+				  $this->db->or_like('ap.profile_cities',$cdata['sid'], 'after');   
+				  $this->db->or_like('ap.profile_cities', $cdata['sid'], 'none');    
+				  $this->db->or_like('ap.profile_cities',$cdata['sid'], 'both');   
 						 
 					 }
 			$this->db->group_end();
+			
 		$records=$this->db->get();
 		if($records->num_rows()>0)
 		{

@@ -85,6 +85,10 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 
-defined('SITE_NAME')  OR define('SITE_NAME', 'Jehlum Chenab');
-defined('LOGO')  	  OR define('LOGO',  'public/img/image-1.png');
+defined('SITE_NAME') 			OR define('SITE_NAME', 'Jehlum Chenab');
+defined('LOGO')  	  			OR define('LOGO',  'public/img/image-1.png');
+defined('DEFAULT_TITLE')  		OR define('DEFAULT_TITLE', 'Jehlum Chenab');
+defined('DEFAULT_KEYWORDS')  	OR define('DEFAULT_KEYWORDS',  'Jehlum Chenab');
+defined('DEFAULT_DESCRIPTION')  OR define('DEFAULT_DESCRIPTION', 'Jehlum Chenab');
+
 

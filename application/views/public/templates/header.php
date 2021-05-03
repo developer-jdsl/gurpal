@@ -2,12 +2,11 @@
 <html>
 
 <head>
-    <title>themelock.com - Couponia - Index shop layout 3</title>
+    <title><?=@$title?></title>
     <!-- meta info -->
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-    <meta name="keywords" content="Koupon HTML5 Template" />
-    <meta name="description" content="Koupon - Premiun HTML5 Template for Coupons Website">
-    <meta name="author" content="Tsoy">
+    <meta name="keywords" content="<?=@$meta_keywords?>" />
+    <meta name="description" content="<?=@$meta_description?>">
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Google fonts -->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css'>

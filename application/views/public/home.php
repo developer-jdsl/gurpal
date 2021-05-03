@@ -86,7 +86,7 @@
                         </div>
                     </div>
                     <div class="gap gap-small"></div>
-                    <h1 class="mb20">Featured Services<small><a href="#">View All</a></small></h1>
+                    <h1 class="mb20">Featured Services<small><a href="<?=base_url('city/'.$this->session->city.'/services/all')?>">View All</a></small></h1>
                     <div class="row row-wrap">
 					
 					<?php //var_dump($services);?>
