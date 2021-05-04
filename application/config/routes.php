@@ -55,9 +55,17 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['cart']='home/cart';
 $route['city/(:any)']='home/get_listings_by_city/$1';
+$route['city/(:any)']='home/city/$1';
 
 /*  Service Routes */
-$route['city/(:any)/service/(:any)']='service/$2/$1';
-$route['city/(:any)/services/(:any)/(:num)']='service/list/$1/$2/$3';
-$route['city/(:any)/services/(:any)']='service/list/$1/$2/0';
-$route['city/(:any)/services']='service/list/$1/all/0';
+
+$route['city/(:any)/service/(:any)']				=	'service/$2/$1';
+$route['city/(:any)/services/(:any)/(:num)']		=	'service/list/$1/$2/$3';
+$route['city/(:any)/services/(:any)']				=	'service/list/$1/$2/0';
+$route['city/(:any)/services']						=	'service/list/$1/all/0';
+
+/* Product Routes */
+
+$route['products/(:any)/(:num)']		=	'product/list/$1/$2/$3';
+$route['products/(:any)']				=	'product/list/$1/$2/0';
+$route['products']						=	'product/list/$1/all/0';

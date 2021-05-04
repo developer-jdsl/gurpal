@@ -45,7 +45,7 @@ class Service_model extends CI_Model {
 	}
 	
 	
-	function get_rows_count($city,$category,$order_by=false,$limit=false,$page=false)
+	function get_rows_count($from=false,$to=false,$city,$category,$order_by=false,$limit=false,$page=false)
 	{
 		$cdata=get_city_state_id($city);
 		$service_cat=get_service_category_slug($category);
@@ -56,6 +56,18 @@ class Service_model extends CI_Model {
 		$this->db->join('tbl_admin as a','s.fk_admin_id=a.pk_admin_id','left');
 		$this->db->join('tbl_admin_profile as ap','ap.fk_admin_id=a.pk_admin_id','left');
 		$this->db->where(array('s.active'=>1,'s.is_deleted'=>0,'p.is_default'=>1));
+		if($from && $to)
+			{
+				$this->db->group_start();
+				$this->db->where('p.original_price>=',$from);
+				$this->db->or_where('p.discount_price>=',$from);
+				$this->db->group_end();
+				
+				$this->db->group_start();
+				$this->db->where('p.original_price<=',$to);
+				$this->db->or_where('p.discount_price<=',$to);
+				$this->db->group_end();
+			}
 			$this->db->group_start();
 				
 				  if(@$cdata['sid'] && @$cdata['cid'])
@@ -103,8 +115,19 @@ class Service_model extends CI_Model {
 			
 			if($order_by)
 			{
+				if($order_by=='name')
+				{
+					
+					$this->db->order_by('s.service_name','ASC');
+				}
+				else if($order_by=='price')
+				{
+
+						$this->db->order_by('p.discount_price', 'ASC');
+						$this->db->order_by('p.original_price', 'ASC');
+				}
 				
-				$this->db->order_by($order_by);
+			
 			}
 			
 			if(($page+1))
@@ -126,7 +149,7 @@ class Service_model extends CI_Model {
 
 	}
 	
-		function get_rows_service($city,$category,$order_by=false,$limit=false,$page=false)
+		function get_rows_service($from=false,$to=false,$city,$category,$order_by=false,$limit=false,$page=false)
 	{
 		$cdata=get_city_state_id($city);
 		$service_cat=get_service_category_slug($category);
@@ -137,7 +160,25 @@ class Service_model extends CI_Model {
 		$this->db->join('tbl_admin as a','s.fk_admin_id=a.pk_admin_id','left');
 		$this->db->join('tbl_admin_profile as ap','ap.fk_admin_id=a.pk_admin_id','left');
 		$this->db->where(array('s.active'=>1,'s.is_deleted'=>0,'p.is_default'=>1));
+		
+		if($from && $to)
+			{
+				$this->db->group_start();
+				$this->db->where('p.original_price>=',$from);
+				$this->db->or_where('p.discount_price>=',$from);
+				$this->db->group_end();
+				
+				$this->db->group_start();
+				$this->db->where('p.original_price<=',$to);
+				$this->db->or_where('p.discount_price<=',$to);
+				$this->db->group_end();
+			}
+			
+			if(@$cdata['sid'] || @$cdata['cid'])
+			{
 		$this->db->group_start();
+		
+		
 				
 				  if(@$cdata['sid'] && @$cdata['cid'])
 				 {
@@ -170,6 +211,7 @@ class Service_model extends CI_Model {
 					 
 					 
 			$this->db->group_end();
+			}
 			if($service_cat)
 			{
 				$this->db->group_start();
@@ -182,8 +224,19 @@ class Service_model extends CI_Model {
 			}
 			if($order_by)
 			{
+				if($order_by=='name')
+				{
+					
+					$this->db->order_by('s.service_name','ASC');
+				}
+				else if($order_by=='price')
+				{
+
+						$this->db->order_by('p.discount_price', 'ASC');
+						$this->db->order_by('p.original_price', 'ASC');
+				}
 				
-				$this->db->order_by($order_by);
+			
 			}
 			
 			

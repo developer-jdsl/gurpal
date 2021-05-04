@@ -9,6 +9,8 @@ class Product extends CI_Controller {
 		 $this->load->model('home_model');
 		 $this->data['cities']			=	$this->home_model->get_cities();
 		  construct_init();
+		   $this->load->library('Ajax_pagination');
+		   $this->per_page=18;
  	}
 		 
 		function _remap($method,$args)
@@ -42,7 +44,7 @@ class Product extends CI_Controller {
 		$this->data['advertisements']	=	$this->home_model->get_advertisements('home','left_sidebar');
 		$this->data['categories']		=	$this->home_model->get_service_cats();
 		$this->data['title']			=   $tmp['meta_title']?$tmp['meta_title']:DEFAULT_TITLE;
-		$this->data['meta_keywords']	=   $tmp['meta_keywords']?$tmp['meta_keywords']:DEFAULT_KEYWORDS;
+		$this->data['meta_keywords']	=   $tmp['meta_keyword']?$tmp['meta_keyword']:DEFAULT_KEYWORDS;
 		$this->data['meta_description']	=   $tmp['meta_description']?$tmp['meta_description']:DEFAULT_DESCRIPTION;
 		
 		$this->load->view('public/templates/header',$this->data);
@@ -65,6 +67,82 @@ class Product extends CI_Controller {
 		//	var_dump($this->session);
 		
 	}
+	
+	
+	public function list($data)
+	{
+		$category=$page=0;
+		$order	=	$this->input->get('sort_by')?$this->input->get('sort_by'):false;
+		$from 	= 	$this->input->get('price_from')?$this->input->get('price_from'):false;
+		$to 	= 	$this->input->get('price_to')?$this->input->get('price_to'):false;
+		if(count($data)==3)
+		{
+			$category=$data[0]?$data[0]:'all';
+			$page=$data[1]?$data[1]:0;
+			$data = array();
+			
+			//total rows count
+			$totalRec = $this->product_model->get_rows_count($from,$to,$category,$order,$this->per_page,$page);
+			
+			//pagination configuration
+			$config['target']      = '#product_ajax_div';
+			$config['base_url']    = base_url('product/ajax_list');
+			$config['total_rows']  = $totalRec;
+			$config['per_page']    = $this->per_page;
+			$config['link_func']   = 'product_ajax';
+			$this->ajax_pagination->initialize($config);
+			$this->data['categories']		=	$this->home_model->get_product_cats();
+			$this->data['products'] 		= 	$this->product_model->get_rows_product($from,$to,$category,$order,$this->per_page,$page);
+			$this->data['category'] 		=	$category;
+			$this->load->view('public/templates/header',$this->data);
+			$this->load->view('public/templates/product_sidebar',$this->data);
+			$this->load->view('public/products',$this->data);
+			$this->load->view('public/templates/footer',$this->data);
+			
+			
+		}
+		
+
+		
+	}
+	
+	function ajax_list(){ 
+     
+	 
+        $page = $this->input->post('page');
+		$category = $this->input->post('category');
+		$from = $this->input->post('from')?$this->input->post('from'):false;
+		$to = $this->input->post('to')?$this->input->post('to'):false;
+        if(!$page){ 
+            $offset = 0; 
+        }else{ 
+            $offset = $page; 
+        } 
+         
+        // Set conditions for search and filter  
+        $sortBy = $this->input->post('sort_by'); 
+
+       
+         
+        // Get record count 
+   
+        $totalRec = $this->product_model->get_rows_count($from,$to,$category,false,$this->per_page);
+			//pagination configuration
+			$config['target']      = '#product_ajax_div';
+			$config['base_url']    = base_url('product/ajax_list');
+			$config['total_rows']  = $totalRec;
+			$config['per_page']    = $this->per_page;
+			$config['link_func']   = 'product_ajax';
+			$this->ajax_pagination->initialize($config);
+    	//$data['categories']		=	$this->home_model->get_service_cats();
+			$this->data['products'] = $this->product_model->get_rows_product($from,$to,$category,$sortBy,$this->per_page,$page); 
+			$this->data['pagination'] = $this->ajax_pagination->create_links();
+         
+        // Load the data list view 
+        $this->load->view('public/products_ajax', $this->data, false); 
+    } 
+	
+	
 	
 		public function add_to_cart()
 	

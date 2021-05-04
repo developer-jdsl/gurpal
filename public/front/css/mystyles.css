@@ -133,3 +133,20 @@ text-align:center;
 .cart-item-image img{
 	width:70px !important;
 }
+
+.loading .content
+{
+	text-align: center;
+    position: absolute;
+    top: 40px;
+    z-index: 99999;
+    background: #f2f2f2;
+    padding: 20% 50%;
+	
+}
+
+.loading img
+{
+	
+	width:100px;
+}

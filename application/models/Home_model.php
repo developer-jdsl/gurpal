@@ -6,7 +6,7 @@ class Home_model extends CI_Model {
         $this->load->database();
     }
 	
-	function get_products()
+	function get_products($limit=false)
 	{
 		$this->db->select('p.*,pp.*,pc.category_name,b.brand_name,a.admin_name,c.color_name,c.color_value,s.size_name,s.size_value');
         $this->db->from('tbl_products as p');
@@ -17,6 +17,11 @@ class Home_model extends CI_Model {
 		$this->db->join('tbl_brands as b','p.product_brand=b.pk_brand_id','left');
 		$this->db->join('tbl_admin as a','p.fk_admin_id=a.pk_admin_id','left');
 		$this->db->where(array('p.active'=>1,'p.is_deleted'=>0));
+		if($limit)
+			{
+				$this->db->limit($limit);
+			}
+		
 		$records=$this->db->get();
 		if($records->num_rows()>0)
 		{
@@ -69,7 +74,7 @@ class Home_model extends CI_Model {
 	}
 	
 	
-	function get_services()
+	function get_services($limit=false)
 	{
 		$cdata=get_city_state_id($this->session->city);
 		
@@ -111,6 +116,10 @@ class Home_model extends CI_Model {
 						 
 					 }
 			$this->db->group_end();
+			if($limit)
+			{
+				$this->db->limit($limit);
+			}
 			
 		$records=$this->db->get();
 		if($records->num_rows()>0)
@@ -297,6 +306,20 @@ class Home_model extends CI_Model {
 			}
 	}
    
+   function is_valid_city($city)
+   {
+	 $res=$this->db->get_where('tbl_cities',array('city_slug'=>$city,'active'=>1));  
+	 if($res)
+	 {
+		 $res=$res->row_array();
+		 if($res['pk_city_id'])
+		 {
+			 return $res;
+		 }
+		 
+	 }
+	  return false; 
+   }
 	
 	
 }

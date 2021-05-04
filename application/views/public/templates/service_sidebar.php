@@ -6,14 +6,16 @@
 						<?php 
 		
 						foreach($categories as $category) { ?>
-						   <li><a href="#"><i class="fa p-2"><img src="<?=base_url('uploads/category/'.$category['category_image'])?>" width="20px"></i><?=$category['category_name']?></a>
+						   <li><a href="<?=base_url('city/'.$this->session->city.'/services/'.$category['category_slug'])?>"><i class="fa p-2">
+						<?php if($category['category_image']) { ?> <img src="<?=base_url('uploads/category/'.$category['category_image'])?>" width="20px"> <?php } ?>
+						   </i><?=$category['category_name']?></a>
                             </li>
 						<?php } ?>
                      
                         </ul>
 						                        <div class="sidebar-box">
                             <h5>Filter By Price</h5>
-                            <input type="text" id="price-slider">
+                            <input type="text" id="price_slider">
                         </div>
                         <div class="sidebar-box">
                             <h5>Product Feature</h5>
@@ -174,3 +176,95 @@
                         </div>
                     </aside>
                 </div>
+				
+				<script>
+				
+			function filter_by_price(from,to)
+			{
+				var page_num = 0;
+							var sortBy = $('#sort_by').val();
+							  var city = $('#hid_city').val();
+								var category = $('#hid_category').val();
+							$.ajax({
+								type: 'POST',
+								url: '<?=base_url("service/ajax_list/"); ?>'+page_num,
+								data:'page='+page_num+'&sortBy='+sortBy+'&city='+city+'&from='+from+'&to='+to+'&category='+category+'&<?=$this->security->get_csrf_token_name()?>=<?=$this->security->get_csrf_hash()?>',
+								beforeSend: function(){
+									$('.loading').show();
+								},
+								success: function(html){
+									$('#service_ajax_div').html(html);
+									$('.loading').fadeOut("slow");
+											if(!category)
+									{
+										category='all';
+									}
+									
+									var latest_url=updateQueryStringParameter(window.location.href,'price_from',from);
+									latest_url=updateQueryStringParameter(latest_url,'price_to',to);
+									
+									var arr = latest_url.split("?");
+								
+									 if (history.pushState) {
+										if(arr[1])
+									{
+											var newurl =  '<?=base_url();?>' + 'city/'+ city+ '/services/'+category+'?'+arr[1]; 
+											
+									}
+									else
+									{
+										
+										var newurl =  '<?=base_url();?>' + 'city/'+ city+ '/services/'+category;
+									}
+									
+									  window.history.pushState({path:newurl},'',newurl);
+								  }
+								}
+							});	
+				
+			}
+			
+			
+				function sort_by()
+			{
+				var page_num = 0;
+							var sortBy = $('#sort_by').val();
+							  var city = $('#hid_city').val();
+								var category = $('#hid_category').val();
+							$.ajax({
+								type: 'POST',
+								url: '<?=base_url("service/ajax_list/"); ?>'+page_num,
+								data:'page='+page_num+'&sort_by='+sortBy+'&city='+city+'&category='+category+'&<?=$this->security->get_csrf_token_name()?>=<?=$this->security->get_csrf_hash()?>',
+								beforeSend: function(){
+									$('.loading').show();
+								},
+								success: function(html){
+									$('#service_ajax_div').html(html);
+									$('.loading').fadeOut("slow");
+											if(!category)
+									{
+										category='all';
+									}
+									
+									var latest_url=updateQueryStringParameter(window.location.href,'sort_by',sortBy);
+									var arr = latest_url.split("?");
+								
+									 if (history.pushState) {
+										if(arr[1])
+									{
+											var newurl =  '<?=base_url();?>' + 'city/'+ city+ '/services/'+category+'?'+arr[1]; 
+											
+									}
+									else
+									{
+										
+										var newurl =  '<?=base_url();?>' + 'city/'+ city+ '/services/'+category;
+									}
+									
+									  window.history.pushState({path:newurl},'',newurl);
+								  }
+								}
+							});	
+				
+			}
+				</script>

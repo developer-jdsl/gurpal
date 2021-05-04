@@ -2,27 +2,26 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="product-sort">
-                                <span class="product-sort-selected">sort by <b>Name</b></span>
-                                <a href="#" class="product-sort-order fa fa-angle-down"></a>
-                                <ul>
-                                    <li><a href="#">sort by Price</a>
-                                    </li>
-                                    <li><a href="#">sort by Date</a>
-                                    </li>
-                                </ul>
+							<select class="form-control" id="sort_by" onchange="sort_by();">
+							<option value="">Sort by
+							<option value="name" <?php if($this->input->get('sort_by')=='name'){echo 'selected';}?> >Sort by Name</option>
+							<option value="price" <?php if($this->input->get('sort_by')=='price'){echo 'selected';}?>>Sort by Price</option>
+							</select>
+                                
                             </div>
                         </div>
                         <div class="col-md-2 col-md-offset-7">
                             <div class="product-view pull-right">
                                 <a class="fa fa-th-large active" href="#"></a>
-                                <a class="fa fa-list" href="category-page-thumbnails-shop-horizontal.html"></a>
+                                <a class="fa fa-list" href="#"></a>
                             </div>
                         </div>
                     </div>
 					<div id="service_ajax_div">
                     <div class="row row-wrap">
 					
-					<?php foreach($services as $service) { ?>
+					<?php if($services) {
+						foreach($services as $service) { ?>
                         <div class="col-md-4">
                             <div class="product-thumb">
                                 <header class="product-header">
@@ -72,6 +71,10 @@
                                 </div>
                             </div>
                         </div>
+					<?php } }
+					
+					else{?>
+						<p align="center">No record Found</p>
 					<?php } ?>
                     </div>
                    <!--
@@ -98,8 +101,8 @@
 					<?php echo $this->ajax_pagination->create_links(); ?>
 					</div>
 					
-					<div class="loading" style="display: none;">
-						<div class="content"><img src="<?php echo base_url('public/front/img/loading.gif'); ?>"/></div>
+					<div class="loading" style="display:none;">
+						<div class="content"><img src="<?php echo base_url('public/front/img/loading.gif'); ?>" width="100px"/></div>
 					</div>
                     <div class="gap"></div>
                 </div>
@@ -124,7 +127,40 @@
 								success: function(html){
 									$('#service_ajax_div').html(html);
 									$('.loading').fadeOut("slow");
+									if(!category)
+									{
+										category='all';
+									
+									}
+						
+									var latest_url=window.location.href;
+									if(sortBy)
+									{
+										latest_url=updateQueryStringParameter(window.location.href,'sort_by',sortBy);
+									}
+									
+									var arr = latest_url.split("?");
+									var qstring="";
+									if(arr[1])
+									{
+										var qstring="?"+arr[1];
+									}
+									 if (history.pushState) {
+										 if(page_num>0)
+										 {
+											var newurl =  '<?=base_url();?>'+'city/'+ city+ '/services/'+category+'/'+page_num+qstring;
+										 }
+										 else
+										 {
+											var newurl =  '<?=base_url();?>' + 'city/'+ city+ '/services/'+category+'/'+qstring; 
+										 }
+									  window.history.pushState({path:newurl},'',newurl);
+								  }
 								}
+								
 							});
 						}
+						
+						var service_price_from='<?=$this->input->get("from")?$this->input->get("from"):"500"?>';
+						var service_price_to='<?=$this->input->get("to")?$this->input->get("to"):"2000"?>';
 				</script>

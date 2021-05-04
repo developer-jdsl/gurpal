@@ -7,10 +7,10 @@ class Service extends CI_Controller {
 		parent::__construct();
 		 $this->load->model('service_model');
 		 $this->load->model('home_model');
-		  $this->data['cities']			=	$this->home_model->get_cities();
-		   construct_init();
-		  $this->load->library('Ajax_pagination');
-		$this->per_page=18;
+		 $this->load->library('Ajax_pagination');
+		 $this->data['cities']			=	$this->home_model->get_cities();
+		 construct_init();
+		 $this->per_page=18;
 		
  	}
 		 
@@ -73,8 +73,9 @@ class Service extends CI_Controller {
 	public function list($data)
 	{
 		$city=$category=$page=0;
-		$order=$this->input->get('sort_by')?$this->input->get('sort_by'):false;
-		$page=$this->input->get('page')?$this->input->get('page'):0;
+		$order	=	$this->input->get('sort_by')?$this->input->get('sort_by'):false;
+		$from 	= 	$this->input->get('price_from')?$this->input->get('price_from'):false;
+		$to 	= 	$this->input->get('price_to')?$this->input->get('price_to'):false;
 		if(count($data)==3)
 		{
 			$city=$data[0];
@@ -83,7 +84,7 @@ class Service extends CI_Controller {
 			$data = array();
 			
 			//total rows count
-			$totalRec = $this->service_model->get_rows_count($city,$category,$order,$this->per_page,$page);
+			$totalRec = $this->service_model->get_rows_count($from,$to,$city,$category,$order,$this->per_page,$page);
 			
 			//pagination configuration
 			$config['target']      = '#service_ajax_div';
@@ -93,10 +94,9 @@ class Service extends CI_Controller {
 			$config['link_func']   = 'service_ajax';
 			$this->ajax_pagination->initialize($config);
 			$this->data['categories']		=	$this->home_model->get_service_cats();
-			$this->data['services'] = $this->service_model->get_rows_service($city,$category,$order,$this->per_page,$page);
-			
-			$this->data['city'] 		=	$city;
-			$this->data['category'] 	=	$category;
+			$this->data['services'] 		= 	$this->service_model->get_rows_service($from,$to,$city,$category,$order,$this->per_page,$page);
+			$this->data['city'] 			=	$city;
+			$this->data['category'] 		=	$category;
 			$this->load->view('public/templates/header',$this->data);
 			$this->load->view('public/templates/service_sidebar',$this->data);
 			$this->load->view('public/services',$this->data);
@@ -115,6 +115,8 @@ class Service extends CI_Controller {
         $page = $this->input->post('page');
 		$city = $this->input->post('city');
 		$category = $this->input->post('category');
+		$from = $this->input->post('from')?$this->input->post('from'):false;
+		$to = $this->input->post('to')?$this->input->post('to'):false;
         if(!$page){ 
             $offset = 0; 
         }else{ 
@@ -124,13 +126,11 @@ class Service extends CI_Controller {
         // Set conditions for search and filter  
         $sortBy = $this->input->post('sort_by'); 
 
-        if(!empty($sortBy)){ 
-            $conditions['search']['sortBy'] = $sortBy; 
-        } 
+       
          
         // Get record count 
    
-        $totalRec = $this->service_model->get_rows_count($city,$category,false,$this->per_page);
+        $totalRec = $this->service_model->get_rows_count($from,$to,$city,$category,false,$this->per_page);
 			//pagination configuration
 			$config['target']      = '#service_ajax_div';
 			$config['base_url']    = base_url('service/ajax_list');
@@ -139,7 +139,7 @@ class Service extends CI_Controller {
 			$config['link_func']   = 'service_ajax';
 			$this->ajax_pagination->initialize($config);
     	//$data['categories']		=	$this->home_model->get_service_cats();
-        $this->data['services'] = $this->service_model->get_rows_service($city,$category,$sortBy,$this->per_page,$page); 
+        $this->data['services'] = $this->service_model->get_rows_service($from,$to,$city,$category,$sortBy,$this->per_page,$page); 
 		$this->data['pagination'] = $this->ajax_pagination->create_links();
          
         // Load the data list view 

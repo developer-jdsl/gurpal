@@ -252,5 +252,36 @@ function  construct_init()
 		
 		return false;
 
-	}		
+	}	
+
+	
+
+	function get_product_category_slug($category)
+	{
+		$cats_ids=array();
+		$CI = & get_instance();	
+		$row=$CI->db->get_where('tbl_product_category',array('active'=>1,'is_deleted'=>0,'category_slug'=>$category));
+		if($row)
+		{
+			$row=$row->row_array();
+			if($row['pk_category_id'])
+			{
+				
+				$rows=$CI->db->get_where('tbl_product_category',array('active'=>1,'is_deleted'=>0,'parent_category'=>$row['pk_category_id']));
+				if($rows)
+				{
+					$rows=$rows->result_array();
+					foreach ($rows as $r1)
+					{
+						$cats_ids[]=$r1['pk_category_id'];		
+					}
+					$cats_ids[]=$row['pk_category_id'];
+				}
+			}
+			return $cats_ids;
+		}
+		
+		return false;
+
+	}
 ?>
