@@ -51,6 +51,48 @@ class Authentication_model extends CI_Model {
    }
    
    
+      
+   function user_login($email,$pass)
+   {
+	   $return_array=array('status'=>false,'msg'=>'');
+	   $this->db->select('u.*,up.*');
+	   $this->db->from('tbl_user as u');
+	   $this->db->join('tbl_user_profile as up','u.pk_user_id=up.fk_user_id','left');
+	   $this->db->where(array('u.user_email'=>$email,'u.user_password'=>$pass));
+	   $return=$this->db->get();
+	   $return=$return->row();
+	   
+	  
+	   if(isset($return->pk_user_id))
+	   {
+		   
+		   if($return->active==1)
+		   {
+			  
+			  
+		  $session_arr=array('front_user_id'=>$return->pk_user_id,
+							 'front_username'=>$return->user_firstname,
+							 'front_user_data'=>$return);
+							 
+			
+			  $this->session->set_userdata($session_arr);
+			  
+			    $return_array['status']=true;
+				
+		   }
+		else{
+			  $return_array['msg']=keyword_value('your_acccount_disabled','Your Account is disabled'); 
+		}	
+	   }
+	   else
+	   {
+		  $return_array['msg']=keyword_value('invalid_email_password','Invaild Email/password combination'); 
+	   }
+	   
+	   return $return_array;
+	   
+   }
+   
    public function update_email_otp($id,$otp)
    {
 	    $time=strtotime("+15 minutes",time());
@@ -59,10 +101,30 @@ class Authentication_model extends CI_Model {
 	   
    }
    
+      public function update_email_otp_user($id,$otp)
+   {
+	    $time=strtotime("+15 minutes",time());
+		$this->db->where('pk_user_id',$id);
+		$this->db->update('tbl_user',array('otp'=>$otp,'otp_validity'=>$time));
+	   
+   }
+   
    
    public function get_otpdetails($otp)
    {
 	 $det=$this->db->get_where('tbl_admin',array('otp'=>$otp));  
+	 if($det)
+	 {
+		 return $det->row_array();
+	 }
+	 
+	 return false;
+	   
+   }
+   
+      public function get_otpdetails_user($otp)
+   {
+	 $det=$this->db->get_where('tbl_user',array('otp'=>$otp));  
 	 if($det)
 	 {
 		 return $det->row_array();
@@ -80,6 +142,13 @@ class Authentication_model extends CI_Model {
 	   
    }
    
+     public function verify_user($id)
+   
+   {
+	   $this->db->where('pk_user_id',$id);
+	   return $this->db->update('tbl_user',array('is_verified'=>1,'otp'=>'','otp_validity'=>''));
+	   
+   }
    
    public function register($data)
    {
@@ -92,6 +161,17 @@ class Authentication_model extends CI_Model {
 		$this->db->insert('tbl_admin_profile',$data2);   
 		return array('status'=>true);
 		   
+	   }
+	   
+	   return array('status'=>false);
+   }
+      public function user_register($data)
+   {
+	   $this->db->insert('tbl_user',$data);
+	   $id=$this->db->insert_id();
+	   if($id)
+	   {
+		return array('status'=>true);
 	   }
 	   
 	   return array('status'=>false);

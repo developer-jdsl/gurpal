@@ -252,3 +252,12 @@
             </div>
 
         </div>
+		<?php if(@$this->session->flashdata('lflag')=='login') { ?>
+		<script>
+		function open_login()
+		{
+			$('#login_li').click();
+		}
+		open_login();
+		</script>
+		<?php } ?>

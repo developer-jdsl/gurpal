@@ -320,6 +320,41 @@ class Home_model extends CI_Model {
 	 }
 	  return false; 
    }
+   
+   function get_user_profile()
+   {
+	$res=$this->db->get_where('tbl_user',array('pk_user_id'=>$this->session->front_user_id,'active'=>1));  
+	 if($res)
+	 {
+		 $res=$res->row_array();
+		 if($res['pk_user_id'])
+		 {
+			 return $res;
+		 }
+		 
+	 }
+	  return false;    
+   }
+   
+      function get_user_addresses()
+   {
+	   $this->db->select('up.*,c.city_name,s.state_name');
+	   $this->db->from('tbl_user_profile as up');
+	   $this->db->join('tbl_states as s','up.profile_state=s.pk_state_id','inner');
+	   $this->db->join('tbl_cities as c','up.profile_city=c.pk_city_id','inner');
+	   $this->db->where('up.fk_user_id',$this->session->front_user_id);
+		$res=$this->db->get();  
+	 if($res)
+	 {
+		 $res=$res->result_array();
+		 if($res)
+		 {
+			 return $res;
+		 }
+		 
+	 }
+	  return false;    
+   }
 	
 	
 }

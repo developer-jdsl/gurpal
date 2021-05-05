@@ -282,10 +282,17 @@
 									<?php } ?>
                                 </div>
                             </li>
-                            <li><a class="popup-text" href="#login-dialog" data-effect="mfp-move-from-top"><i class="fa fa-sign-in"></i>Sign in</a>
+							<?php if($this->session->front_user_id){?>
+							<li><a href="<?=base_url('my-account')?>" ><i class="fa fa-user"></i>My Account</a>
+                            </li>
+							<li><a href="<?=base_url('logout')?>" ><i class="fa fa-power-off"></i>Logout</a>
+                            </li>
+							<?php } else {?>
+                            <li><a class="popup-text" id="login_li" href="#login-dialog" data-effect="mfp-move-from-top"><i class="fa fa-sign-in"></i>Sign in</a>
                             </li>
                             <li><a class="popup-text" href="#register-dialog" data-effect="mfp-move-from-top"><i class="fa fa-edit"></i>Sign up</a>
                             </li>
+							<?php } ?>
                         </ul>
                     </div>
                 </div>
@@ -294,24 +301,38 @@
         <!-- LOGIN REGISTER LINKS CONTENT -->
         <div id="login-dialog" class="mfp-with-anim mfp-hide mfp-dialog clearfix">
             <i class="fa fa-sign-in dialog-icon"></i>
-            <h3>Member Login</h3>
-            <h5>Welcome back, friend. Login to get started</h5>
+            <h3>Login</h3>
+			 <h5 id="login_message"></h5>
             <form class="dialog-form">
                 <div class="form-group">
                     <label>E-mail</label>
-                    <input type="text" placeholder="email@domain.com" class="form-control">
+                    <input type="email"  id="login_email" class="form-control">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" placeholder="My secret password" class="form-control">
+                    <input type="password" id="login_password" class="form-control">
                 </div>
                 <div class="checkbox">
                     <label>
                         <input type="checkbox">Remember me
                     </label>
                 </div>
-                <input type="submit" value="Sign in" class="btn btn-primary">
+                <p align="center"><input type="button" value="Sign in" onclick="user_login();" class="btn btn-primary"></p>
+				<p align="center">Or</p>
+				
             </form>
+			<div class="social-login p-40">
+                                    <div class="mb-20">
+                                        <button class="btn btn-lg btn-block btn-social btn-facebook"><i class="fa fa-facebook-square"></i>Sign In with Facebook</button>
+                                    </div>
+                                    <div class="mb-20">
+                                        <button class="btn btn-lg btn-block btn-social btn-twitter"><i class="fa fa-twitter"></i>Sign In with Twitter</button>
+                                    </div>
+                                    <div class="mb-20">
+                                        <button class="btn btn-lg btn-block btn-social btn-google-plus"><i class="fa fa-google-plus"></i>Sign In with Google</button>
+                                    </div>
+                                </div>
+			<br>
             <ul class="dialog-alt-links">
                 <li><a class="popup-text" href="#register-dialog" data-effect="mfp-zoom-out">Not member yet</a>
                 </li>
@@ -319,51 +340,146 @@
                 </li>
             </ul>
         </div>
+		<script>
+		
+		function user_signup()
+		{
+			$('#reg_message').html();
+			var fname=$('#reg_first_name').val();
+			var lname=$('#reg_last_name').val();
+			var email=$('#reg_email').val();
+			var mobile=$('#reg_mobile').val();
+			var pass=$('#reg_password').val();
+			var cpass=$('#reg_password_confirm').val();
+			if(fname && lname && email && mobile && pass && cpass)
+			{
+						$.ajax({
+								type: 'POST',
+								url: '<?=base_url("home/user_register"); ?>',
+								data:'reg_first_name='+fname+'&reg_last_name='+lname+'&reg_email='+email+'&reg_mobile='+mobile+'&reg_password='+pass+'&reg_password_conf='+cpass+'&<?=$this->security->get_csrf_token_name()?>=<?=$this->security->get_csrf_hash()?>',
+								success: function(html){
+									if(html){
+										var obj = JSON.parse(html);
+										if(obj.status==true)
+										{
+											$('#reg_message').html(obj.message);
+											window.location.href="<?=base_url('my-account')?>";
+										}
+										else
+										{
+											$('#reg_message').html(obj.message);
+										}
+									
+									}
+									else
+									{
+										$('#reg_message').html('Error Occured, Try again after sometime');
+										
+									}
+								  
+								}
+							});
+				
+			}
+			else
+			{
+				$('reg_message').html('Fill all(*) required fields ');
+			}
+			
+		}
+		
+				function user_login()
+		{
+			$('#login_message').html();
+			var email=$('#login_email').val();
+			var pass=$('#login_password').val();
 
+			if(email && pass)
+			{
+						$.ajax({
+								type: 'POST',
+								url: '<?=base_url("home/user_login"); ?>',
+								data:'login_email='+email+'&login_password='+pass+'&<?=$this->security->get_csrf_token_name()?>=<?=$this->security->get_csrf_hash()?>',
+								success: function(html){
+									if(html){
+										var obj = JSON.parse(html);
+										if(obj.status==true)
+										{
+											$('#login_message').html(obj.message);
+											window.location.href="<?=base_url('my-account')?>";
+										}
+										else
+										{
+											$('#login_message').html(obj.message);
+										}
+									
+									}
+									else
+									{
+										$('#login_message').html('Error Occured, Try again after sometime');
+										
+									}
+								  
+								}
+							});
+				
+			}
+			else
+			{
+				$('login_message').html('Fill all(*) required fields ');
+			}
+			
+		}
+		</script>
 
         <div id="register-dialog" class="mfp-with-anim mfp-hide mfp-dialog clearfix">
             <i class="fa fa-edit dialog-icon"></i>
-            <h3>Member Register</h3>
-            <h5>Ready to get best offers? Let's get started!</h5>
+            <h3>Register</h3>
+
+			<h5 id="reg_message" style="color:brown"></h5>
             <form class="dialog-form">
+			<div class="row">
+				<div class="col-md-6">
+			  <div class="form-group ">
+                    <label>First Name *</label>
+                    <input type="text" class="form-control" id="reg_first_name" required>
+                </div>
+				</div>
+				<div class="col-md-6">
+				 <div class="form-group">
+                    <label>Last Name *</label>
+                    <input type="text" class="form-control" id="reg_last_name" required>
+                </div>
+			</div>
+			</div>
                 <div class="form-group">
-                    <label>E-mail</label>
-                    <input type="text" placeholder="email@domain.com" class="form-control">
+                    <label>E-mail *</label>
+                    <input type="email" id="reg_email" class="form-control" required>
+                </div>
+				<div class="form-group">
+                    <label>Mobile (without ISD code)</label>
+                    <input type="tel" id="reg_mobile" class="form-control" >
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" placeholder="My secret password" class="form-control">
+                    <label>Password *</label>
+                    <input type="password" id="reg_password" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label>Repeat Password</label>
-                    <input type="password" placeholder="Type your password again" class="form-control">
+                    <label>Repeat Password *</label>
+                    <input type="password" id="reg_password_confirm" class="form-control" required>
                 </div>
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <label>Your Area</label>
-                            <input type="password" placeholder="Boston" class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Postal/Zip</label>
-                            <input type="password" placeholder="12345" class="form-control">
-                        </div>
-                    </div>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox">Get hot offers via e-mail
-                    </label>
-                </div>
-                <input type="submit" value="Sign up" class="btn btn-primary">
+
+				<a href="javascript:void(0);" class="btn btn-primary" onclick="user_signup();">Sign up<a>
             </form>
             <ul class="dialog-alt-links">
                 <li><a class="popup-text" href="#login-dialog" data-effect="mfp-zoom-out">Already member</a>
                 </li>
             </ul>
-        </div>
+        
+		</div>
+		
+		
+
 
 
         <div id="password-recover-dialog" class="mfp-with-anim mfp-hide mfp-dialog clearfix">
@@ -372,7 +488,7 @@
             <h5>Fortgot your password? Don't worry we can deal with it</h5>
             <form class="dialog-form">
                 <label>E-mail</label>
-                <input type="text" placeholder="email@domain.com" class="span12">
+                <input type="email" id="forgot_email"class="span12">
                 <input type="submit" value="Request new password" class="btn btn-primary">
             </form>
         </div>

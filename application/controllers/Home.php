@@ -108,6 +108,223 @@ class Home extends CI_Controller {
 		}
 	}
 	
+	public function user_register()
+	{
+	 $this->load->library('form_validation');
+     $this->load->helper('form');
+	 $this->load->model('authentication_model');
+	$return['status']=false;
+	$this->form_validation->set_rules('reg_first_name', 'First Name', 'required',
+			array('required' =>  keyword_value('you_must_enter_first_name','First Name is required')
+		));
+		
+		$this->form_validation->set_rules('reg_last_name', 'Last Name', 'required',
+			array('required' =>  keyword_value('you_must_enter_last_name','Last Name is required')
+		));
+		
+			$this->form_validation->set_rules('reg_mobile', 'Last Name', 'required|is_unique[tbl_user.user_phone]|min_length[10]|max_length[12]',
+			array('required' =>  keyword_value('you_must_enter_mobile','Mobile Number is required')
+		));
+		
+			$this->form_validation->set_rules('reg_email', 'Email', 'required|valid_email|is_unique[tbl_user.user_email]',
+			array('required' =>  keyword_value('you_must_enter_email','You must enter Email.'),
+				  'valid_email' => keyword_value('please_enter_valid_email','Please Enter a valid Email'),
+				  'is_unique'=>keyword_value('email_exits','Emil already exits. Please choose another one or try logging in'))
+		);
+		
+		$this->form_validation->set_rules('reg_password', 'Password', 'required',
+				array('required' =>  keyword_value('you_must_enter_password','Enter  Password'))
+		);
+		
+		$this->form_validation->set_rules('reg_password_conf', 'Confirm Password', 'required|matches[reg_password]',
+				array('required' =>  keyword_value('you_must_enter_cpassword','Enter Confirm Password'))
+		
+		);
+		
+		
+		  if ($this->form_validation->run() == FALSE)
+		{
+			$return['message']=validation_errors();
+		}
+		
+		else
+		{
+			$data['user_email']			=	$this->input->post('reg_email');
+			$data['user_firstname']		=	$this->input->post('reg_first_name');
+			$data['user_lastname']		=	$this->input->post('reg_last_name');
+			$data['active']				=	1;
+			if($this->input->post('reg_mobile'))
+			{
+				$data['user_phone']=$this->input->post('reg_mobile');
+				
+			}
+			$password					= 	hash ( "sha256", $this->input->post('reg_password'));
+			$data['user_password']		=	$password;
+			$return						=	$this->authentication_model->user_register($data);
+			if($return['status']==true)
+			{
+				$this->sendverifylink();
+				$return2=$this->authentication_model->user_login($data['user_email'],$data['user_password']);
+				if($return2['status']==false)
+				{
+					$return['message']=$return['msg'];
+				}
+				else
+				{
+					$return['message']='Registeration success. Logging you in....... ';
+					$return['status']=true;
+				}
+			}
+		
+				
+				
+		}
+		
+		
+		echo json_encode($return);
+	
+		
+	}
+	
+	
+		
+	public function user_login()
+	{
+	 $this->load->library('form_validation');
+     $this->load->helper('form');
+	 $this->load->model('authentication_model');
+	$return['status']=false;
+
+		
+			$this->form_validation->set_rules('login_email', 'Email', 'required|valid_email',
+			array('required' =>  keyword_value('you_must_enter_email','You must enter Email.'),
+				  'valid_email' => keyword_value('please_enter_valid_email','Please Enter a valid Email'))
+		);
+		
+		$this->form_validation->set_rules('login_password', 'Password', 'required',
+				array('required' =>  keyword_value('you_must_enter_password','Enter  Password'))
+		);
+	
+		
+		  if ($this->form_validation->run() == FALSE)
+		{
+			$return['message']=validation_errors();
+		}
+		
+		else
+		{
+			$data['user_email']			=	$this->input->post('login_email');
+			$password					= 	hash ( "sha256", $this->input->post('login_password'));
+			$data['user_password']		=	$password;
+		
+				$return2=$this->authentication_model->user_login($data['user_email'],$data['user_password']);
+				if($return2['status']==false)
+				{
+					$return['message']=$return2['msg'];
+				}
+				else
+				{
+					$return['message']='Success! Logging you in....... ';
+					$return['status']=true;
+				}
+			
+				
+				
+		}
+		
+		
+		echo json_encode($return);
+	
+		
+	}
+	
+	
+	public function my_account()
+	
+	{
+		
+		if($this->session->front_user_id)
+		{
+		$this->data['title']			=   DEFAULT_TITLE;
+		$this->data['meta_keywords']	=   DEFAULT_KEYWORDS;
+		$this->data['meta_description']	=   DEFAULT_DESCRIPTION;
+		$this->data['profile']			=   $this->home_model->get_user_profile();
+		$this->load->view('public/templates/header',$this->data);
+		$this->load->view('public/my_account',$this->data);
+		$this->load->view('public/templates/footer',$this->data);
+		}
+		else
+		{	$this->sesssion->set_flashdata('lflag','login');
+			redirect('/');
+			
+		}
+
+		
+	}
+	
+		public function my_addresses()
+	
+	{
+		
+		if($this->session->front_user_id)
+		{
+		$this->data['title']			=   DEFAULT_TITLE;
+		$this->data['meta_keywords']	=   DEFAULT_KEYWORDS;
+		$this->data['meta_description']	=   DEFAULT_DESCRIPTION;
+		$this->data['addresses']		=   $this->home_model->get_user_addresses();
+		$this->load->view('public/templates/header',$this->data);
+		$this->load->view('public/my_addresses',$this->data);
+		$this->load->view('public/templates/footer',$this->data);
+		}
+		else
+		{	$this->sesssion->set_flashdata('lflag','login');
+			redirect('/');
+			
+		}
+
+		
+	}
+	
+			public function logout()
+	
+	{
+		
+		if($this->session->front_user_id)
+		{
+			  $sses=array('front_user_id','front_username','front_user_data');
+			  $this->session->unset_userdata($sses);
+		}
+		redirect('/');	
+
+		
+	}
+	
+				public function sendverifylink()
+	{
+		 if(@$this->session->front_user_data->user_email)
+		{
+			$this->load->helper('string');
+			$random=random_string('alnum',30);
+			$vlink=base_url('verify_email/verify_user/'.$random);
+			$this->authentication_model->update_email_otp_user($this->session->front_user_id,$random);
+			$template=get_email_template('user_register');
+			$ret=false;
+			if($template)
+			{
+			$find = array("{{LOGO}}","{{SITE_URL}}","{{SITE_NAME}}","{{USER_NAME}}","{{VERIFY_LINK}}");
+			$replace = array(LOGO,base_url(),SITE_NAME,$this->session->front_user_data->user_firstname.' '.$this->session->front_user_data->user_lastname,$vlink);
+			$email['to']=$this->session->front_user_data->user_email;
+			$email['subject']=$template['template_subject'];
+			$email['message']=str_replace($find,$replace,$template['template']);
+			$ret=sendemail($email);
+			}
+			}
+		
+		
+		
+	}
+	
+	
 	
 	
 	

@@ -73,13 +73,10 @@ class Register extends CI_Controller {
 				
 		}
 		
-		
-		
-	
-		
 	}
 	
-		public function sendverifylink()
+	
+			public function sendverifylink()
 	{
 		if(@$this->session->user_data->admin_email)
 		{
@@ -114,11 +111,25 @@ class Register extends CI_Controller {
 			redirect('admin');
 	
 		}
-		else
-			
+		else if(@$this->session->front_user_data->user_email)
+		{
+			$this->load->helper('string');
+			$random=random_string('alnum',30);
+			$vlink=base_url('verify_email/verify_user/'.$random);
+			$this->authentication_model->update_user_email_otp($this->session->front_user_id,$random);
+			$template=get_email_template('user_register');
+			$ret=false;
+			if($template)
 			{
-				redirect('authentication/admin');
+			$find = array("{{LOGO}}","{{SITE_URL}}","{{SITE_NAME}}","{{USER_NAME}}","{{VERIFY_LINK}}");
+			$replace = array(LOGO,base_url(),SITE_NAME,$this->session->front_user_data->user_firstname.' '.$this->session->front_user_data->user_lastname,$vlink);
+			$email['to']=$this->session->front_user_data->user_email;
+			$email['subject']=$template['template_subject'];
+			$email['message']=str_replace($find,$replace,$template['template']);
+			$ret=sendemail($email);
 			}
+			}
+		
 		
 		
 	}
