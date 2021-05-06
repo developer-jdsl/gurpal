@@ -14,51 +14,77 @@
                 </div>
                 <div class="col-md-9">
                     <div id="edit-address-dialog" class="mfp-with-anim mfp-hide mfp-dialog clearfix">
-                        <form>
+                    			<?php echo form_open_multipart('edit-address',array('id'=>'edit_address_form')); ?>
+						     <div class="form-group">
+                                <label>Address</label>
+								<textarea name="edit_profile_address" class="form-control" required></textarea>
+                            </div>
                             <div class="form-group">
-                                <label>Country</label>
-                                <input value="USA" type="text" class="form-control" />
+                                <label>State</label>
+								<select name="edit_profile_state" class="form-control" required >
+									<option value="">Select State</option>
+								<?php foreach($states as $state) { ?>
+							
+								<option value="<?=$state['pk_state_id']?>"><?=$state['state_name']?></option>
+								<?php } ?>
+								</select>
                             </div>
                             <div class="form-group">
                                 <label>City</label>
-                                <input value="San Francisco, CA" type="text" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label>Address</label>
-                                <input value="1355 Market St, Suite 900" type="text" class="form-control" />
+                               <select name="edit_profile_city" class="form-control" required >
+							   <option value="">Select City</option>
+								<?php foreach($cities as $city) { ?>
+								
+								<option value="<?=$city['pk_city_id']?>" class="city_sel_li sel_li_<?=$city['fk_state_id']?>" ><?=$city['city_name']?></option>
+								<?php } ?>
+								</select>
                             </div>
                             <div class="form-group">
                                 <label>Zip/Postal</label>
-                                <input value="94103" type="text" class="form-control" />
+                                <input type="text" name="edit_profile_zip" class="form-control" required />
                             </div>
+							<input type="hidden" name="edit_id">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" class="i-check" />Set Primary</label>
+                                    <input type="checkbox" name="edit_is_default" class="i-check" />Set Primary</label>
                             </div>
                             <input type="submit" class="btn btn-primary" value="Save Changes" />
                         </form>
                     </div>
                     <div id="add-address-dialog" class="mfp-with-anim mfp-hide mfp-dialog clearfix">
-                        <form>
+                   
+						<?php echo form_open_multipart('add-address'); ?>
+						     <div class="form-group">
+                                <label>Address</label>
+								<textarea name="add_profile_address" class="form-control" required></textarea>
+                            </div>
                             <div class="form-group">
-                                <label>Country</label>
-                                <input type="text" class="form-control" />
+                                <label>State</label>
+								<select name="add_profile_state" class="form-control" required >
+									<option value="">Select State</option>
+								<?php foreach($states as $state) { ?>
+							
+								<option value="<?=$state['pk_state_id']?>"><?=$state['state_name']?></option>
+								<?php } ?>
+								</select>
                             </div>
                             <div class="form-group">
                                 <label>City</label>
-                                <input type="text" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label>Address</label>
-                                <input type="text" class="form-control" />
+                               <select name="add_profile_city" class="form-control" required >
+							   <option value="">Select City</option>
+								<?php foreach($cities as $city) { ?>
+								
+								<option value="<?=$city['pk_city_id']?>" class="city_sel_li sel_li_<?=$city['fk_state_id']?>" ><?=$city['city_name']?></option>
+								<?php } ?>
+								</select>
                             </div>
                             <div class="form-group">
                                 <label>Zip/Postal</label>
-                                <input type="text" class="form-control" />
+                                <input type="text" name="add_profile_zip" class="form-control" required />
                             </div>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" checked class="i-check" />Set Primary</label>
+                                    <input type="checkbox" name="add_is_default" class="i-check" />Set Primary</label>
                             </div>
                             <input type="submit" class="btn btn-primary" value="Add Address" />
                         </form>
@@ -70,7 +96,7 @@
                         <div class="col-md-4">
                             <div class="address-box">
                                 <a class="address-box-remove" href="#" data-toggle="tooltip" data-placement="right" title="Remove"></a>
-                                <a class="address-box-edit popup-text" href="#edit-address-dialog" data-effect="mfp-move-from-top" data-toggle="tooltip" data-placement="right" title="Edit"></a>
+                                <a class="address-box-edit popup-text" href="#edit-address-dialog" data-effect="mfp-move-from-top" data-toggle="tooltip" data-placement="right"  data-zip="<?=$address['profile_zip']?>" data-eid="<?=$address['pk_profile_id']?>" data-state="<?=$address['pk_state_id']?>" data-city="<?=$address['pk_city_id']?>" data-address="<?=$address['profile_address']?>" data-title="Edit"></a>
                                 <ul>
                                     <li>Address: <?=$address['profile_address']?></li>
                                     <li>City: <?=$address['city_name']?></li>

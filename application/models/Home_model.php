@@ -338,7 +338,7 @@ class Home_model extends CI_Model {
    
       function get_user_addresses()
    {
-	   $this->db->select('up.*,c.city_name,s.state_name');
+	   $this->db->select('up.*,c.pk_city_id,c.city_name,s.pk_state_id,s.state_name');
 	   $this->db->from('tbl_user_profile as up');
 	   $this->db->join('tbl_states as s','up.profile_state=s.pk_state_id','inner');
 	   $this->db->join('tbl_cities as c','up.profile_city=c.pk_city_id','inner');
@@ -354,6 +354,107 @@ class Home_model extends CI_Model {
 		 
 	 }
 	  return false;    
+   }
+   
+   
+   function update_profile($data)
+   {
+	   $this->db->where(array('pk_user_id'=>$this->session->front_user_id));
+	   return $this->db->update('tbl_user',$data);
+   }
+   
+   function profile_check_email($data)
+   {
+	  $this->db->select('pk_user_id');
+	  $this->db->from('tbl_user');
+	  $this->db->where('pk_user_id!=',$this->session->front_user_id);
+	  $this->db->where('user_email=',$data['user_email']);
+	  $res=$this->db->get();
+	  if($res)
+	  {
+		  $res=$res->row_array();
+		  if($res['pk_user_id'])
+		  {
+			  return false;
+			  
+		  }
+		  else
+		  {
+			  return true;
+		  }
+		  
+		  
+	  }
+	  
+	  return false;
+	   
+   }
+   
+   function get_states()
+   {
+	   $res=$this->db->get_where('tbl_states',array('active'=>1,'is_deleted'=>0));
+	   if($res)
+	   {
+		   return $res->result_array();
+	   }
+	   return false;
+   }
+   
+
+   
+      function profile_check_phone($data)
+   {
+	  $this->db->select('pk_user_id');
+	  $this->db->from('tbl_user');
+	  $this->db->where('pk_user_id!=',$this->session->front_user_id);
+	  $this->db->where('user_phone=',$data['user_phone']);
+	  $res=$this->db->get();
+	  if($res)
+	  {
+		  $res=$res->row_array();
+		  if($res['pk_user_id'])
+		  {
+			  return false;
+			  
+		  }
+		  else
+		  {
+			  return true;
+		  }
+		  
+		  
+	  }
+	  
+	  return false;
+	   
+   }
+   
+   function add_address($data)
+   {
+	   if($data['is_default']==1)
+	   {
+		   $this->db->where('fk_user_id',$this->session->front_user_id);
+		   $this->db->update('tbl_user_profile',array('is_default'=>0));
+
+		  
+	   }
+	   
+	    return $this->db->insert('tbl_user_profile',$data);
+	   
+   }
+   
+      function edit_address($id,$data)
+   {
+	   if($data['is_default']==1)
+	   {
+		   $this->db->where('fk_user_id',$this->session->front_user_id);
+		   $this->db->update('tbl_user_profile',array('is_default'=>0));
+		   
+			
+	   }
+	   $this->db->where('pk_profile_id',$id);
+		   return $this->db->update('tbl_user_profile',$data);
+	   
    }
 	
 	

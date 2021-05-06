@@ -568,7 +568,29 @@ $(document).ready(function() {
     });
     
 });
+
+	$('[name="add_profile_state"]').on('change', function (e) {
+		var val=$(this).val();
+		$('.city_sel_li').hide();
+		$('.sel_li_'+val).show();
+    
 });
+
+});
+
+
+	 $('.address-box-edit').click(function(){
+	 
+	 $('[name="edit_profile_address"]').val($(this).data('address'));
+	 $('[name="edit_profile_state"]').val($(this).data('state'));
+	 $('[name="edit_profile_city"]').val($(this).data('city'));
+	 $('[name="edit_profile_zip"]').val($(this).data('zip'));
+	 $('[name="edit_id"]').val($(this).data('eid'));
+	 
+	 
+	 });
+	 
+	 
 		 $('.cart-item-remove').click(function(){
 			var pid=$(this).data('id');
 			var type=$(this).data('type');

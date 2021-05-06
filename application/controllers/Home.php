@@ -242,8 +242,19 @@ class Home extends CI_Controller {
 	public function my_account()
 	
 	{
-		
+		$msg="";
 		if($this->session->front_user_id)
+		{
+		
+		$this->load->library('form_validation');
+		$this->load->helper('form');
+	
+		$this->form_validation->set_rules('user_firstname', 'First Name', 'required');
+		$this->form_validation->set_rules('user_lastname', 'Last Name', 'required');
+		$this->form_validation->set_rules('user_email', 'Email', 'required|valid_email');
+		$this->form_validation->set_rules('user_phone', 'Phone', 'required|min_length[10]|max_length[12]');	
+
+		  if ($this->form_validation->run() == FALSE)
 		{
 		$this->data['title']			=   DEFAULT_TITLE;
 		$this->data['meta_keywords']	=   DEFAULT_KEYWORDS;
@@ -252,6 +263,80 @@ class Home extends CI_Controller {
 		$this->load->view('public/templates/header',$this->data);
 		$this->load->view('public/my_account',$this->data);
 		$this->load->view('public/templates/footer',$this->data);
+			
+		}
+		else
+			
+		{
+			
+			$image=$error=null;	
+		
+			if($_FILES['user_image']["name"])
+			{
+			  $config['upload_path']   = './uploads/users/'; 
+			  $config['allowed_types'] = 'gif|jpg|png|jpeg'; 
+			  $config['max_size']      = 1024;
+			  $this->load->library('upload', $config);
+				   if ( ! $this->upload->do_upload('user_image')) {
+			 $error = implode('<br>',$this->upload->display_errors()); 
+		
+		  }
+		  
+		  else { 
+					$uploadedImage = $this->upload->data();
+					$image=$uploadedImage['file_name'];
+				} 
+			}
+			
+			if($image)
+			{
+				$data['user_image']=$image;
+			}
+			
+			$data['user_firstname']=$this->input->post('user_firstname');
+			$data['user_lastname']=$this->input->post('user_lastname');
+			$data['user_email']=$this->input->post('user_email');
+			$data['user_phone']=$this->input->post('user_phone');
+			
+			if(!$this->home_model->profile_check_phone($data))
+			{				
+					$msg='Phone number is associated with another account';
+				
+			}
+			
+			if(!$this->home_model->profile_check_email($data))
+			{
+	
+				$msg='Email is associated with another account';
+				
+			}
+			
+			$flag=$this->home_model->update_profile($data);
+	
+		if($flag)
+		{
+			$msg='Profile Sucessfully updated';
+
+		}
+		else
+		{
+			$msg='Error Occured try again';
+		
+			
+		}
+		
+		$this->data['title']			=   DEFAULT_TITLE;
+		$this->data['meta_keywords']	=   DEFAULT_KEYWORDS;
+		$this->data['meta_description']	=   DEFAULT_DESCRIPTION;
+		$this->data['profile']			=   $this->home_model->get_user_profile();
+		$this->data['msg']			    =  $msg?$msg:'';
+		$this->load->view('public/templates/header',$this->data);
+		$this->load->view('public/my_account',$this->data);
+		$this->load->view('public/templates/footer',$this->data);
+		
+		}
+		
+		
 		}
 		else
 		{	$this->sesssion->set_flashdata('lflag','login');
@@ -265,13 +350,16 @@ class Home extends CI_Controller {
 		public function my_addresses()
 	
 	{
-		
+		$this->load->library('form_validation');
+		$this->load->helper('form');
 		if($this->session->front_user_id)
 		{
 		$this->data['title']			=   DEFAULT_TITLE;
 		$this->data['meta_keywords']	=   DEFAULT_KEYWORDS;
 		$this->data['meta_description']	=   DEFAULT_DESCRIPTION;
 		$this->data['addresses']		=   $this->home_model->get_user_addresses();
+		$this->data['states']			=   $this->home_model->get_states();
+		$this->data['cities']			=   $this->home_model->get_cities();
 		$this->load->view('public/templates/header',$this->data);
 		$this->load->view('public/my_addresses',$this->data);
 		$this->load->view('public/templates/footer',$this->data);
@@ -284,6 +372,60 @@ class Home extends CI_Controller {
 
 		
 	}
+	
+	public function add_address()
+	
+	{
+		$this->load->library('form_validation');
+		$this->load->helper('form');
+		if($this->session->front_user_id)
+		{
+			$data['profile_address']=$this->input->post('add_profile_address');
+			$data['profile_state']=$this->input->post('add_profile_state');
+			$data['profile_city']=$this->input->post('add_profile_city');
+			$data['profile_zip']=$this->input->post('add_profile_zip');
+			$data['is_default']=$this->input->post('add_is_default')?1:0;
+			$data['fk_user_id']=$this->session->front_user_id;
+			
+			$this->home_model->add_address($data);
+			redirect('/my-addresses');
+		}
+		else
+		{	$this->sesssion->set_flashdata('lflag','login');
+			redirect('/');
+			
+		}
+
+		
+	}
+	
+		public function edit_address()
+	
+	{
+		$this->load->library('form_validation');
+		$this->load->helper('form');
+		if($this->session->front_user_id)
+		{
+			$data['profile_address']=$this->input->post('edit_profile_address');
+			$data['profile_state']=$this->input->post('edit_profile_state');
+			$data['profile_city']=$this->input->post('edit_profile_city');
+			$data['profile_zip']=$this->input->post('edit_profile_zip');
+			$data['is_default']=$this->input->post('edit_is_default')?1:0;
+			$id=$this->input->post('edit_id');
+			
+			$this->home_model->edit_address($id,$data);
+			redirect('/my-addresses');
+		}
+		else
+		{	$this->sesssion->set_flashdata('lflag','login');
+			redirect('/');
+			
+		}
+
+		
+	}
+	
+	
 	
 			public function logout()
 	
