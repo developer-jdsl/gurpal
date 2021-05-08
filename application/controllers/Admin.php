@@ -2467,10 +2467,11 @@ class Admin extends CI_Controller {
 			$data['display_page']=$this->input->post('display_page');
 			$data['display_section']=$this->input->post('display_section');
 
-			$data['display_locations']=$this->input->post('display_locations');
-			$data['display_categories']=$this->input->post('display_categories');
+			$data['display_locations']=implode(',',$this->input->post('display_locations'));
+			$data['display_categories']=implode(',',$this->input->post('display_categories'));
 			$data['fk_admin_id']=$this->input->post('fk_admin_id');
 			$data['active']=$this->input->post('active');
+	
 			$return=$this->admin_model->update_ad($id,$data);
 		
 			if($return['status']==true && !$error)
@@ -2584,9 +2585,6 @@ class Admin extends CI_Controller {
 	{
 
 		is_superadmin();
-		
-		
-		
 	
 			$this->form_validation->set_rules('active', 'Status', 'required',
 			array('required' =>  keyword_value('you_must_select_ad_media','You must select Banner Image.')));
@@ -2609,19 +2607,17 @@ class Admin extends CI_Controller {
 			$image=$error=null;
 			if($_FILES['banner_image']["name"])
 			{
+				$this->load->library('upload');
 			  $config['upload_path']   = './uploads/banners/'; 
 			  $config['allowed_types'] = 'gif|jpg|png|jpeg'; 
 			  $config['max_size']      = 1024;
-			  $this->load->library('upload', $config);
-				   if ( ! $this->upload->do_upload('banner_image')) {
+			  $this->upload->initialize($config);
+			if ( ! $this->upload->do_upload('banner_image')) {
 			 $error = implode('<br>',$this->upload->display_errors()); 
-		
-		  }else { 
-
-
-			$uploadedImage = $this->upload->data();
-			$image=$uploadedImage['file_name'];
-      } 
+			}else { 
+					$uploadedImage = $this->upload->data();
+					$image=$uploadedImage['file_name'];
+			} 
 			}
 			
 			$data['banner_text']=$this->input->post('banner_text');
@@ -2719,16 +2715,18 @@ class Admin extends CI_Controller {
 		}
 		else
 		{
-			
+		
 			$image=$error=null;
 			if($_FILES['banner_image']["name"])
 			{
+				$this->load->library('upload');
 			  $config['upload_path']   = './uploads/banners/'; 
 			  $config['allowed_types'] = 'gif|jpg|png|jpeg'; 
 			  $config['max_size']      = 1024;
-			  $this->load->library('upload', $config);
+			 $this->upload->initialize($config);
 				   if ( ! $this->upload->do_upload('banner_image')) {
 			 $error = implode('<br>',$this->upload->display_errors()); 
+	
 		
 		  }else { 
 
@@ -2746,6 +2744,8 @@ class Admin extends CI_Controller {
 			{
 				$data['banner_image']=$image;
 			}
+			
+	
 			$data['active']=$this->input->post('active');
 			$data['fk_admin_id']=$this->session->pk_admin_id;
 			

@@ -153,7 +153,7 @@ class Product extends CI_Controller {
 		$data['pid']=$this->input->post('product_id');
 		$data['sid']=$this->input->post('size_id');
 		$data['cid']=$this->input->post('color_id');
-		$details=$this->product_model->get_variation_details($data);
+		$details=$this->product_model->get_variation_details($data,array('city'=>null,'search'=>null));
 		if($details)
 		{
 			if($this->session->cart_data)
@@ -237,7 +237,7 @@ class Product extends CI_Controller {
 		$html=$html_li="";
 		$updated=0;
 		$data['pid']=$this->input->post('pid');
-		$details=$this->product_model->get_variation_detail($data);
+		$details=$this->product_model->get_variation_detail($data,array('city'=>null,'search'=>null));
 		if($details)
 		{
 			if($this->session->cart_data)
@@ -321,7 +321,7 @@ class Product extends CI_Controller {
 		$html=$html_li="";
 		$updated=$subt=$gst=0;
 		$data['pid']=$this->input->post('pid');
-		$details=$this->product_model->get_variation_detail($data);
+		$details=$this->product_model->get_variation_detail($data,array('city'=>null,'search'=>null));
 		$st=array('status'=>'fail','html'=>'','subtotal'=>0,'gst'=>0,'gtotal'=>0,'shipping'=>0);
 		if($details)
 		{
@@ -396,7 +396,7 @@ class Product extends CI_Controller {
 		$updated=$subt=$gst=0;
 		$data['pid']=$this->input->post('pid');
 		$qty=$this->input->post('qty');
-		$details=$this->product_model->get_variation_detail($data);
+		$details=$this->product_model->get_variation_detail($data,array('city'=>null,'search'=>null));
 		$st=array('status'=>'fail','html'=>'','subtotal'=>0,'gst'=>0,'gtotal'=>0,'shipping'=>0);
 		if($details)
 		{

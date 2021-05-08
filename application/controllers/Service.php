@@ -153,7 +153,7 @@ class Service extends CI_Controller {
 		$html=$html_li="";
 		$updated=0;
 		$data['sid']=$this->input->post('service_id');
-		$details=$this->service_model->get_variation_details($data);
+		$details=$this->service_model->get_variation_details($data,array('city'=>null,'search'=>null));
 		if($details)
 		{
 			if($this->session->cart_data)
@@ -237,7 +237,7 @@ class Service extends CI_Controller {
 		$html=$html_li="";
 		$updated=0;
 		$data['pid']=$this->input->post('pid');
-		$details=$this->service_model->get_variation_detail($data);
+		$details=$this->service_model->get_variation_detail($data,array('city'=>null,'search'=>null));
 		if($details)
 		{
 			if($this->session->cart_data)
@@ -321,7 +321,7 @@ class Service extends CI_Controller {
 		$html=$html_li="";
 		$updated=$subt=$gst=0;
 		$data['pid']=$this->input->post('pid');
-		$details=$this->service_model->get_variation_detail($data);
+		$details=$this->service_model->get_variation_detail($data,array('city'=>null,'search'=>null));
 		$st=array('status'=>'fail','html'=>'','subtotal'=>0,'gst'=>0,'gtotal'=>0,'shipping'=>0);
 		if($details)
 		{

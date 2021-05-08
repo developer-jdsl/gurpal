@@ -94,7 +94,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 										<?php  $city_arr=explode(',',$result['display_locations']);?>
 										  <div class="form-group">
 										<label><?=keyword_value('display_locations','Display Locations')?></label>
-										<select name="display_locations" class="form-control select2 form-control-user" multiple>
+										<select name="display_locations[]" class="form-control select2 form-control-user" multiple>
 										<option value="0">ALL</option>
 										<?php foreach($cities as $city) { ?>
 										<option value="<?=$city['pk_city_id']?>" <?php if(in_array($city['pk_city_id'],$city_arr)){ echo 'selected';}?> ><?=$city['city_name']?></option>
@@ -107,7 +107,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 										<?php  $cat_arr=explode(',',$result['display_categories']);?>
 										  <div class="form-group">
 										<label><?=keyword_value('display_categories','Display Categories')?></label>
-										<select name="display_categories" class="form-control select2 form-control-user" multiple>
+										<select name="display_categories[]" class="form-control select2 form-control-user" multiple>
 										<option value="0">ALL</option>
 										<?php foreach($cats as $cat) { ?>
 										<option value="<?=$cat['pk_category_id']?>"  <?php if(in_array($cat['pk_category_id'],$cat_arr)){echo 'selected';}?>  ><?=$cat['category_name']?></option>

@@ -59,7 +59,7 @@ class Home extends CI_Controller {
 		$dt['city']		=		$this->input->post('city')?$this->input->post('city'):null;
 		$this->data['products']			=	$this->home_model->get_products(6,$dt);
 		$this->data['services']			=	$this->home_model->get_services(6,$dt);
-		//$this->data['banners']			=	$this->home_model->get_banners();
+		//$this->data['banners']		=	$this->home_model->get_banners();
 		$this->data['brands']			=	$this->home_model->get_brands();
 		$this->data['advertisements']	=	$this->home_model->get_advertisements('home','left_sidebar');
 		$this->data['categories']		=	$this->home_model->get_service_cats();
