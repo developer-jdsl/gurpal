@@ -95,8 +95,8 @@
 					?>
                         <div class="col-md-4">
                             <div class="address-box">
-                                <a class="address-box-remove" href="#" data-toggle="tooltip" data-placement="right" title="Remove"></a>
-                                <a class="address-box-edit popup-text" href="#edit-address-dialog" data-effect="mfp-move-from-top" data-toggle="tooltip" data-placement="right"  data-zip="<?=$address['profile_zip']?>" data-eid="<?=$address['pk_profile_id']?>" data-state="<?=$address['pk_state_id']?>" data-city="<?=$address['pk_city_id']?>" data-address="<?=$address['profile_address']?>" data-title="Edit"></a>
+                                <a class="address-box-remove" href="javascript:void(0);" data-toggle="tooltip" data-placement="right" title="Remove"></a>
+                                <a class="address-box-edit popup-text" href="#edit-address-dialog" data-effect="mfp-move-from-top" data-toggle="tooltip" data-placement="right"  data-zip="<?=$address['profile_zip']?>" data-default="<?=$address['is_default']?>" data-eid="<?=$address['pk_profile_id']?>" data-state="<?=$address['pk_state_id']?>" data-city="<?=$address['pk_city_id']?>" data-address="<?=$address['profile_address']?>" data-title="Edit"></a>
                                 <ul>
                                     <li>Address: <?=$address['profile_address']?></li>
                                     <li>City: <?=$address['city_name']?></li>

@@ -55,8 +55,10 @@ class Home extends CI_Controller {
 	{
 		if($ret=$this->home_model->is_valid_city($city))
 		{
-		$this->data['products']			=	$this->home_model->get_products(6);
-		$this->data['services']			=	$this->home_model->get_services(6);
+		$dt['search']	=		$this->input->post('search')?$this->input->post('search'):null;
+		$dt['city']		=		$this->input->post('city')?$this->input->post('city'):null;
+		$this->data['products']			=	$this->home_model->get_products(6,$dt);
+		$this->data['services']			=	$this->home_model->get_services(6,$dt);
 		//$this->data['banners']			=	$this->home_model->get_banners();
 		$this->data['brands']			=	$this->home_model->get_brands();
 		$this->data['advertisements']	=	$this->home_model->get_advertisements('home','left_sidebar');
@@ -339,7 +341,7 @@ class Home extends CI_Controller {
 		
 		}
 		else
-		{	$this->sesssion->set_flashdata('lflag','login');
+		{	$this->session->set_flashdata('lflag','login');
 			redirect('/');
 			
 		}
@@ -365,7 +367,8 @@ class Home extends CI_Controller {
 		$this->load->view('public/templates/footer',$this->data);
 		}
 		else
-		{	$this->sesssion->set_flashdata('lflag','login');
+		{
+			$this->session->set_flashdata('lflag','login');
 			redirect('/');
 			
 		}
@@ -391,7 +394,7 @@ class Home extends CI_Controller {
 			redirect('/my-addresses');
 		}
 		else
-		{	$this->sesssion->set_flashdata('lflag','login');
+		{	$this->session->set_flashdata('lflag','login');
 			redirect('/');
 			
 		}
@@ -417,7 +420,7 @@ class Home extends CI_Controller {
 			redirect('/my-addresses');
 		}
 		else
-		{	$this->sesssion->set_flashdata('lflag','login');
+		{	$this->session->set_flashdata('lflag','login');
 			redirect('/');
 			
 		}

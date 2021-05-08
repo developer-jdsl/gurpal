@@ -284,4 +284,197 @@ function  construct_init()
 		return false;
 
 	}
+	
+	
+	function product_cats_menu_li()
+	{
+		$html="<ul>";
+	$CI = & get_instance();		
+	$cats=$CI->db->get_where('tbl_product_category',array('active'=>1,'is_deleted'=>0,'parent_category'=>0));
+	if($cats)
+	{
+		$cats=$cats->result_array();
+		
+		foreach($cats as $cat)
+		{
+		$html.="<li><a href='".base_url('products/'.$cat['category_slug'])."'>".$cat['category_name']."</a>";
+		$cats1=$CI->db->get_where('tbl_product_category',array('active'=>1,'is_deleted'=>0,'parent_category'=>$cat['pk_category_id']));
+		if($cats1)
+		{
+			$html.="<ul>";
+			$cats1=$cats1->result_array();
+			foreach($cats1 as $cat1)
+			{
+			$html.="<li><a href='".base_url('products/'.$cat1['category_slug'])."'>".$cat1['category_name']."</a>";	
+			$cats2=$CI->db->get_where('tbl_product_category',array('active'=>1,'is_deleted'=>0,'parent_category'=>$cat1['pk_category_id']));
+			
+					if($cats2)
+				{
+					$html.="<ul>";
+					$cats2=$cats2->result_array();
+					
+					foreach($cats2 as $cat2)
+					{
+						$html.="<li><a href='".base_url('products/'.$cat2['category_slug'])."'>".$cat2['category_name']."</a></li>";	
+					}
+					$html.="</ul>";
+				}
+		
+			
+			
+			
+				
+			}
+			$html.="</li></ul>";
+		}
+		
+		}
+		$html.="</li>";
+	}
+	$html.="</ul>";
+	
+	return $html;
+	}
+	
+	function service_cats_menu_li()
+	{
+		$html="<ul>";
+	$CI = & get_instance();		
+	$cats=$CI->db->get_where('tbl_business_category',array('active'=>1,'is_deleted'=>0,'parent_category'=>0));
+	if($cats)
+	{
+		$cats=$cats->result_array();
+		
+		foreach($cats as $cat)
+		{
+		$html.="<li><a href='".base_url('city/'.$CI->session->city.'/services/'.$cat['category_slug'])."'>".$cat['category_name']."</a>";
+		$cats1=$CI->db->get_where('tbl_business_category',array('active'=>1,'is_deleted'=>0,'parent_category'=>$cat['pk_category_id']));
+		if($cats1)
+		{
+			$html.="<ul>";
+			$cats1=$cats1->result_array();
+			foreach($cats1 as $cat1)
+			{
+			$html.="<li><a href='".base_url('city/'.$CI->session->city.'/services/'.$cat1['category_slug'])."'>".$cat1['category_name']."</a>";	
+			$cats2=$CI->db->get_where('tbl_business_category',array('active'=>1,'is_deleted'=>0,'parent_category'=>$cat1['pk_category_id']));
+			
+					if($cats2)
+				{
+					$html.="<ul>";
+					$cats2=$cats2->result_array();
+					
+					foreach($cats2 as $cat2)
+					{
+						$html.="<li><a href='".base_url('city/'.$CI->session->city.'/services/'.$cat2['category_slug'])."'>".$cat2['category_name']."</a></li>";	
+					}
+					$html.="</ul>";
+				}
+		
+			
+			
+			
+				
+			}
+			$html.="</li></ul>";
+		}
+		
+		}
+		$html.="</li>";
+	}
+	$html.="</ul>";
+	
+	return $html;
+	}
+	
+	
+	function get_popular_products($limit=false)
+	{
+		$CI = & get_instance();	
+		$CI->db->select('p.*,pp.*,pc.category_name,b.brand_name,a.admin_name,c.color_name,c.color_value,s.size_name,s.size_value');
+        $CI->db->from('tbl_products as p');
+		$CI->db->join('tbl_product_pricing as pp','p.pk_product_id=pp.fk_product_id','left');
+		$CI->db->join('tbl_size as s','s.pk_size_id=pp.fk_size_id','left');
+		$CI->db->join('tbl_color as c','c.pk_color_id=pp.fk_color_id','left');
+		$CI->db->join('tbl_product_category as pc','p.product_category=pc.pk_category_id','left');
+		$CI->db->join('tbl_brands as b','p.product_brand=b.pk_brand_id','left');
+		$CI->db->join('tbl_admin as a','p.fk_admin_id=a.pk_admin_id','left');
+		$CI->db->where(array('p.active'=>1,'p.is_deleted'=>0));
+		
+		if($limit)
+			{
+				$CI->db->limit($limit);
+			}
+		
+		$records=$CI->db->get();
+		if($records->num_rows()>0)
+		{
+			return $records->result_array();
+		}
+		
+		return false;
+		
+	}
+	
+	function get_popular_services($limit)
+	{
+		$CI = & get_instance();	
+		$cdata=get_city_state_id($CI->session->city);
+		
+		$CI->db->select('s.*,b.category_name,p.*,ap.profile_states,ap.profile_cities');
+        $CI->db->from('tbl_services as s');
+		$CI->db->join('tbl_service_pricing as p','s.pk_service_id=p.fk_service_id','inner');
+		$CI->db->join('tbl_business_category as b','s.service_category=b.pk_category_id','left');
+		$CI->db->join('tbl_admin as a','s.fk_admin_id=a.pk_admin_id','left');
+		$CI->db->join('tbl_admin_profile as ap','ap.fk_admin_id=a.pk_admin_id','left');
+		$CI->db->where(array('s.active'=>1,'s.is_deleted'=>0,'p.is_default'=>1));
+			$CI->db->group_start();
+				
+				  if(@$cdata['sid'] && @$cdata['cid'])
+				 {
+					$CI->db->like('ap.profile_states',$cdata['sid'], 'before');   
+					$CI->db->or_like('ap.profile_states',$cdata['sid'], 'after');   
+					$CI->db->or_like('ap.profile_states', $cdata['sid'], 'none');    
+					$CI->db->or_like('ap.profile_states',$cdata['sid'], 'both');  
+					
+					
+						 $CI->db->or_like('ap.profile_cities',$cdata['cid'], 'before');   
+						  $CI->db->or_like('ap.profile_cities',$cdata['cid'], 'after');   
+						  $CI->db->or_like('ap.profile_cities', $cdata['cid'], 'none');    
+						  $CI->db->or_like('ap.profile_cities',$cdata['cid'], 'both');   
+						
+				 }
+				 
+				 else  if(@$cdata['sid'] && !@$cdata['cid'])
+				 {
+					$CI->db->like('ap.profile_states',$cdata['sid'], 'before');   
+					$CI->db->or_like('ap.profile_states',$cdata['sid'], 'after');   
+					$CI->db->or_like('ap.profile_states', $cdata['sid'], 'none');    
+					$CI->db->or_like('ap.profile_states',$cdata['sid'], 'both');  
+				 }
+				 else if(!@$cdata['sid'] && @$cdata['cid'])
+					 
+					 {
+						
+						 $CI->db->like('ap.profile_cities',$cdata['cid'], 'before');   
+						  $CI->db->or_like('ap.profile_cities',$cdata['cid'], 'after');   
+						  $CI->db->or_like('ap.profile_cities', $cdata['cid'], 'none');    
+						  $CI->db->or_like('ap.profile_cities',$cdata['cid'], 'both');   
+					
+						 
+					 }
+			$CI->db->group_end();
+			
+			if($limit)
+			{
+				$CI->db->limit($limit);
+			}
+			
+		$records=$CI->db->get();
+		if($records->num_rows()>0)
+		{
+			return $records->result_array();
+		}
+		
+		return false;
+	}
 ?>

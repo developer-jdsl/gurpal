@@ -586,6 +586,11 @@ $(document).ready(function() {
 	 $('[name="edit_profile_city"]').val($(this).data('city'));
 	 $('[name="edit_profile_zip"]').val($(this).data('zip'));
 	 $('[name="edit_id"]').val($(this).data('eid'));
+	 if($(this).data('default')==1)
+	 {
+		 
+		$('[name="edit_is_default"]').attr('checked',true);
+	 }
 	 
 	 
 	 });

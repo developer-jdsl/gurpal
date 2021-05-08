@@ -13,137 +13,47 @@
 						<?php } ?>
                        
                         </ul>
+                     
                         <div class="sidebar-box">
-                            <h5>Recent Viewed</h5>
+                            <h5>Popular Products</h5>
                             <ul class="thumb-list">
+                                <?php $popular_products=get_popular_products(3);
+							foreach($popular_products as $product) {
+							?>
                                 <li>
-                                    <a href="#">
-                                        <img src="<?=base_url('public/front/img/70x70.png')?>" alt="Image Alternative text" title="Urbex Esch/Lux with Laney and Laaaaag" />
+                                    <a href="<?=base_url('product/'.$product['product_slug'])?>">
+									<?php if($product['product_image']) { ?>
+                                        <img src="<?=base_url('uploads/product/'.$product['product_image'])?>" alt="<?=$product['product_name']?>" title="<?=$product['product_name']?>" />
+									<?php } ?>
                                     </a>
                                     <div class="thumb-list-item-caption">
-                                        <h5 class="thumb-list-item-title"><a href="#">Best Camera</a></h5>
-                                        <p class="thumb-list-item-price">$384</p>
+                                        <h5 class="thumb-list-item-title"><a href="<?=base_url('product/'.$product['product_slug'])?>"><?=$product['product_name']?></a></h5>
+                                        <p class="thumb-list-item-price"><?php if($product['discount_price']){ echo $product['discount_price'];} else { echo $product['original_price'];} ?></p>
                                     </div>
                                 </li>
+                               
+                              <?php } ?>
+						</ul><br>
+						<h5>Popular Services</h5>
+                            <ul class="thumb-list">
+							  <?php $popular_services=get_popular_services(3);
+							foreach($popular_services as $service) {
+							?>
                                 <li>
-                                    <a href="#">
-                                        <img src="<?=base_url('public/front/img/70x70.png')?>" alt="Image Alternative text" title="AMaze" />
+                                    <a href="<?=base_url('city/'.$this->session->city.'/service/'.$service['service_slug'])?>">
+									<?php if($service['service_banners']) { ?>
+                                        <img src="<?=base_url('uploads/service/'.$service['service_banners'])?>" alt="<?=$service['service_name']?>" title="<?=$service['service_name']?>" />
+									<?php } ?>
                                     </a>
                                     <div class="thumb-list-item-caption">
-                                        <h5 class="thumb-list-item-title"><a href="#">New Glass Collection</a></h5>
-                                        <p class="thumb-list-item-price">$351</p>
+                                        <h5 class="thumb-list-item-title"><a href="<?=base_url('city/'.$this->session->city.'/service/'.$service['service_slug'])?>"><?=$service['service_name']?></a></h5>
+                                        <p class="thumb-list-item-price"><?php if($service['discount_price']){ echo $service['discount_price'];} else { echo $service['original_price'];} ?></p>
                                     </div>
                                 </li>
-                                <li>
-                                    <a href="#">
-                                        <img src="<?=base_url('public/front/img/70x70.png')?>" alt="Image Alternative text" title="waipio valley" />
-                                    </a>
-                                    <div class="thumb-list-item-caption">
-                                        <h5 class="thumb-list-item-title"><a href="#">Awesome Vacation</a></h5>
-                                        <p class="thumb-list-item-price">$500</p>
-                                    </div>
-                                </li>
+                               
+                              <?php } ?>
                             </ul>
                         </div>
-                        <div class="sidebar-box">
-                            <h5>Popular</h5>
-                            <ul class="thumb-list">
-                                <li>
-                                    <a href="#">
-                                        <img src="<?=base_url('public/front/img/70x70.png')?>" alt="Image Alternative text" title="Food is Pride" />
-                                    </a>
-                                    <div class="thumb-list-item-caption">
-                                        <h5 class="thumb-list-item-title"><a href="#">Best Pasta</a></h5>
-                                        <p class="thumb-list-item-price">$312</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <img src="<?=base_url('public/front/img/70x70.png')?>" alt="Image Alternative text" title="Old No7" />
-                                    </a>
-                                    <div class="thumb-list-item-caption">
-                                        <h5 class="thumb-list-item-title"><a href="#">Jack Daniels Huge Pack</a></h5>
-                                        <p class="thumb-list-item-price">$447</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <img src="<?=base_url('public/front/img/70x70.png')?>" alt="Image Alternative text" title="The Hidden Power of the Heart" />
-                                    </a>
-                                    <div class="thumb-list-item-caption">
-                                        <h5 class="thumb-list-item-title"><a href="#">Beach Holidays</a></h5>
-                                        <p class="thumb-list-item-price">$195</p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="sidebar-box">
-                            <h5>Recent Reviews</h5>
-                            <ul class="thumb-list">
-                                <li>
-                                    <a href="#">
-                                        <img src="<?=base_url('public/front/img/70x70.png')?>" alt="Image Alternative text" title="Hot mixer" />
-                                    </a>
-                                    <div class="thumb-list-item-caption">
-                                        <ul class="icon-group icon-list-rating" title="4/5 rating">
-                                            <li><i class="fa fa-star"></i>
-                                            </li>
-                                            <li><i class="fa fa-star"></i>
-                                            </li>
-                                            <li><i class="fa fa-star"></i>
-                                            </li>
-                                            <li><i class="fa fa-star"></i>
-                                            </li>
-                                            <li><i class="fa fa-star-o"></i>
-                                            </li>
-                                        </ul>
-                                        <h5 class="thumb-list-item-title"><a href="#">Modern DJ Set</a></h5>
-                                        <p class="thumb-list-item-author">by Richard Jones</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <img src="<?=base_url('public/front/img/70x70.png')?>" alt="Image Alternative text" title="Our Coffee miss u" />
-                                    </a>
-                                    <div class="thumb-list-item-caption">
-                                        <ul class="icon-group icon-list-rating" title="5/5 rating">
-                                            <li><i class="fa fa-star"></i>
-                                            </li>
-                                            <li><i class="fa fa-star"></i>
-                                            </li>
-                                            <li><i class="fa fa-star"></i>
-                                            </li>
-                                            <li><i class="fa fa-star"></i>
-                                            </li>
-                                            <li><i class="fa fa-star"></i>
-                                            </li>
-                                        </ul>
-                                        <h5 class="thumb-list-item-title"><a href="#">Coffe Shop Discount</a></h5>
-                                        <p class="thumb-list-item-author">by Carol Blevins</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <img src="<?=base_url('public/front/img/70x70.png')?>" alt="Image Alternative text" title="Food is Pride" />
-                                    </a>
-                                    <div class="thumb-list-item-caption">
-                                        <ul class="icon-group icon-list-rating" title="3/5 rating">
-                                            <li><i class="fa fa-star"></i>
-                                            </li>
-                                            <li><i class="fa fa-star"></i>
-                                            </li>
-                                            <li><i class="fa fa-star"></i>
-                                            </li>
-                                            <li><i class="fa fa-star-o"></i>
-                                            </li>
-                                            <li><i class="fa fa-star-o"></i>
-                                            </li>
-                                        </ul>
-                                        <h5 class="thumb-list-item-title"><a href="#">Best Pasta</a></h5>
-                                        <p class="thumb-list-item-author">by Bernadette Cornish</p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                  
                     </aside>
                 </div>

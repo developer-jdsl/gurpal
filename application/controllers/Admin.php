@@ -305,6 +305,29 @@ class Admin extends CI_Controller {
 		}
 		else
 		{
+			
+							$image=$error=null;
+			if($_FILES['city_img']["name"])
+			{
+			  $config['upload_path']   = './uploads/cities/'; 
+			  $config['allowed_types'] = 'gif|jpg|png|jpeg'; 
+			  $config['max_size']      = 1024;
+			  $this->load->library('upload', $config);
+				   if ( ! $this->upload->do_upload('city_img')) {
+			 $error = implode('<br>',$this->upload->display_errors()); 
+		
+		  }else { 
+
+
+			$uploadedImage = $this->upload->data();
+			$image=$uploadedImage['file_name'];
+      } 
+			}
+	  
+			if($image)
+			{
+				$data['city_image']=$image;
+			}
 			$data['fk_state_id']=$this->input->post('state_name');
 			$data['city_name']=$this->input->post('city_name');
 			$data['active']=$this->input->post('active');
@@ -397,7 +420,28 @@ class Admin extends CI_Controller {
 		}
 		else
 		{
-			
+				$image=$error=null;
+			if($_FILES['city_img']["name"])
+			{
+			  $config['upload_path']   = './uploads/cities/'; 
+			  $config['allowed_types'] = 'gif|jpg|png|jpeg'; 
+			  $config['max_size']      = 1024;
+			  $this->load->library('upload', $config);
+				   if ( ! $this->upload->do_upload('city_img')) {
+			 $error = implode('<br>',$this->upload->display_errors()); 
+		
+		  }else { 
+
+
+			$uploadedImage = $this->upload->data();
+			$image=$uploadedImage['file_name'];
+      }
+			}	  
+	  
+			if($image)
+			{
+				$data['city_image']=$image;
+			}
 			$data['fk_state_id']=$this->input->post('state_name');
 			$data['city_name']=$this->input->post('city_name');
 			$data['city_slug']=$this->input->post('city_slug');

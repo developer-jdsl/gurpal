@@ -60,30 +60,18 @@
                     </div>
                     <div class="gap"></div>
                     <div class="row row-wrap">
+					<?php $pi=0; foreach($cities as $row) { if($pi<3){?>
                         <div class="col-md-4">
                             <div class="product-banner">
-                                <img src="<?=base_url('public/front/img/800x600.png')?>" alt="Image Alternative text" title="Gamer Chick" />
+                                <img src="<?=base_url('uploads/cities/'.$row['city_image'])?>" alt="<?=$row['city_name']?>" title="<?=$row['city_name']?>"  style="height:170px;"/>
                                 <div class="product-banner-inner">
-                                    <h5>Playstation Accsories</h5><a class="btn btn-sm btn-white btn-ghost">Explore Now</a>
+                                    <h5><?=$row['city_name']?></h5><a class="btn btn-sm btn-white btn-ghost" href="<?=base_url('city/'.$row['city_slug'])?>">Explore Now</a>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="product-banner">
-                                <img src="<?=base_url('public/front/img/800x600.png')?>" alt="Image Alternative text" title="Urbex Esch/Lux with Laney and Laaaaag" />
-                                <div class="product-banner-inner">
-                                    <h5>Canon Cameras</h5><a class="btn btn-sm btn-white btn-ghost">Explore Now</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="product-banner">
-                                <img src="<?=base_url('public/front/img/800x600.png')?>" alt="Image Alternative text" title="AMaze" />
-                                <div class="product-banner-inner">
-                                    <h5>New Glass Collections</h5><a class="btn btn-sm btn-white btn-ghost">Explore Now</a>
-                                </div>
-                            </div>
-                        </div>
+						
+					<?php $pi++;}} ?>
+                      
                     </div>
                     <div class="gap gap-small"></div>
                     <h1 class="mb20">Featured Services<small><a href="<?=base_url('city/'.$this->session->city.'/services/all')?>">View All</a></small></h1>
@@ -98,8 +86,9 @@
                                 <header class="product-header">
                                     <img src="<?=base_url('uploads/service/'.$service['service_banners'])?>" alt="<?=$service['service_name']?>" title="<?=$service['service_name']?>" />
                                     <div class="product-quick-view">
-                                        <a class="fa fa-eye popup-text" href="#product-quick-view-dialog" data-effect="mfp-move-from-top" data-toggle="tooltip" data-placement="top" title="Quick View"></a>
+                                       <!-- <a class="fa fa-eye popup-text" href="#product-quick-view-dialog" data-effect="mfp-move-from-top" data-toggle="tooltip" data-placement="top" title="Quick View"></a> -->
                                     </div>
+									
                                     <div class="product-secondary-image">
                                         <img src="<?=base_url('uploads/service/'.$service['service_banners'])?>" alt="<?=$service['service_name']?>" title="<?=$service['service_name']?>" />
                                     </div>
@@ -228,7 +217,7 @@
                     <div class="gap gap-small"></div>
 					
 					
-					<h1 class="mb20">Brands <small><a href="#">View All</a></small></h1>
+					<h1 class="mb20">Brands</h1>
 					<div class="row">
 					<?php $cnt=0;
 					foreach($brands as $brand) { 

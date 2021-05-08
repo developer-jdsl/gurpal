@@ -184,6 +184,8 @@ class Product extends CI_Controller {
 					$gst=number_format((((intval($details['gst_slab']))/100)*$cur_data['item_price']), 2, '.', '');
 					$cur_data['item_gstvalue']=$gst;
 					$cur_data['item_pid']=$details['pk_price_id'];
+					$cur_data['item_var']=$details['color_name'];
+					$cur_data['item_subvar']=$details['size_name'];
 					$cart_data[]=$cur_data;	
 			
 			}
@@ -266,6 +268,8 @@ class Product extends CI_Controller {
 					$gst=number_format((((intval($details['gst_slab']))/100)*$cur_data['item_price']), 2, '.', '');
 					$cur_data['item_gstvalue']=$gst;
 					$cur_data['item_pid']=$details['pk_price_id'];
+					$cur_data['item_var']=$details['color_name'];
+					$cur_data['item_subvar']=$details['size_name'];
 					$cart_data[]=$cur_data;	
 			
 			}

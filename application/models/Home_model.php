@@ -6,7 +6,7 @@ class Home_model extends CI_Model {
         $this->load->database();
     }
 	
-	function get_products($limit=false)
+	function get_products($limit=false,$dt=false)
 	{
 		$this->db->select('p.*,pp.*,pc.category_name,b.brand_name,a.admin_name,c.color_name,c.color_value,s.size_name,s.size_value');
         $this->db->from('tbl_products as p');
@@ -17,6 +17,16 @@ class Home_model extends CI_Model {
 		$this->db->join('tbl_brands as b','p.product_brand=b.pk_brand_id','left');
 		$this->db->join('tbl_admin as a','p.fk_admin_id=a.pk_admin_id','left');
 		$this->db->where(array('p.active'=>1,'p.is_deleted'=>0));
+		
+		if(@$dt['search'])
+		{
+			$this->db->group_start();
+			$this->db->like('p.product_name', $dt['search'], 'before'); 
+			$this->db->or_like('p.product_name', $dt['search'], 'after'); 
+			$this->db->or_like('p.product_name', $dt['search'], 'both'); 
+			$this->db->or_like('p.product_name', $dt['search'], 'none'); 
+			$this->db->group_end();
+		}
 		if($limit)
 			{
 				$this->db->limit($limit);
@@ -74,7 +84,7 @@ class Home_model extends CI_Model {
 	}
 	
 	
-	function get_services($limit=false)
+	function get_services($limit=false,$dt=false)
 	{
 		$cdata=get_city_state_id($this->session->city);
 		
@@ -93,10 +103,22 @@ class Home_model extends CI_Model {
 					$this->db->or_like('ap.profile_states',$cdata['sid'], 'after');   
 					$this->db->or_like('ap.profile_states', $cdata['sid'], 'none');    
 					$this->db->or_like('ap.profile_states',$cdata['sid'], 'both');  
-					$this->db->or_like('ap.profile_cities',$cdata['cid'], 'before');  
-					$this->db->or_like('ap.profile_cities',$cdata['cid'], 'after');  
-					$this->db->or_like('ap.profile_cities',$cdata['cid'], 'none');  
-					$this->db->or_like('ap.profile_cities',$cdata['cid'], 'both');  
+					
+					if(@$dt['city'])
+						{
+						$this->db->or_like('ap.profile_cities',$dt['city'], 'before');   
+						  $this->db->or_like('ap.profile_cities',$dt['city'], 'after');   
+						  $this->db->or_like('ap.profile_cities', $dt['city'], 'none');    
+						  $this->db->or_like('ap.profile_cities',$dt['city'], 'both');   	
+							
+						}
+						else
+						{
+						 $this->db->or_like('ap.profile_cities',$cdata['cid'], 'before');   
+						  $this->db->or_like('ap.profile_cities',$cdata['cid'], 'after');   
+						  $this->db->or_like('ap.profile_cities', $cdata['cid'], 'none');    
+						  $this->db->or_like('ap.profile_cities',$cdata['cid'], 'both');   
+						}
 				 }
 				 
 				 else  if(@$cdata['sid'] && !@$cdata['cid'])
@@ -109,13 +131,36 @@ class Home_model extends CI_Model {
 				 else if(!@$cdata['sid'] && @$cdata['cid'])
 					 
 					 {
-				 $this->db->like('ap.profile_cities',$cdata['sid'], 'before');   
-				  $this->db->or_like('ap.profile_cities',$cdata['sid'], 'after');   
-				  $this->db->or_like('ap.profile_cities', $cdata['sid'], 'none');    
-				  $this->db->or_like('ap.profile_cities',$cdata['sid'], 'both');   
+						if(@$dt['city'])
+						{
+						$this->db->like('ap.profile_cities',$dt['city'], 'before');   
+						  $this->db->or_like('ap.profile_cities',$dt['city'], 'after');   
+						  $this->db->or_like('ap.profile_cities', $dt['city'], 'none');    
+						  $this->db->or_like('ap.profile_cities',$dt['city'], 'both');   	
+							
+						}
+						else
+						{
+						 $this->db->like('ap.profile_cities',$cdata['cid'], 'before');   
+						  $this->db->or_like('ap.profile_cities',$cdata['cid'], 'after');   
+						  $this->db->or_like('ap.profile_cities', $cdata['cid'], 'none');    
+						  $this->db->or_like('ap.profile_cities',$cdata['cid'], 'both');   
+						}
 						 
 					 }
 			$this->db->group_end();
+			
+			
+			
+			if(@$dt['search'])
+		{
+			$this->db->group_start();
+			$this->db->like('s.service_name', $dt['search'], 'before'); 
+			$this->db->or_like('s.service_name', $dt['search'], 'after'); 
+			$this->db->or_like('s.service_name', $dt['search'], 'both'); 
+			$this->db->or_like('s.service_name', $dt['search'], 'none'); 
+			$this->db->group_end();
+		}
 			if($limit)
 			{
 				$this->db->limit($limit);

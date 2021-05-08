@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <div class="card-body">
                             <?php echo validation_errors();?>
 
-									<?php echo form_open('admin/add_city'); ?>
+									<?php echo form_open_multipart('admin/add_city'); ?>
 									
 										<div class="form-group">
 										<label><?=keyword_value('state_name','State Name')?></label>
@@ -40,6 +40,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 										<label><?=keyword_value('city_name','City Name')?></label>
                                             <input type="text" name="city_name" class="form-control form-control-user" required>
                                         </div>
+										 <div class="form-group">
+							
+										<label><?=keyword_value('city_img','City Image')?></label>
+                                            <input type="file" name="city_img"  class="form-control form-control-user" accept="image/*">
+                                        </div>
+										
+										
                                         <div class="form-group">
 										<label><?=keyword_value('status','Status')?></label>
 										<select name="active" class="form-control form-control-user">
