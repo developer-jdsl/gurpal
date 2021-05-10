@@ -80,9 +80,7 @@
 					<?php echo $this->ajax_pagination->create_links(); ?>
 					</div>
 					
-					<div class="loading" style="display:none;">
-						<div class="content"><img src="<?php echo base_url('public/front/img/loading.gif'); ?>" width="100px"/></div>
-					</div>
+					
                     <div class="gap"></div>
                 </div>
 			</div>

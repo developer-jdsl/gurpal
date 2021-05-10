@@ -99,7 +99,7 @@
                     </div>
                     <div class="col-md-6">
                         <ul class="login-register">
-                            <li class="shopping-cart"><a href="<?=base_url('cart')?>"><i class="fa fa-shopping-cart"></i>My Cart</a>
+                            <li class="shopping-cart"><a href="javascript:void(0);"><i class="fa fa-shopping-cart"></i>My Cart</a>
                                 <div class="shopping-cart-box">
 								<?php $header_cart_data=get_cart_data();?>
                                     <ul class="shopping-cart-items">

@@ -1,4 +1,136 @@
 "use strict";
+
+
+  /**
+   * Manages custom events
+   *
+   * @class Event
+   * @private
+   */
+  var Event = {
+    /**
+     * Lazily evaluates which create method needed
+     * @param eventName
+     * @param [eventType=HTMLEvents] - type of event
+     */
+    create: function(eventName, eventType) {
+      var method;
+      var self = this;
+
+      eventType = eventType || 'HTMLEvents';
+
+      if (document.createEvent) {
+        method = function(eventName) {
+          var event = document.createEvent(eventType);
+
+          // dont bubble
+          event.initEvent(eventName, false, true);
+
+          return event;
+        };
+      } else {
+        // ie < 9
+        // BUGFIX: Infinite loop on keypress in ie8
+        // will update when i fix this
+        method = function(eventName, eventType) {
+          var _event = document.createEventObject(
+            window.event
+          );
+
+          _event.cancelBubble = true;
+          _event.eventType = eventName;
+          return _event;
+        };
+      }
+
+      self.create = method;
+      return method(eventName);
+    },
+
+    /**
+     * Lazily evaluates which fire event method is needed
+     * @param el
+     * @param eventName
+     */
+    fire: function(el, eventName, eventType, code) {
+      var method;
+      var self = this;
+
+      if(document.createEvent) {
+        method = function(el, eventName, eventType, code) {
+          var event = self.create(eventName, eventType);
+
+          if(eventType === 'KeyboardEvent') {
+            var get = { get: function() { return code } };
+            var defineProperty = Object.defineProperty;
+
+            defineProperty(event, 'which', get);
+            defineProperty(event, 'keyCode', get);
+          }
+
+          el.dispatchEvent(event);
+        };
+      } else {
+        // ie < 9
+        method = function(el, eventName, eventType, code) {
+          var onEventName = ['on', eventName].join('');
+
+          // Event names recognised by old ie
+          // (without the 'on').
+          // any event not in this list must be
+          // handled differently in ie < 9
+          var ieEvents = [
+            'load',
+            'unload',
+            'blur',
+            'change',
+            'focus',
+            'reset',
+            'select',
+            'submit',
+            'abort',
+            'keydown',
+            'keypress',
+            'keyup',
+            'click',
+            'dblclick',
+            'mousedown',
+            'mousemove',
+            'mouseout',
+            'mouseover',
+            'mouseup'
+          ];
+
+          // no indexOf in old ie
+          var isIeEvent = function(event) {
+            for(var i = 0, l = ieEvents.length; i < l; i++) {
+              if(ieEvents[i] === event) {
+                return true;
+              }
+            }
+
+            return false;
+          };
+
+          if(isIeEvent(eventName)) {
+            // Existing ie < 9 event name
+            var _event = self.create(eventName);
+
+            _event.keyCode = code;
+
+            el.fireEvent(onEventName, _event);
+          } else if(el[onEventName]) {
+            el[onEventName]();
+          }
+        };
+      }
+
+      self.fire = method;
+      method(el, eventName);
+    }
+  };
+  
+  
 // Global vars
 var TWITTER_USERNAME = 'envato',
     GOOGLE_MAP_LAT = 40.7564971,
@@ -361,7 +493,9 @@ $(this).addClass('active');
 $('.add_to_cart').click(function(){
 var size_id=$('.size_ul .active').data('id');
 var color_id=$('.color_ul .active').data('id');
-var product_id=$(this).data('pid');
+var target=$(this);
+target.html('Adding to cart...');
+var product_id=target.data('pid');
 
 $.post(base_url+"product/add_to_cart",
 		{size_id: size_id,
@@ -371,10 +505,14 @@ $.post(base_url+"product/add_to_cart",
 		 if(result && result!="fail")
 		 {
 			 $(".shopping-cart-box").html(result); 
+			 target.html('<i class="fa fa-shopping-cart"></i>Add to Cart');
+			 target.parent().parent().append('<li><div class="alert alert-success fade in alert-dismissible" style="margin-top:10px;margin-bottom:0;padding:8px">'+'<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>'+'<strong>Item Added to Cart</strong></div></li>');
 		 }
 		 else
 		 {
-			 alert('Product Currenlty Not Available');
+			 
+			 target.parent().parent().append('<li><div class="alert alert-warning fade in alert-dismissible" style="margin-top:10px;margin-bottom:0;padding:8px">'+'<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>'+'<strong>Product Currenlty Not Available</strong></div></li>');
+			 target.html('<i class="fa fa-shopping-cart"></i>Add to Cart');
 		 }
      
     });
@@ -392,8 +530,9 @@ var price=$(this).find(':selected').data('price');
 
 
 $('.add_service').click(function(){
-
-var service_id=$(this).data('sid');
+var target=$(this);
+var service_id=target.data('sid');
+target.html('Adding to cart...');
 
 $.post(base_url+"service/add_to_cart",
 		{service_id:service_id},
@@ -401,10 +540,14 @@ $.post(base_url+"service/add_to_cart",
 		 if(result && result!="fail")
 		 {
 			 $(".shopping-cart-box").html(result); 
+			 target.html('<i class="fa fa-shopping-cart"></i> Add to Cart');
+			 target.parent().parent().append('<li><div class="alert alert-success fade in alert-dismissible" style="margin-top:10px;margin-bottom:0;padding:8px">'+'<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>'+'<strong>Item Added to Cart</strong></div></li>');
 		 }
 		 else
 		 {
-			 alert('Product Currenlty Not Available');
+		
+			 target.parent().parent().append('<li><div class="alert alert-warning fade in alert-dismissible" style="margin-top:10px;margin-bottom:0;padding:8px">'+'<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>'+'<strong>Service Currenlty Not Available</strong></div></li>');
+			 target.html('<i class="fa fa-shopping-cart"></i>Add to Cart');
 		 }
      
     });
@@ -413,8 +556,10 @@ $.post(base_url+"service/add_to_cart",
 
 
 $('.add_service_list').click(function(){
+var target=$(this)
+var pid=target.data('id');
 
-var pid=$(this).data('id');
+target.html('Adding to cart...');
 
 $.post(base_url+"service/add_to_cart_list",
 		{pid:pid},
@@ -422,10 +567,14 @@ $.post(base_url+"service/add_to_cart_list",
 		 if(result && result!="fail")
 		 {
 			 $(".shopping-cart-box").html(result); 
+			target.html('<i class="fa fa-shopping-cart"></i> To Cart');
+			target.parent().parent().append('<li><div class="alert alert-success fade in alert-dismissible" style="margin-top:10px;margin-bottom:0;padding:8px">'+'<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>'+'<strong>Item Added to Cart</strong></div></li>');
 		 }
 		 else
 		 {
-			 alert('Product Currenlty Not Available');
+		
+			 target.parent().parent().append('<li><div class="alert alert-warning fade in alert-dismissible" style="margin-top:10px;margin-bottom:0;padding:8px">'+'<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>'+'<strong>Service Currenlty Not Available</strong></div></li>');
+			 target.html('<i class="fa fa-shopping-cart"></i> To Cart');
 		 }
      
     });
@@ -534,8 +683,9 @@ var pid=$('#cart-quantity').data('id');
 
 
 $('.add_to_cart_list').click(function(){
-
-var pid=$(this).data('id');
+var target=$(this);
+target.html('Adding to cart...');
+var pid=target.data('id');
 
 $.post(base_url+"product/add_to_cart_list",
 		{pid:pid},
@@ -543,10 +693,13 @@ $.post(base_url+"product/add_to_cart_list",
 		 if(result && result!="fail")
 		 {
 			 $(".shopping-cart-box").html(result); 
+			 target.html('<i class="fa fa-shopping-cart"></i> To Cart');
+			 target.parent().parent().append('<li><div class="alert alert-success fade in alert-dismissible" style="margin-top:10px;margin-bottom:0;padding:8px">'+'<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>'+'<strong>Item Added to Cart</strong></div></li>');
 		 }
 		 else
 		 {
-			 alert('Product Currenlty Not Available');
+			target.parent().parent().append('<li><div class="alert alert-warning fade in alert-dismissible" style="margin-top:10px;margin-bottom:0;padding:8px">'+'<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>'+'<strong>Product Currenlty Not Available</strong></div></li>');
+			 target.html('<i class="fa fa-shopping-cart"></i> To Cart');
 		 }
      
     });
@@ -570,6 +723,13 @@ $(document).ready(function() {
 });
 
 	$('[name="add_profile_state"]').on('change', function (e) {
+		var val=$(this).val();
+		$('.city_sel_li').hide();
+		$('.sel_li_'+val).show();
+    
+});
+
+	$('#profile_state').on('change', function (e) {
 		var val=$(this).val();
 		$('.city_sel_li').hide();
 		$('.sel_li_'+val).show();

@@ -178,6 +178,7 @@ class Service extends CI_Controller {
 				$cur_data['item_slug']=base_url('city/'.$this->session->city.'/service/'.$details['service_slug']);
 				$cur_data['item_image']=base_url('uploads/service/'.$details['service_banners']);
 				$cur_data['item_type']='service';
+				$cur_data['item_cod']=1;
 				$cur_data['item_qty']=1;
 				$cur_data['item_price']=($details['discount_price']>0)?$details['discount_price']:$details['original_price'];
 				$cur_data['item_gstrate']=$details['gst_slab'];
@@ -263,6 +264,7 @@ class Service extends CI_Controller {
 					$cur_data['item_image']=base_url('uploads/service/'.$details['service_banners']);
 					$cur_data['item_type']='service';
 					$cur_data['item_qty']=1;
+					$cur_data['item_cod']=1;
 					$cur_data['item_price']=($details['discount_price']>0)?$details['discount_price']:$details['original_price'];
 					$cur_data['item_gstrate']=$details['gst_slab'];
 					$gst=number_format((((intval($details['gst_slab']))/100)*$cur_data['item_price']), 2, '.', '');

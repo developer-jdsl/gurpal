@@ -1,4 +1,5 @@
 
+  
 $(document).on('click', '.add-product' ,function (e) {
   var target=$(this).parent().parent().parent();
 var color_select= $('#color_sel').html();

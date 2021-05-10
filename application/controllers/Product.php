@@ -178,6 +178,7 @@ class Product extends CI_Controller {
 					$cur_data['item_slug']=base_url('product/'.$details['product_slug']);
 					$cur_data['item_image']=base_url('uploads/product/'.$details['product_image']);
 					$cur_data['item_type']='product';
+					$cur_data['item_cod']=$details['is_cod'];
 					$cur_data['item_qty']=1;
 						$cur_data['item_price']=($details['discount_price']>0)?$details['discount_price']:$details['original_price'];
 					$cur_data['item_gstrate']=$details['gst_slab'];
@@ -262,6 +263,7 @@ class Product extends CI_Controller {
 					$cur_data['item_slug']=base_url('product/'.$details['product_slug']);
 					$cur_data['item_image']=base_url('uploads/product/'.$details['product_image']);
 					$cur_data['item_type']='product';
+					$cur_data['item_cod']=$details['is_cod'];
 					$cur_data['item_qty']=1;
 						$cur_data['item_price']=($details['discount_price']>0)?$details['discount_price']:$details['original_price'];
 					$cur_data['item_gstrate']=$details['gst_slab'];

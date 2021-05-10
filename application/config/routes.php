@@ -53,9 +53,10 @@ $route['default_controller'] = 'Home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
-$route['cart']='home/cart';
-$route['city/(:any)']='home/get_listings_by_city/$1';
-$route['city/(:any)']='home/city/$1';
+$route['cart']			=	'home/cart';
+$route['checkout']		=	'home/checkout';
+$route['city/(:any)']	=	'home/get_listings_by_city/$1';
+$route['city/(:any)']	=	'home/city/$1';
 
 /*  Service Routes */
 

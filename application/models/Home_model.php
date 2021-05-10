@@ -501,7 +501,29 @@ class Home_model extends CI_Model {
 		   return $this->db->update('tbl_user_profile',$data);
 	   
    }
-	
+   
+   function get_payment_methods()
+   {
+	   
+	  $res=$this->db->get_where('tbl_payment_method',array('active'=>1));
+	   if($res)
+	   {
+		   return $res->result_array();
+	   }
+	   return false; 
+   }
+	function add_user_address($data2)
+	{
+		$this->db->insert('tbl_user_profile',$data);
+		$id=$this->db->insert_id();
+	   if($id)
+	   {
+		return $id;
+	   }
+	   
+	   return null;
+		
+	}
 	
 }
    

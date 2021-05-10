@@ -3,7 +3,7 @@
                <div class="container text-center">
                   <div class="col-sm-12">
                      <div class="newsletter-form">
-                        <h4><i class="ti-email"></i>Sign up for our weekly email newsletter with the best money-saving coupons.</h4>
+                        <h4 class="text-white"><i class="ti-email"></i>Sign up for our weekly email newsletter with the best money-saving coupons.</h4>
                         <div class="input-group">
                            <input type="text" class="form-control input-lg" placeholder="Email"> <span class="input-group-btn">
                            <button class="btn btn-danger btn-lg" type="button">
@@ -11,7 +11,7 @@
                            </button>
                            </span> 
                         </div>
-                        <p><small>We’ll never share your email address with a third-party.</small> </p>
+                        <p><small class="text-white">We’ll never share your email address with a third-party.</small> </p>
                      </div>
                   </div>
                </div>
@@ -67,8 +67,10 @@
                   </div>
                </div>
             </footer>
-		
-		
+	
+					<div class="loading" style="display:none;">
+						<div class="content"><img src="<?php echo base_url('public/front/img/loading.gif'); ?>" width="100px"/></div>
+					</div>
 		
         <!-- //////////////////////////////////
 	//////////////END MAIN  FOOTER///////// 

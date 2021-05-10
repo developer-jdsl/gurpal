@@ -36,7 +36,7 @@
 
 							} ?>
                         </tbody>
-                    </table>	<a href="#" class="btn btn-primary">Update the cart</a>
+                    </table>
                 </div>
                 <div class="col-md-3">
                     <ul class="cart-total-list">
@@ -49,7 +49,7 @@
                         <li><span>Total</span><span id="cart_total">₹<?=$gst+$subt?></span>
                         </li>
                     </ul>
-                    <a href="#" class="btn btn-primary btn-lg">Checkout</a>
+                    <a href="<?=base_url('checkout')?>" class="btn btn-primary btn-lg">Checkout</a>
                 </div>
             </div>
 			

@@ -167,6 +167,7 @@ class Authentication_model extends CI_Model {
    }
       public function user_register($data)
    {
+	   
 	   $this->db->insert('tbl_user',$data);
 	   $id=$this->db->insert_id();
 	   if($id)

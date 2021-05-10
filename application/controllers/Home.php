@@ -87,14 +87,150 @@ class Home extends CI_Controller {
 	public function cart()
 	{
 		$this->data['cart']				=	get_cart_data();
+		if(!empty($this->data['cart']))
+		{
 		$this->data['title']			=   DEFAULT_TITLE;
 		$this->data['meta_keywords']	=   DEFAULT_KEYWORDS;
 		$this->data['meta_description']	=   DEFAULT_DESCRIPTION;
 		$this->load->view('public/templates/header',$this->data);
 		$this->load->view('public/cart',$this->data);
 		$this->load->view('public/templates/footer',$this->data);
+		}
+		else {
+		redirect('/');
+		}	
 
-	}		
+	}
+
+	public function checkout()
+	{
+		$this->data['cart']				=	get_cart_data();
+		if(!empty($this->data['cart']))
+		{
+		
+	 $this->load->library('form_validation');
+     $this->load->helper('form');
+	 $this->load->model('authentication_model');	
+
+		$this->form_validation->set_rules('user_firstname', 'First Name', 'required',
+			array('required' =>  keyword_value('you_must_enter_first_name','First Name is required')
+		));
+		
+		$this->form_validation->set_rules('user_lastname', 'Last Name', 'required',
+			array('required' =>  keyword_value('you_must_enter_last_name','Last Name is required')
+		));
+		
+			$this->form_validation->set_rules('user_phone', 'Last Name', 'required|is_unique[tbl_user.user_phone]|min_length[10]|max_length[12]',
+			array('required' =>  keyword_value('you_must_enter_mobile','Mobile Number is required')
+		));
+		
+			$this->form_validation->set_rules('user_email', 'Email', 'required|valid_email|is_unique[tbl_user.user_email]',
+			array('required' =>  keyword_value('you_must_enter_email','You must enter Email.'),
+				  'valid_email' => keyword_value('please_enter_valid_email','Please Enter a valid Email'),
+				  'is_unique'=>keyword_value('email_exits','Emil already exits. Please choose another one or try logging in'))
+		);	
+		
+		
+		$this->form_validation->set_rules('profile_address', 'Address', 'required',
+			array('required' =>  keyword_value('you_must_enter_address','Please enter Address')
+		));
+		
+		$this->form_validation->set_rules('profile_state', 'State', 'required',
+			array('required' =>  keyword_value('you_must_enter_state','Please Select State')
+		));
+		$this->form_validation->set_rules('profile_city', 'City', 'required',
+			array('required' =>  keyword_value('you_must_enter_city','Please Select City')
+		));
+		$this->form_validation->set_rules('profile_zip', 'PIN/ZIP Code', 'required',
+			array('required' =>  keyword_value('you_must_enter_zip','Please enter PIN/ZIP code')
+		));
+		$this->form_validation->set_rules('pg', 'Payment Method', 'required',
+			array('required' =>  keyword_value('you_must_select_pg','Please Select Payment ethod')
+		));
+
+
+		
+	   if ($this->form_validation->run() == FALSE)
+		{
+			
+		$this->data['payment_methods']	=	$this->home_model->get_payment_methods();
+		$this->data['title']			=   DEFAULT_TITLE;
+		$this->data['meta_keywords']	=   DEFAULT_KEYWORDS;
+		$this->data['meta_description']	=   DEFAULT_DESCRIPTION;	
+		$this->load->view('public/templates/header',$this->data);
+		if($this->session->front_user_id)
+		{
+			$this->data['addresses']		=   $this->home_model->get_user_addresses();
+		}
+		$this->data['states']			=   $this->home_model->get_states();
+		$this->data['cities']			=   $this->home_model->get_cities();
+		$this->load->view('public/checkout',$this->data);
+		$this->load->view('public/templates/footer',$this->data);
+		}
+		
+		else
+			
+			{
+				
+				$data1['user_email']			=	$this->input->post('user_email');
+				$data1['user_firstname']		=	$this->input->post('user_firstname');
+				$data1['user_lastname']			=	$this->input->post('user_lastname');
+				$data1['active']				=	1;
+				$data1['user_phone']			=	$this->input->post('user_phone');
+				$plain_pass						=   mt_rand(1000000,9999999);
+				$password						= 	hash ( "sha256", $plain_pass);
+				$data1['user_password']			=	$password;
+				$return							=	$this->authentication_model->user_register($data1);
+				
+				if($return['status'])
+				{
+					
+				$this->sendverifylink();
+				$return2=$this->authentication_model->user_login($data['user_email'],$data['user_password']);
+
+
+				$data2['profile_address']		=	$this->input->post('profile_address');
+				$data2['profile_state']			=	$this->input->post('profile_state');
+				$data2['profile_city']			=	$this->input->post('profile_city');
+				$data2['profile_zip']			=	$this->input->post('profile_zip');
+				$data2['fk_user_id']			=	$this->session->front_user_id;
+				$data2['is_default']			=	1;
+				
+				$return2=$this->home_model->add_user_address($data2);
+				
+				$data3['txn_id']			= mt_rand(100000000,999999999);
+				$data3['fk_user_id']		= $this->session->front_user_id;
+				$data3['ip_address']		= $this->input->ip_address();
+				$data3['total_quantity']	= $this->input->ip_address();
+				$data3['subtotal']			= $this->input->ip_address();
+				$data3['discount']			= $this->input->ip_address();
+				$data3['order_gst']			= $this->input->ip_address();
+				$data3['grand_total']		= $this->input->ip_address();
+				$data3['coupon_id']			= $this->input->ip_address();
+				$data3['coupon_discount']	= $this->input->ip_address();
+				$data3['invoice_date']		= $this->input->ip_address();
+				$data3['payment_id']		= $this->input->ip_address();
+				$data3['order_status']		= $this->input->ip_address();
+				$data3['order_type']		= $this->input->ip_address();
+				$data3['fk_id']				= $this->input->ip_address();
+				
+						
+				
+				
+				
+						
+				}
+				
+				
+				
+			}
+		
+		}
+		else {
+		redirect('/');
+		}
+		
+	}
 	
 	public function set_city()
 	{
