@@ -631,7 +631,7 @@ var pid=$('#cart-quantity').data('id');
 					 $("#cart_gst").html('₹'+resp.gst); 
 					 $("#cart_subtotal").html('₹'+resp.subtotal); 
 					 $("#cart_total").html('₹'+resp.gtotal); 
-					 	 $("#td_subt").html('₹'+resp.subtotal); 
+					 	 //$("#td_subt").html('₹'+resp.subtotal); 
 			   }
 			   else
 		 {
@@ -666,7 +666,7 @@ var pid=$('#cart-quantity').data('id');
 					 $("#cart_gst").html('₹'+resp.gst); 
 					 $("#cart_subtotal").html('₹'+resp.subtotal); 
 					 $("#cart_total").html('₹'+resp.gtotal); 
-					 $("#td_subt").html('₹'+resp.subtotal); 
+					 //$("#td_subt").html('₹'+resp.subtotal); 
 					 
 			   }
 			   else

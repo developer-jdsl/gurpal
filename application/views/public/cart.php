@@ -25,7 +25,7 @@
                                     <input type="text" name="cart-quantity" id="cart-quantity" min="1" data-id="<?=$row['item_pid']?>" class="cart-quantity" value="<?=$row['item_qty']?>" <?php if($row['item_type']!='product'){ echo 'disabled';} ?> />
 								<?php if($row['item_type']=='product'){ ?><i class="fa fa-plus cart-item-plus"></i> <?php } ?>
                                 </td>
-                                <td id="td_subt">₹<?=$row['item_price']*$row['item_qty']?></td>
+                                <td id="td_subt">₹<?=$row['item_price']?></td>
                                 <td class="cart-item-remove" data-id="<?=$row['item_pid']?>" data-type="<?=$row['item_type']?>">
                                     <a class="fa fa-times" href="javascript:void(0);"></a>
                                 </td>
