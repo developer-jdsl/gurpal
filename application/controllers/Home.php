@@ -105,12 +105,110 @@ class Home extends CI_Controller {
 	public function checkout()
 	{
 		$this->data['cart']				=	get_cart_data();
+		
 		if(!empty($this->data['cart']))
 		{
-		
+				
 	 $this->load->library('form_validation');
      $this->load->helper('form');
-	 $this->load->model('authentication_model');	
+	 $this->load->model('authentication_model');
+	 
+	 
+		if($this->session->front_user_id)		
+		{
+		
+
+
+		$this->form_validation->set_rules('primaryAddressOption', 'Address', 'required',
+			array('required' =>  keyword_value('you_must_enter_address','Please Select Address')
+		));			
+		$this->form_validation->set_rules('pg', 'Payment Method', 'required',
+			array('required' =>  keyword_value('you_must_select_pg','Please Select Payment ethod')
+		));	
+		
+		
+			   if ($this->form_validation->run() == FALSE)
+		{
+			
+		$this->data['payment_methods']	=	$this->home_model->get_payment_methods();
+		$this->data['title']			=   DEFAULT_TITLE;
+		$this->data['meta_keywords']	=   DEFAULT_KEYWORDS;
+		$this->data['meta_description']	=   DEFAULT_DESCRIPTION;	
+		$this->load->view('public/templates/header',$this->data);
+		if($this->session->front_user_id)
+		{
+			$this->data['addresses']		=   $this->home_model->get_user_addresses();
+			
+		}
+		$this->data['states']			=   $this->home_model->get_states();
+		$this->data['cities']			=   $this->home_model->get_cities();
+		$this->load->view('public/checkout',$this->data);
+		$this->load->view('public/templates/footer',$this->data);
+		}
+		
+		else
+			
+			{
+				$pg			=		$this->input->post('pg');
+				$address	=		$this->input->post('primaryAddressOption');
+				
+				if($pg==1)  // COD
+				{
+					$subt=$gst=$tqty=0;
+					
+					foreach(get_cart_data() as $row) 
+					{ 
+						$subt=$subt+($row['item_price']*$row['item_qty']);
+						$tqty=$tqty+$row['item_qty'];
+						$gst=$gst+($row['item_gstvalue']*$row['item_qty']); 
+					} 
+					
+					$data3['txn_id']			= mt_rand(100000000,999999999);
+					$data3['fk_user_id']		= $this->session->front_user_id;
+					$data3['ip_address']		= $this->input->ip_address();
+					$data3['total_quantity']	= $tqty;
+					$data3['subtotal']			= $subt;
+					$data3['discount']			= 0;
+					$data3['order_gst']			= $gst;
+					$data3['grand_total']		= $subt+$gst;
+					$data3['coupon_id']			= 0;
+					$data3['coupon_discount']	= 0;
+					$data3['invoice_date']		= time();
+					$data3['payment_id']		= $pg;
+					$data3['order_status']		= 'paid';
+					
+					$rid=$this->home_model->add_user_order($data3);
+					
+					if($rid)
+					{
+						$this->home_model->generate_order_id($rid);
+						
+						foreach(get_cart_data() as $row) 
+					{ 
+						$data4[]=array('fk_order_id'=>$rid,'fk_pricing_id'=>$row['item_pid'],'quantity'=>$row['item_qty'],'unit_price'=>($details['discount_price']>0)?$details['discount_price']:$details['original_price'],'gst_slab'=>$details['gst_slab'],'order_type'=>$row['item_type']);
+						
+					} 
+						
+					$this->home_model->add_order_details($data4);
+					$this->session->unset_userdata('cart_data');
+					redirect('my-orders');
+						
+					}
+				
+				}		
+		
+				
+			}
+		
+			
+			
+			
+		}
+		
+		else
+		{
+			
+	
 
 		$this->form_validation->set_rules('user_firstname', 'First Name', 'required',
 			array('required' =>  keyword_value('you_must_enter_first_name','First Name is required')
@@ -120,14 +218,16 @@ class Home extends CI_Controller {
 			array('required' =>  keyword_value('you_must_enter_last_name','Last Name is required')
 		));
 		
-			$this->form_validation->set_rules('user_phone', 'Last Name', 'required|is_unique[tbl_user.user_phone]|min_length[10]|max_length[12]',
-			array('required' =>  keyword_value('you_must_enter_mobile','Mobile Number is required')
+			$this->form_validation->set_rules('user_phone', 'Mobile Number', 'required|is_unique[tbl_user.user_phone]|min_length[10]|max_length[12]',
+			array('required' =>  keyword_value('you_must_enter_mobile','Mobile Number is required'),
+			'is_unique'=>keyword_value('email_exits','Mobile Number already exits. ')
+			
 		));
 		
 			$this->form_validation->set_rules('user_email', 'Email', 'required|valid_email|is_unique[tbl_user.user_email]',
 			array('required' =>  keyword_value('you_must_enter_email','You must enter Email.'),
 				  'valid_email' => keyword_value('please_enter_valid_email','Please Enter a valid Email'),
-				  'is_unique'=>keyword_value('email_exits','Emil already exits. Please choose another one or try logging in'))
+				  'is_unique'=>keyword_value('email_exits','Email already exits. Please choose another one or try logging in'))
 		);	
 		
 		
@@ -161,6 +261,7 @@ class Home extends CI_Controller {
 		if($this->session->front_user_id)
 		{
 			$this->data['addresses']		=   $this->home_model->get_user_addresses();
+			
 		}
 		$this->data['states']			=   $this->home_model->get_states();
 		$this->data['cities']			=   $this->home_model->get_cities();
@@ -171,6 +272,7 @@ class Home extends CI_Controller {
 		else
 			
 			{
+				$pg=$this->input->post('pg');
 				
 				$data1['user_email']			=	$this->input->post('user_email');
 				$data1['user_firstname']		=	$this->input->post('user_firstname');
@@ -186,7 +288,7 @@ class Home extends CI_Controller {
 				{
 					
 				$this->sendverifylink();
-				$return2=$this->authentication_model->user_login($data['user_email'],$data['user_password']);
+				$return2=$this->authentication_model->user_login($data1['user_email'],$data1['user_password']);
 
 
 				$data2['profile_address']		=	$this->input->post('profile_address');
@@ -198,32 +300,66 @@ class Home extends CI_Controller {
 				
 				$return2=$this->home_model->add_user_address($data2);
 				
-				$data3['txn_id']			= mt_rand(100000000,999999999);
-				$data3['fk_user_id']		= $this->session->front_user_id;
-				$data3['ip_address']		= $this->input->ip_address();
-				$data3['total_quantity']	= $this->input->ip_address();
-				$data3['subtotal']			= $this->input->ip_address();
-				$data3['discount']			= $this->input->ip_address();
-				$data3['order_gst']			= $this->input->ip_address();
-				$data3['grand_total']		= $this->input->ip_address();
-				$data3['coupon_id']			= $this->input->ip_address();
-				$data3['coupon_discount']	= $this->input->ip_address();
-				$data3['invoice_date']		= $this->input->ip_address();
-				$data3['payment_id']		= $this->input->ip_address();
-				$data3['order_status']		= $this->input->ip_address();
-				$data3['order_type']		= $this->input->ip_address();
-				$data3['fk_id']				= $this->input->ip_address();
+				if($return2)
 				
+				{	
+
+				if($pg==1)  // COD
+				{
+					$subt=$gst=$tqty=0;
+					
+					foreach(get_cart_data() as $row) 
+					{ 
+						$subt=$subt+($row['item_price']*$row['item_qty']);
+						$tqty=$tqty+$row['item_qty'];
+						$gst=$gst+($row['item_gstvalue']*$row['item_qty']); 
+					} 
+					
+					$data3['txn_id']			= mt_rand(100000000,999999999);
+					$data3['fk_user_id']		= $this->session->front_user_id;
+					$data3['ip_address']		= $this->input->ip_address();
+					$data3['total_quantity']	= $tqty;
+					$data3['subtotal']			= $subt;
+					$data3['discount']			= 0;
+					$data3['order_gst']			= $gst;
+					$data3['grand_total']		= $subt+$gst;
+					$data3['coupon_id']			= 0;
+					$data3['coupon_discount']	= 0;
+					$data3['invoice_date']		= time();
+					$data3['payment_id']		= $pg;
+					$data3['order_status']		= 'paid';
+					
+					$rid=$this->home_model->add_user_order($data3);
+					
+					if($rid)
+					{
+						$this->home_model->generate_order_id($rid);
 						
+						foreach(get_cart_data() as $row) 
+					{ 
+						$data4[]=array('fk_order_id'=>$rid,'fk_pricing_id'=>$row['item_pid'],'quantity'=>$row['item_qty'],'unit_price'=>($details['discount_price']>0)?$details['discount_price']:$details['original_price'],'gst_slab'=>$details['gst_slab'],'order_type'=>$row['item_type']);
+						
+					} 
+						
+					$this->home_model->add_order_details($data4);
+					$this->session->unset_userdata('cart_data');
+					redirect('my-orders');
+						
+					}
+				
+				}		
 				
 				
-				
+				}
 						
 				}
 				
 				
 				
 			}
+			
+			
+		}	
 		
 		}
 		else {
@@ -512,6 +648,30 @@ class Home extends CI_Controller {
 		
 	}
 	
+			public function my_orders()
+	
+	{
+		
+		if($this->session->front_user_id)
+		{
+		$this->data['title']			=   DEFAULT_TITLE;
+		$this->data['meta_keywords']	=   DEFAULT_KEYWORDS;
+		$this->data['meta_description']	=   DEFAULT_DESCRIPTION;
+		$this->data['orders']			=   $this->home_model->get_user_orders();
+		$this->load->view('public/templates/header',$this->data);
+		$this->load->view('public/my_orders',$this->data);
+		$this->load->view('public/templates/footer',$this->data);
+		}
+		else
+		{
+			$this->session->set_flashdata('lflag','login');
+			redirect('/');
+			
+		}
+
+		
+	}
+	
 	public function add_address()
 	
 	{
@@ -526,8 +686,17 @@ class Home extends CI_Controller {
 			$data['is_default']=$this->input->post('add_is_default')?1:0;
 			$data['fk_user_id']=$this->session->front_user_id;
 			
+			
 			$this->home_model->add_address($data);
-			redirect('/my-addresses');
+			$ref_url=$this->input->post('ref_url')?$this->input->post('ref_url'):null;
+			if($ref_url)
+			{
+				redirect($ref_url);
+			}
+			else
+			{
+				redirect('/my-addresses');
+			}
 		}
 		else
 		{	$this->session->set_flashdata('lflag','login');
@@ -553,7 +722,15 @@ class Home extends CI_Controller {
 			$id=$this->input->post('edit_id');
 			
 			$this->home_model->edit_address($id,$data);
-			redirect('/my-addresses');
+						$ref_url=$this->input->post('ref_url')?$this->input->post('ref_url'):null;
+			if($ref_url)
+			{
+				redirect($ref_url);
+			}
+			else
+			{
+				redirect('/my-addresses');
+			}
 		}
 		else
 		{	$this->session->set_flashdata('lflag','login');

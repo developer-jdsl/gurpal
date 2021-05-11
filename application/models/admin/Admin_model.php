@@ -396,7 +396,7 @@ class Admin_model extends CI_Model {
    {
 	   if($id)
 	   {
-		  $return=$this->db->get_where('tbl_gst',array('pk_gst_id'=>$id,'active'=>1)); 
+		  $return=$this->db->get_where('tbl_gst',array('pk_gst_id'=>$id)); 
 		  if($return)
 		  {
 			$return=$return->row_array();
@@ -627,6 +627,7 @@ class Admin_model extends CI_Model {
 		{
 			$this->db->where(array('p.is_deleted'=>0,'p.fk_admin_id'=>$this->session->pk_admin_id));
 		}
+		$this->db->where(array('pp.is_default'=>1));
 		$colums=array('p.product_name','pc.category_name');
         
         $i = 0;
@@ -775,7 +776,7 @@ class Admin_model extends CI_Model {
    {
 	   if($data && $id)
 	   {
-		   $this->db->where(array('pk_product_id'=>$id));
+		   
 		   
 		   if($data['product_slug'])
 		   {
@@ -786,7 +787,7 @@ class Admin_model extends CI_Model {
 			   $data['product_slug']= $this->create_slug($id,'pk_product_id','tbl_products','product_slug',$data['product_name']);
 		   }
 		   
-		   $id=$this->db->update('tbl_products',$data);
+		   $id=$this->db->update('tbl_products',$data,array('pk_product_id' => $id));
 		   
 		   if($id)
 		   {
@@ -853,11 +854,12 @@ class Admin_model extends CI_Model {
    }
    
  
-   function pricing_product($insert_data=null)
+   function pricing_product($insert_data=null,$id)
    {
 	   if($insert_data)
 	   {
-		   $chk=$this->db->get_where('tbl_product_pricing',array('is_default'=>1,'fk_product_id'=>$insert_data['fk_product_id']));
+		   $chk=$this->db->get_where('tbl_product_pricing',array('is_default'=>1,'fk_product_id'=>$id));
+
 		   if($chk->num_rows()==0)
 		   {
 			  $insert_data[0]['is_default']=1; 
@@ -1390,7 +1392,6 @@ class Admin_model extends CI_Model {
    {
 	   if($data && $id)
 	   {
-		   $this->db->where(array('pk_service_id'=>$id));
 		   
 		   if($data['service_slug'])
 		   {
@@ -1401,7 +1402,7 @@ class Admin_model extends CI_Model {
 			   $data['service_slug']= $this->create_slug($id,'pk_service_id','tbl_services','service_slug',$data['service_name']);
 		   }
 		   
-		   $id=$this->db->update('tbl_services',$data);
+		   $id=$this->db->update('tbl_services',$data,array('pk_service_id'=>$id));
 		   
 		   if($id)
 		   {
@@ -1914,6 +1915,19 @@ function add_admin($data=null,$data2=null)
 		   return array('status'=>false);
 	   }
 	   
+   }
+   
+   
+   function get_users()
+   {
+	   
+	$return=$this->db->get_where('tbl_user',array('1'=>'1')); 
+		  if($return)
+		  {
+			return $return->result_array();
+			
+		  }
+		  return false;
    }
   
 }

@@ -749,7 +749,8 @@ $(document).ready(function() {
 	 if($(this).data('default')==1)
 	 {
 		 
-		$('[name="edit_is_default"]').attr('checked',true);
+		$('[name="edit_is_default"]').prop('checked',true);
+
 	 }
 	 
 	 

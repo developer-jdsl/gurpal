@@ -8,9 +8,9 @@ class Product extends CI_Controller {
 		 $this->load->model('product_model');
 		 $this->load->model('home_model');
 		 $this->data['cities']			=	$this->home_model->get_cities();
-		  construct_init();
-		   $this->load->library('Ajax_pagination');
-		   $this->per_page=18;
+		 construct_init();
+		 $this->load->library('Ajax_pagination');
+		 $this->per_page=18;
  	}
 		 
 		function _remap($method,$args)
@@ -94,6 +94,8 @@ class Product extends CI_Controller {
 			$this->data['categories']		=	$this->home_model->get_product_cats();
 			$this->data['products'] 		= 	$this->product_model->get_rows_product($from,$to,$category,$order,$this->per_page,$page);
 			$this->data['category'] 		=	$category;
+			
+			
 			$this->load->view('public/templates/header',$this->data);
 			$this->load->view('public/templates/product_sidebar',$this->data);
 			$this->load->view('public/products',$this->data);
@@ -137,7 +139,7 @@ class Product extends CI_Controller {
     	//$data['categories']		=	$this->home_model->get_service_cats();
 			$this->data['products'] = $this->product_model->get_rows_product($from,$to,$category,$sortBy,$this->per_page,$page); 
 			$this->data['pagination'] = $this->ajax_pagination->create_links();
-         
+         	
         // Load the data list view 
         $this->load->view('public/products_ajax', $this->data, false); 
     } 

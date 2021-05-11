@@ -72,6 +72,7 @@ $route['products/(:any)']				=	'product/list/$1/$2/0';
 $route['products']						=	'product/list/$1/all/0';
 
 $route['my-account']					=	'home/my_account';
+$route['my-orders']						=	'home/my_orders';
 
 $route['my-addresses']					=	'home/my_addresses';
 $route['add-address']					=	'home/add_address';

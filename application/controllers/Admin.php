@@ -1878,8 +1878,11 @@ class Admin extends CI_Controller {
 				
 				}
 				
+				
 			}
-			
+			else{
+						$img_array[]='default.jpg'; 
+						}
 			if(count($org_price)>0)
 			{
 			foreach($org_price as $key=>$value)
@@ -1902,15 +1905,11 @@ class Admin extends CI_Controller {
 			}
 			
 			
-			
-			
-			
-			
 			$return=$this->admin_model->edit_product($data,$id);
 			
 			if(!empty($insert_data))
 			{
-				$this->admin_model->pricing_product($insert_data);
+				$this->admin_model->pricing_product($insert_data,$id);
 			}
 		
 			if($return['status']==true)
@@ -4702,5 +4701,19 @@ class Admin extends CI_Controller {
 		}
 	
 	}
+	
+	
+		public function users()
+	{
+		is_superadmin();
+		$this->data['users']=$this->admin_model->get_users();
+		$this->load->view('admin/templates/header');
+		$this->load->view('admin/templates/sidebar');
+		$this->load->view('admin/templates/topbar');
+		$this->load->view('admin/users/users',$this->data);
+		$this->load->view('admin/templates/footer');
+	}
+	
+	
 
 }

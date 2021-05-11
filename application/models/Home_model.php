@@ -514,7 +514,7 @@ class Home_model extends CI_Model {
    }
 	function add_user_address($data2)
 	{
-		$this->db->insert('tbl_user_profile',$data);
+		$this->db->insert('tbl_user_profile',$data2);
 		$id=$this->db->insert_id();
 	   if($id)
 	   {
@@ -523,6 +523,44 @@ class Home_model extends CI_Model {
 	   
 	   return null;
 		
+	}
+	
+	function add_user_order($data)
+	{
+		$this->db->insert('tbl_orders',$data);
+		$id=$this->db->insert_id();
+	   if($id)
+	   {
+		return $id;
+	   }
+	   
+	   return null;
+		
+	}
+	
+	function generate_order_id($id)
+	{
+		$oid='OR-'.sprintf("%06d", $id);
+		return $this->db->update('tbl_orders',array('order_number'=>$oid),array('pk_order_id'=>$id));
+		
+	}
+	
+	function add_order_details($data)
+	{
+		$this->db->insert_batch('tbl_order_details',$data);
+	}
+	
+	
+	function get_user_orders()
+	{
+		
+		$res=$this->db->get_where('tbl_orders',array('fk_user_id'=>$this->session->front_user_id));
+		 if($res)
+	   {
+		   return $res->result_array();
+	   }
+	   return false; 
+	
 	}
 	
 }

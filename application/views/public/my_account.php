@@ -5,7 +5,7 @@
                             </li>
                             <li><a href="<?=base_url('my-addresses')?>">Address Book</a>
                             </li>
-                            <li><a href="javascript:void(0);">Orders History</a>
+                            <li><a href="<?=base_url('my-orders')?>">Orders History</a>
                             </li>
                             <li><a href="javascript:void(0);">Wishlist</a>
                             </li>
@@ -64,3 +64,5 @@
 			
                     <div class="gap"></div>
                 </div>
+				</div>
+				</div>
