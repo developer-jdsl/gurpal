@@ -135,7 +135,7 @@ function get_rows_count($from=false,$to=false,$category,$order_by=false,$limit=f
 		function get_rows_product($from=false,$to=false,$category,$order_by=false,$limit=false,$page=false)
 	{
 		
-		$product_cat=get_product_category_slug($category);
+		$product_cat=get_product_category($category);
 		$this->db->select('p.*,pp.*,pc.category_name,b.brand_name,a.admin_name,c.color_name,c.color_value,s.size_name,s.size_value,g.gst_slab');
         $this->db->from('tbl_products as p');
 		$this->db->join('tbl_product_pricing as pp','p.pk_product_id=pp.fk_product_id','left');
@@ -162,16 +162,14 @@ function get_rows_count($from=false,$to=false,$category,$order_by=false,$limit=f
 			
 						if($product_cat)
 			{
-				foreach($product_cat as $cat)
-				{
+				
 					$this->db->group_start();
-							$this->db->like('pc.pk_category_id',$cat, 'before');   
-							$this->db->or_like('pc.pk_category_id',$cat, 'after');   
-							$this->db->or_like('pc.pk_category_id',$cat, 'none');    
-							$this->db->or_like('pc.pk_category_id',$cat, 'both'); 
+							$this->db->like('p.product_category',$product_cat, 'before');   
+							$this->db->or_like('p.product_category',$product_cat, 'after');   
+							$this->db->or_like('p.product_category',$product_cat, 'none');    
+							$this->db->or_like('p.product_category',$product_cat, 'both'); 
 					$this->db->group_end();
-				}
-	
+			
 			}
 			
 			if($order_by)

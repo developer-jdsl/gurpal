@@ -601,7 +601,7 @@ var pid=$(this).data('id');
 					 $("#cart_gst").html('₹'+resp.gst); 
 					 $("#cart_subtotal").html('₹'+resp.subtotal); 
 					 $("#cart_total").html('₹'+resp.gtotal); 
-					 	 $("#td_subt").html('₹'+resp.subtotal); 
+					 	// $("#td_subt").html('₹'+resp.subtotal); 
 			   }
 			   else
 		 {
@@ -615,8 +615,9 @@ var pid=$(this).data('id');
 
 $('.cart-item-plus').click(function(){
 
-var qty=$('#cart-quantity').val();
-var pid=$('#cart-quantity').data('id');
+var target= $(this).parent().find('.cart-quantity');
+var qty=target.val();
+var pid=target.data('id');
 
 			$.post(base_url+"product/qty_update",   // url
 			  {pid:pid,qty:qty}, // data to be submit
@@ -645,13 +646,15 @@ var pid=$('#cart-quantity').data('id');
 });
 
 $('.cart-item-minus').click(function(){
-if($('#cart-quantity').val()==0)
+	var target= $(this).parent().find('.cart-quantity');
+if(target.val()==0)
 {
-	$('#cart-quantity').val(1);
+	target.val(1);
 }
 
-var qty=$('#cart-quantity').val();
-var pid=$('#cart-quantity').data('id');
+
+var qty=target.val();
+var pid=target.data('id');
 
 			$.post(base_url+"product/qty_update",   // url
 			  {pid:pid,qty:qty}, // data to be submit
@@ -799,7 +802,7 @@ $(document).ready(function() {
 				   $("#price_slider").ionRangeSlider({
 						type: "double",
 						grid: true,
-						min: 100,
+						min: 10,
 						max: 10000,
 						from: service_price_from,
 						to: service_price_to,

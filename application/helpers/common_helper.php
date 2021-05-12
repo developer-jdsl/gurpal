@@ -285,6 +285,26 @@ function  construct_init()
 
 	}
 	
+		function get_product_category($category)
+	{
+		$cats_ids=array();
+		$CI = & get_instance();	
+		$row=$CI->db->get_where('tbl_product_category',array('active'=>1,'is_deleted'=>0,'category_slug'=>$category));
+		if($row)
+		{
+			$row=$row->row_array();
+			if($row['pk_category_id'])
+			{
+				
+				return $row['pk_category_id'];
+			}
+			
+		}
+		
+		return false;
+
+	}
+	
 	
 	function product_cats_menu_li()
 	{

@@ -38,7 +38,7 @@ class Service extends CI_Controller {
 		{
 		
 		$this->data['gallery']			=	$this->home_model->get_service_gallery($tmp['pk_service_id']);
-		$this->data['featured_services']=	$this->home_model->get_services();
+		$this->data['featured_services']=	$this->home_model->get_related_services(false,$tmp['pk_category_id'],$tmp['pk_service_id']);
 		//$this->data['services']		=	$this->home_model->get_services();
 		//$this->data['banners']		=	$this->home_model->get_banners();
 		$this->data['brands']			=	$this->home_model->get_brands();

@@ -67,9 +67,9 @@ $route['city/(:any)/services']						=	'service/list/$1/all/0';
 
 /* Product Routes */
 
-$route['products/(:any)/(:num)']		=	'product/list/$1/$2/$3';
-$route['products/(:any)']				=	'product/list/$1/$2/0';
-$route['products']						=	'product/list/$1/all/0';
+$route['products/(:any)/(:num)']		=	'product/list/$1/$2';
+$route['products/(:any)']				=	'product/list/$1/0';
+$route['products']						=	'product/list/all/0';
 
 $route['my-account']					=	'home/my_account';
 $route['my-orders']						=	'home/my_orders';

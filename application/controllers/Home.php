@@ -185,7 +185,7 @@ class Home extends CI_Controller {
 						
 						foreach(get_cart_data() as $row) 
 					{ 
-						$data4[]=array('fk_order_id'=>$rid,'fk_pricing_id'=>$row['item_pid'],'quantity'=>$row['item_qty'],'unit_price'=>($details['discount_price']>0)?$details['discount_price']:$details['original_price'],'gst_slab'=>$details['gst_slab'],'order_type'=>$row['item_type']);
+						$data4[]=array('fk_order_id'=>$rid,'fk_pricing_id'=>$row['item_pid'],'quantity'=>$row['item_qty'],'unit_price'=>$row['item_price'],'gst_slab'=>$row['item_gstrate'],'order_type'=>$row['item_type']);
 						
 					} 
 						
@@ -337,7 +337,7 @@ class Home extends CI_Controller {
 						
 						foreach(get_cart_data() as $row) 
 					{ 
-						$data4[]=array('fk_order_id'=>$rid,'fk_pricing_id'=>$row['item_pid'],'quantity'=>$row['item_qty'],'unit_price'=>($details['discount_price']>0)?$details['discount_price']:$details['original_price'],'gst_slab'=>$details['gst_slab'],'order_type'=>$row['item_type']);
+						$data4[]=array('fk_order_id'=>$rid,'fk_pricing_id'=>$row['item_pid'],'quantity'=>$row['item_qty'],'unit_price'=>$row['item_price'],'gst_slab'=>$row['item_gstrate'],'order_type'=>$row['item_type']);
 						
 					} 
 						

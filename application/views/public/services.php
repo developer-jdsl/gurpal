@@ -105,6 +105,9 @@
                     <div class="gap"></div>
                 </div>
 				
+				</div>
+				</div>
+				
 				<input type="hidden" id="hid_city" value="<?=$city?>">
 				
 				<input type="hidden" id="hid_category" value="<?=$category?>">

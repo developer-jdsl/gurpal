@@ -644,7 +644,7 @@ class Admin_model extends CI_Model {
                 {
                     $this->db->or_like($item, @$_POST['search']['value']);
                 }
-                if(count($this->column) - 1 == $i) //last loop
+                if(count($colums) - 1 == $i) //last loop
                     $this->db->group_end(); //close bracket
             }
             $column[$i] = $item; // set column array variable to order processing
@@ -1297,7 +1297,7 @@ class Admin_model extends CI_Model {
                 {
                     $this->db->or_like($item, @$_POST['search']['value']);
                 }
-                if(count($this->column) - 1 == $i) //last loop
+                if(count($colums) - 1 == $i) //last loop
                     $this->db->group_end(); //close bracket
             }
             $column[$i] = $item; // set column array variable to order processing

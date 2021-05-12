@@ -442,6 +442,9 @@ class Admin extends CI_Controller {
 			{
 				$data['city_image']=$image;
 			}
+			else{
+				$data['city_image']=null;
+			}
 			$data['fk_state_id']=$this->input->post('state_name');
 			$data['city_name']=$this->input->post('city_name');
 			$data['city_slug']=$this->input->post('city_slug');

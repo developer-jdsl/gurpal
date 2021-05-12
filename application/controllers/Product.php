@@ -37,7 +37,7 @@ class Product extends CI_Controller {
 		{
 		
 		$this->data['gallery']			=	$this->home_model->get_product_gallery($tmp['pk_product_id']);
-		$this->data['featured_products']=	$this->home_model->get_products();
+		$this->data['featured_products']=	$this->home_model->get_related_products(false,$tmp['pk_category_id'],$tmp['pk_product_id']);
 		//$this->data['services']		=	$this->home_model->get_services();
 		//$this->data['banners']		=	$this->home_model->get_banners();
 		$this->data['brands']			=	$this->home_model->get_brands();
@@ -80,7 +80,6 @@ class Product extends CI_Controller {
 			$category=$data[0]?$data[0]:'all';
 			$page=$data[1]?$data[1]:0;
 			$data = array();
-			
 			//total rows count
 			$totalRec = $this->product_model->get_rows_count($from,$to,$category,$order,$this->per_page,$page);
 			
@@ -95,7 +94,7 @@ class Product extends CI_Controller {
 			$this->data['products'] 		= 	$this->product_model->get_rows_product($from,$to,$category,$order,$this->per_page,$page);
 			$this->data['category'] 		=	$category;
 			
-			
+		
 			$this->load->view('public/templates/header',$this->data);
 			$this->load->view('public/templates/product_sidebar',$this->data);
 			$this->load->view('public/products',$this->data);
@@ -400,7 +399,7 @@ class Product extends CI_Controller {
 		$updated=$subt=$gst=0;
 		$data['pid']=$this->input->post('pid');
 		$qty=$this->input->post('qty');
-		$details=$this->product_model->get_variation_detail($data,array('city'=>null,'search'=>null));
+		$details=$this->product_model->get_variation_detail($data);
 		$st=array('status'=>'fail','html'=>'','subtotal'=>0,'gst'=>0,'gtotal'=>0,'shipping'=>0);
 		if($details)
 		{

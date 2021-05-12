@@ -22,7 +22,7 @@
                                 </td>
                                 <td class="cart-item-quantity">
 								<?php if($row['item_type']=='product'){ ?> <i class="fa fa-minus cart-item-minus"></i> <?php } ?>
-                                    <input type="text" name="cart-quantity" id="cart-quantity" min="1" data-id="<?=$row['item_pid']?>" class="cart-quantity" value="<?=$row['item_qty']?>" <?php if($row['item_type']!='product'){ echo 'disabled';} ?> />
+                                    <input type="text" name="cart-quantity" min="1" data-id="<?=$row['item_pid']?>" class="cart-quantity" value="<?=$row['item_qty']?>" <?php if($row['item_type']!='product'){ echo 'disabled';} ?> />
 								<?php if($row['item_type']=='product'){ ?><i class="fa fa-plus cart-item-plus"></i> <?php } ?>
                                 </td>
                                 <td id="td_subt">₹<?=$row['item_price']?></td>

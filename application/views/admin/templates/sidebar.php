@@ -90,6 +90,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </a>
                
             </li>
+			
+				<li class="nav-item">
+                <a class="nav-link " href="<?=base_url('admin/users')?>">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span><?=keyword_value('users','Users')?></span>
+                </a>
+               
+            </li>
 		
 			
 				<?php } ?>
