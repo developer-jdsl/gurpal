@@ -453,7 +453,7 @@ $config['csrf_token_name'] = 'csrf_jc';
 $config['csrf_cookie_name'] = 'csrf_cookie_jc';
 $config['csrf_expire'] = 7200;
 $config['csrf_regenerate'] = FALSE;
-$config['csrf_exclude_uris'] = array('admin/product_list','admin/service_list','admin/update_product_ajax','admin/product_ajax_upload','admin/remove_gallery_ajax','admin/product_ajax_default','product/add_to_cart','product/remove_from_cart','product/add_to_cart_list','product/qty_update','home/set_city','service/add_to_cart','service/remove_from_cart','service/add_to_cart_list');
+$config['csrf_exclude_uris'] = array('admin/product_list','admin/order_list','admin/service_list','admin/update_product_ajax','admin/product_ajax_upload','admin/remove_gallery_ajax','admin/product_ajax_default','product/add_to_cart','product/remove_from_cart','product/add_to_cart_list','product/qty_update','home/set_city','service/add_to_cart','service/remove_from_cart','service/add_to_cart_list');
 
 /*
 |--------------------------------------------------------------------------

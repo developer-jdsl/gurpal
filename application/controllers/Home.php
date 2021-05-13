@@ -776,6 +776,7 @@ class Home extends CI_Controller {
 			$email['message']=str_replace($find,$replace,$template['template']);
 			$ret=sendemail($email);
 			}
+			
 			}
 		
 		

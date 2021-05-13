@@ -49,14 +49,14 @@
                             <ul class="header-features">
                                 <li><i class="fa fa-phone"></i>
                                     <div class="header-feature-caption">
-                                        <h5 class="header-feature-title">+1-202-555-0140</h5>
+                                        <h5 class="header-feature-title">+91-123-345-5678</h5>
                                         <p class="header-feature-sub-title">24/7 phone assistance</p>
                                     </div>
                                 </li>
                                 <li><i class="fa fa-truck"></i>
                                     <div class="header-feature-caption">
-                                        <h5 class="header-feature-title">Free Delivery</h5>
-                                        <p class="header-feature-sub-title">on all orders over $100</p>
+                                        <h5 class="header-feature-title">Vocal for Local</h5>
+                                        <p class="header-feature-sub-title">Indigeneous Products</p>
                                     </div>
                                 </li>
                                 <li><i class="fa fa-asterisk"></i>
@@ -277,6 +277,9 @@
 			}
 			
 		}
+		
+		var service_price_from='<?=$this->input->get("from")?$this->input->get("from"):"5"?>';
+						var service_price_to='<?=$this->input->get("to")?$this->input->get("to"):"2000"?>';
 		</script>
 
         <div id="register-dialog" class="mfp-with-anim mfp-hide mfp-dialog clearfix">

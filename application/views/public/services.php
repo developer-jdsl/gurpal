@@ -162,6 +162,5 @@
 							});
 						}
 						
-						var service_price_from='<?=$this->input->get("from")?$this->input->get("from"):"500"?>';
-						var service_price_to='<?=$this->input->get("to")?$this->input->get("to"):"2000"?>';
+			
 				</script>

@@ -1929,5 +1929,167 @@ function add_admin($data=null,$data2=null)
 		  }
 		  return false;
    }
+   
+   /*************
+   Orders MOdule
+   **************/
+   
+   function get_orderss()
+   {
+	  if($this->session->pk_admin_id && $this->session->user_type=='superadmin')
+	  {		
+			$this->db->distinct('o.pk_order_id');
+			$this->db->select('o.*, CONCAT(u.user_firstname," ",u.user_lastname) AS user');	  
+			$this->db->from('tbl_orders as o');
+			$this->db->join('tbl_order_details as od','o.pk_order_id=od.fk_order_id','inner');
+			$this->db->join('tbl_product_pricing as pp','pp.pk_price_id=od.fk_pricing_id and od.order_type="product"','left');
+			$this->db->join('tbl_products as p','p.pk_product_id=pp.fk_product_id and od.order_type="product"','left');
+			$this->db->join('tbl_service_pricing as sp','sp.pk_pricing_id=od.fk_pricing_id and od.order_type="service"','left');
+			$this->db->join('tbl_services as s','s.pk_service_id=sp.fk_service_id and od.order_type="service"','left');
+			$this->db->join('tbl_user as u','o.fk_user_id=u.pk_user_id','inner');
+			
+			if( $this->session->user_type=='admin')
+			{
+				$this->db->group_start();
+				$this->db->where(array('p.fk_admin_id'=>$this->session->pk_admin_id));
+				$this->db->or_where(array('s.fk_admin_id'=>$this->session->pk_admin_id));
+				$this->db->group_end();
+			}
+			$get=$this->db->get();
+			if($get)
+			{
+				$get=$get->result();
+				return $get;
+			}
+			
+
+	  }
+
+		
+   }
+      
+  
+  
+   
+    private function _get_orders_query()
+    {
+			$this->db->distinct('o.pk_order_id');
+			$this->db->select('o.*, CONCAT(u.user_firstname," ",u.user_lastname) AS user');	  
+			$this->db->from('tbl_orders as o');
+			$this->db->join('tbl_order_details as od','o.pk_order_id=od.fk_order_id','inner');
+			$this->db->join('tbl_product_pricing as pp','pp.pk_price_id=od.fk_pricing_id and od.order_type="product"','left');
+			$this->db->join('tbl_products as p','p.pk_product_id=pp.fk_product_id and od.order_type="product"','left');
+			$this->db->join('tbl_service_pricing as sp','sp.pk_pricing_id=od.fk_pricing_id and od.order_type="service"','left');
+			$this->db->join('tbl_services as s','s.pk_service_id=sp.fk_service_id and od.order_type="service"','left');
+			$this->db->join('tbl_user as u','o.fk_user_id=u.pk_user_id','inner');
+			
+			if( $this->session->user_type=='admin')
+			{
+				$this->db->group_start();
+				$this->db->where(array('p.fk_admin_id'=>$this->session->pk_admin_id));
+				$this->db->or_where(array('s.fk_admin_id'=>$this->session->pk_admin_id));
+				$this->db->group_end();
+			}
+			
+		$colums=array('o.order_number','o.txn_id');
+        
+        $i = 0;
+        foreach ($colums as $item) // loop column
+        {
+            if(@$_POST['search']['value']) // if datatable send POST for search
+            {
+                if($i===0) // first loop
+                {
+                    $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
+                    $this->db->like($item, $_POST['search']['value']);
+                }
+                else
+                {
+                    $this->db->or_like($item, @$_POST['search']['value']);
+                }
+                if(count($colums) - 1 == $i) //last loop
+                    $this->db->group_end(); //close bracket
+            }
+            $column[$i] = $item; // set column array variable to order processing
+            $i++;
+        }
+      
+    }
+
+    function get_orders()
+    {
+        $this->_get_orders_query();
+        if($this->input->post('length') != -1)
+        $this->db->limit($this->input->post('length'), $this->input->post('start'));
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    function orders_count_filtered()
+    {
+        $this->_get_orders_query();
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+
+     function orders_count_all()
+    {
+		$this->db->where('1','1');
+        $this->db->from('tbl_orders');
+        return $this->db->count_all_results();
+    }
+	
+	     function check_order_id($id=null)
+   {
+	   if($id)
+	   {
+		  $return=$this->db->get_where('tbl_orders',array('pk_order_id'=>$id)); 
+		  if($return)
+		  {
+			$return=$return->row_array();
+			if($return['pk_order_id'])
+			{
+				
+				return $return;
+			}
+		  }
+		   
+	   }
+	   
+	   return false;
+   }
+   
+   
+   function get_order_details($id=false)
+   {
+	   if($id)
+	   {
+		 
+			$this->db->select('o.*,od.*,p.product_name,c.color_name,ps.size_name,s.service_name,sp.service_variation,sp.service_subvariation,CONCAT(u.user_firstname," ",u.user_lastname) AS user');	  
+			$this->db->from('tbl_orders as o');
+			$this->db->join('tbl_order_details as od','o.pk_order_id=od.fk_order_id','inner');
+			$this->db->join('tbl_product_pricing as pp','pp.pk_price_id=od.fk_pricing_id and od.order_type="product"','left');
+			$this->db->join('tbl_products as p','p.pk_product_id=pp.fk_product_id and od.order_type="product"','left');
+			$this->db->join('tbl_color as c','pp.fk_color_id=c.pk_color_id and od.order_type="product"','left');
+			$this->db->join('tbl_size as ps','pp.fk_size_id=ps.pk_size_id and od.order_type="product"','left');
+			$this->db->join('tbl_service_pricing as sp','sp.pk_pricing_id=od.fk_pricing_id and od.order_type="service"','left');
+			$this->db->join('tbl_services as s','s.pk_service_id=sp.fk_service_id and od.order_type="service"','left');
+			$this->db->join('tbl_user as u','o.fk_user_id=u.pk_user_id','inner');
+			
+			if( $this->session->user_type=='admin')
+			{
+				$this->db->group_start();
+				$this->db->where(array('p.fk_admin_id'=>$this->session->pk_admin_id));
+				$this->db->or_where(array('s.fk_admin_id'=>$this->session->pk_admin_id));
+				$this->db->group_end();
+			}  
+			
+			$this->db->where('o.pk_order_id',$id);
+			 $query = $this->db->get();
+			return $query->result_array();
+		   
+	   }
+	   return false;
+   }
   
 }

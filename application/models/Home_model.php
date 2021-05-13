@@ -222,13 +222,10 @@ class Home_model extends CI_Model {
 					$this->db->or_like('ap.profile_states',$cdata['sid'], 'after');   
 					$this->db->or_like('ap.profile_states', $cdata['sid'], 'none');    
 					$this->db->or_like('ap.profile_states',$cdata['sid'], 'both');  
-					
-				
-						 $this->db->or_like('ap.profile_cities',$cdata['cid'], 'before');   
-						  $this->db->or_like('ap.profile_cities',$cdata['cid'], 'after');   
-						  $this->db->or_like('ap.profile_cities', $cdata['cid'], 'none');    
-						  $this->db->or_like('ap.profile_cities',$cdata['cid'], 'both');   
-						
+					$this->db->or_like('ap.profile_cities',$cdata['cid'], 'before');   
+					$this->db->or_like('ap.profile_cities',$cdata['cid'], 'after');   
+					$this->db->or_like('ap.profile_cities', $cdata['cid'], 'none');    
+					$this->db->or_like('ap.profile_cities',$cdata['cid'], 'both');  
 				 }
 				 
 				 else  if(@$cdata['sid'] && !@$cdata['cid'])
