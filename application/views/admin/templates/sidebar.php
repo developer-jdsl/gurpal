@@ -66,6 +66,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </a>
                
             </li>
+			
+			<li class="nav-item">
+                <a class="nav-link " href="<?=base_url('admin/orders')?>">
+                    <i class="fas fa-fw fa-shopping-bag"></i>
+                    <span><?=keyword_value('orders','Orders')?></span>
+                </a>
+               
+            </li>
 				<?php if($this->session->user_type=='superadmin') { ?>
 			<li class="nav-item">
                 <a class="nav-link " href="<?=base_url('admin/ads')?>">
@@ -111,6 +119,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                
             </li>
 				<?php } ?>
+				
+				
+				
 				
 				<li class="nav-item">
                 <a class="nav-link " href="<?=base_url('admin/logout')?>">

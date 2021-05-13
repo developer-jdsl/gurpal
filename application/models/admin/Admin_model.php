@@ -1933,43 +1933,7 @@ function add_admin($data=null,$data2=null)
    /*************
    Orders MOdule
    **************/
-   
-   function get_orderss()
-   {
-	  if($this->session->pk_admin_id && $this->session->user_type=='superadmin')
-	  {		
-			$this->db->distinct('o.pk_order_id');
-			$this->db->select('o.*, CONCAT(u.user_firstname," ",u.user_lastname) AS user');	  
-			$this->db->from('tbl_orders as o');
-			$this->db->join('tbl_order_details as od','o.pk_order_id=od.fk_order_id','inner');
-			$this->db->join('tbl_product_pricing as pp','pp.pk_price_id=od.fk_pricing_id and od.order_type="product"','left');
-			$this->db->join('tbl_products as p','p.pk_product_id=pp.fk_product_id and od.order_type="product"','left');
-			$this->db->join('tbl_service_pricing as sp','sp.pk_pricing_id=od.fk_pricing_id and od.order_type="service"','left');
-			$this->db->join('tbl_services as s','s.pk_service_id=sp.fk_service_id and od.order_type="service"','left');
-			$this->db->join('tbl_user as u','o.fk_user_id=u.pk_user_id','inner');
-			
-			if( $this->session->user_type=='admin')
-			{
-				$this->db->group_start();
-				$this->db->where(array('p.fk_admin_id'=>$this->session->pk_admin_id));
-				$this->db->or_where(array('s.fk_admin_id'=>$this->session->pk_admin_id));
-				$this->db->group_end();
-			}
-			$get=$this->db->get();
-			if($get)
-			{
-				$get=$get->result();
-				return $get;
-			}
-			
-
-	  }
-
-		
-   }
-      
-  
-  
+ 
    
     private function _get_orders_query()
     {
