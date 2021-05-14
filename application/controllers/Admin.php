@@ -3400,6 +3400,7 @@ class Admin extends CI_Controller {
 			}
 			
 			$data['category_name']=$this->input->post('category_name');
+			$data['category_icon']=$this->input->post('category_icon');
 			$data['parent_category']=$this->input->post('parent_category');
 			$data['meta_title']=$this->input->post('meta_title');
 			$data['meta_keywords']=$this->input->post('meta_keywords');
@@ -3520,6 +3521,7 @@ class Admin extends CI_Controller {
 			}
 			
 			$data['category_name']=$this->input->post('category_name');
+			$data['category_icon']=$this->input->post('category_icon');
 			$data['category_slug']=$this->input->post('category_slug');
 			$data['parent_category']=$this->input->post('parent_category');
 			$data['meta_title']=$this->input->post('meta_title');
@@ -4704,23 +4706,6 @@ class Admin extends CI_Controller {
 		}
 	
 	}
-
-	/* 
-   #######################################
-   Users MODULE 
-   #######################################
-   */	
-	
-		public function users()
-	{
-		is_superadmin();
-		$this->data['users']=$this->admin_model->get_users();
-		$this->load->view('admin/templates/header');
-		$this->load->view('admin/templates/sidebar');
-		$this->load->view('admin/templates/topbar');
-		$this->load->view('admin/users/users',$this->data);
-		$this->load->view('admin/templates/footer');
-	}
 	
 	
 	/* 
@@ -4746,15 +4731,21 @@ class Admin extends CI_Controller {
       $data = array();
       $no = $this->input->post('start');
       foreach ($list as $ro) {
+		$details=$this->admin_model->get_order_details($ro->pk_order_id);
+		$ttqty=$ttgtotal=0;
+		foreach($details as $det){
+		$ttqty+=	$det['quantity'];
+		$ttgtotal+=$det['grandtotal'];
+		}
       $no++;
       $row = array();
       $row[] = $ro->order_number;
 	  $row[] = $ro->txn_id;
-	  $row[] = $ro->total_quantity;
-	  $row[] = '₹'.$ro->grand_total;
+	  $row[] = $ttqty; //order_status
+	  $row[] = '₹'.$ttgtotal; // $ro->grand_total
 	  $row[] = date('d M,Y',$ro->invoice_date);
 	  $row[] = $ro->user;
-	  $row[] = $ro->order_status;
+	  $row[] = $ro->status;
 
 		
 		 $row[] = form_open('admin/edit_order',array('class'=>'d-inline')).'
@@ -4777,7 +4768,8 @@ class Admin extends CI_Controller {
 	
 	public function edit_order()
 	{
-		$id=$this->input->post('id');
+		$fid=$this->session->flashdata('order_id');
+		$id=$this->input->post('id')?$this->input->post('id'):$fid;
 		if($id)
 		{
 			
@@ -4814,19 +4806,40 @@ class Admin extends CI_Controller {
 	 
 
 	
-	public function update_tracking()
+	public function update_order()
 	{
 		if($this->session->pk_admin_id)
 		{
-			$id=$this->input->post('id');
-			$data['tracking_no']=$this->input->post('tracking_carrier');
+			$detail_id=$this->input->post('id');
+			$order_id=$this->input->post('oid');
+			$data['tracking_company']=$this->input->post('tracking_carrier');
 			$data['tracking_number']=$this->input->post('tracking_number');
+			$data['order_status']=$this->input->post('order_status');
+			
+
+			if($this->admin_model->update_order_details($data,$detail_id))
+			{
+				$this->session->set_flashdata('msg', 'Order was updated successfully');
+				$this->session->set_flashdata('order_id',$order_id);
+				redirect('admin/edit_order/');
+			}
+			
+			else
+			{
+				$this->session->set_flashdata('msg', 'Action was not successfull');
+				$this->session->set_flashdata('order_id',$order_id);
+				redirect('admin/edit_order/');
+				
+			}
+			
 			
 		}
 		
 		
 	}
 	
+	
+
 	
 
 }

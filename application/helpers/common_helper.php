@@ -497,4 +497,53 @@ function  construct_init()
 		
 		return false;
 	}
+	
+	
+	function get_admin_id_from_pid($pid=null)
+	{
+		if($pid)
+		{
+			
+			$CI = & get_instance();	
+			$CI->db->select('a.pk_admin_id');
+			$CI->db->from('tbl_product_pricing as pp');
+			$CI->db->join('tbl_products as p','p.pk_product_id=pp.fk_product_id','inner');
+			$CI->db->join('tbl_admin as a','a.pk_admin_id=p.fk_admin_id','inner');
+			$CI->db->where(array('pp.pk_price_id'=>$pid));
+			$res=$CI->db->get();
+			if($res)
+			{
+				$res=$res->row_array();
+				return $res['pk_admin_id'];
+			}
+
+			return false;
+
+		}			
+		
+	}
+	
+		function get_admin_id_from_sid($sid=null)
+	{
+		if($sid)
+		{
+			
+			$CI = & get_instance();	
+			$CI->db->select('a.pk_admin_id');
+			$CI->db->from('tbl_service_pricing as sp');
+			$CI->db->join('tbl_services as s','s.pk_service_id=sp.fk_service_id','inner');
+			$CI->db->join('tbl_admin as a','a.pk_admin_id=s.fk_admin_id','inner');
+			$CI->db->where(array('sp.pk_pricing_id'=>$sid));
+			$res=$CI->db->get();
+			if($res)
+			{
+				$res=$res->row_array();
+				return $res['pk_admin_id'];
+			}
+
+			return false;
+
+		}			
+		
+	}
 ?>

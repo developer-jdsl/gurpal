@@ -29,7 +29,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 											<th><?=keyword_value('gtotal','G.Total')?></th>
 											<th><?=keyword_value('dated','Dated')?></th>
 											<th><?=keyword_value('user','User')?></th>
-                                            <th><?=keyword_value('status','Status')?></th>
+                                            <th><?=keyword_value('payment_status','Payment Status')?></th>
                                             <th><?=keyword_value('action','Action')?></th>
                                             
                                         </tr>
@@ -42,8 +42,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 											<th><?=keyword_value('gtotal','G.Total')?></th>
 											<th><?=keyword_value('dated','Dated')?></th>
 											<th><?=keyword_value('user','User')?></th>
-                                            <th><?=keyword_value('status','Status')?></th>
-                                            <th><?=keyword_value('action','Action')?></
+                                          <th><?=keyword_value('payment_status','Payment Status')?></th>
+                                            <th><?=keyword_value('action','Action')?></th>
                                             
                                         </tr>
                                     </tfoot>

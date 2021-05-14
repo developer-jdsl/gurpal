@@ -1930,7 +1930,8 @@ function add_admin($data=null,$data2=null)
 		  return false;
    }
    
-   /*************
+   
+    /*************
    Orders MOdule
    **************/
  
@@ -1938,7 +1939,7 @@ function add_admin($data=null,$data2=null)
     private function _get_orders_query()
     {
 			$this->db->distinct('o.pk_order_id');
-			$this->db->select('o.*, CONCAT(u.user_firstname," ",u.user_lastname) AS user');	  
+			$this->db->select('o.pk_order_id,o.order_number,o.order_status as status,o.txn_id,o.invoice_date, CONCAT(u.user_firstname," ",u.user_lastname) AS user');	  
 			$this->db->from('tbl_orders as o');
 			$this->db->join('tbl_order_details as od','o.pk_order_id=od.fk_order_id','inner');
 			$this->db->join('tbl_product_pricing as pp','pp.pk_price_id=od.fk_pricing_id and od.order_type="product"','left');
@@ -1949,6 +1950,8 @@ function add_admin($data=null,$data2=null)
 			
 			if( $this->session->user_type=='admin')
 			{
+				
+				$this->db->where(array('od.fk_admin_id'=>$this->session->pk_admin_id));
 				$this->db->group_start();
 				$this->db->where(array('p.fk_admin_id'=>$this->session->pk_admin_id));
 				$this->db->or_where(array('s.fk_admin_id'=>$this->session->pk_admin_id));
@@ -2055,5 +2058,12 @@ function add_admin($data=null,$data2=null)
 	   }
 	   return false;
    }
+   
+   function update_order_details($data,$id)
+   {
+	  return $this->db->update('tbl_order_details',$data,array('pk_detail_id'=>$id,'fk_admin_id'=>$this->session->pk_admin_id)); 
+	   
+   }
+  
   
 }

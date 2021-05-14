@@ -37,16 +37,52 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 									<tbody>
 									<?php
 									$stotal=$tgst=$gtotal=0;
-									foreach($order_details as $row) { ?>
+									
+				
+									foreach($order_details as $row) { 
+									if($this->session->user_type=='superadmin') {
+									?>
 									<tr>
 									<td> <?=($row['order_type']=='product')?$row['product_name'].'('.$row['color_name'].' | '.$row['size_name'] .')':$row['service_name'].'('.$row['service_variation'].' | '.$row['service_subvariation'] .')'?></td>
 									<td><?php echo '₹'.$row['unit_price']; $stotal+=$row['unit_price'];?></td>
 									<td><?=$row['quantity']?></td>
-									<td><?php $gst=number_format((number_format(((intval($row['gst_slab']))/100),'2','.','')*$row['unit_price']),'2','.',''); $tgst+=$gst; echo '₹'.$gst.' ('.$row['gst_slab'].')';?></td>
-									<td><?php $ttol=number_format(((number_format(($row['unit_price']+$gst),'2','.',''))*$row['quantity']),'2','.',''); $gtotal+=$ttol;echo '₹'.$ttol;?></td>
+									<td><?php $tgst+=$row['gst']; echo '₹'.$row['gst'].' ('.$row['gst_slab'].')';?></td>
+									<td><?php $gtotal+=$row['grandtotal'];echo '₹'.$row['grandtotal'];?></td>
 									</tr>
 										
-									<?php } ?>
+									<?php } else {
+										if($this->session->pk_admin_id==$row['fk_admin_id']) { ?>
+										<tr>
+									<td> <?=($row['order_type']=='product')?$row['product_name'].'('.$row['color_name'].' | '.$row['size_name'] .')':$row['service_name'].'('.$row['service_variation'].' | '.$row['service_subvariation'] .')'?></td>
+									<td><?php echo '₹'.$row['unit_price']; $stotal+=$row['unit_price'];?></td>
+									<td><?=$row['quantity']?></td>
+									<td><?php $tgst+=$row['gst']; echo '₹'.$row['gst'].' ('.$row['gst_slab'].')';?></td>
+									<td><?php $gtotal+=$row['grandtotal'];echo '₹'.$row['grandtotal'];?></td>
+									</tr>
+										<tr>
+											<?php echo form_open_multipart('admin/update_order'); ?>
+										   <td><input type="text" name="tracking_carrier" class="form-control" placeholder="Shipping Partner" value="<?=$row['tracking_company']?>" ></td>
+										 <td> <input type="text" name="tracking_number" class="form-control" placeholder="Tracking Number" value="<?=$row['tracking_number']?>" > </td>
+										 <td colspan="2"> <select name="order_status" class="form-control" required>
+											<option value="processing" <?php if($row['order_status']=='processing'){ echo 'selected'; } ?> >Processing</option>
+											<option value="shipped" <?php if($row['order_status']=='shipped'){ echo 'selected'; } ?> >Shipped</option>
+											<option value="completed" <?php if($row['order_status']=='completed'){ echo 'selected'; } ?> >Completed</option>
+											<option value="cancelled" <?php if($row['order_status']=='cancelled'){ echo 'selected'; } ?> >Cancelled</option>
+											</select>
+											</td>
+										 <td> <input type="submit" class="btn btn-primary" value="Update Order">
+										  <input type="hidden" name="id" value="<?=$row['pk_detail_id']?>">
+										  <input type="hidden" name="oid" value="<?=$results['pk_order_id']?>">
+										  </td>
+										  </form>
+										  </td></tr>
+										  
+										  
+										<?php }
+										
+										}
+										
+										} ?>
 									</tbody>
                                     <tfoot>
                                          <tr>
@@ -69,31 +105,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         </tr>
 										
 											<tr>
-											 <!--
-                                           <th colspan="3">
-										  
-										   	<?php echo form_open_multipart('admin/update_tracking'); ?>
-										   <input type="text" name="tracking_carrier" placeholder="Shipping Partner" required>
-										  <input type="text" name="tracking_number" placeholder="Tracking Number" required>
-										  <input type="submit" class="btn btn-primary" value="Update Tracking">
-										  <input type="hidden" name="id" value="<?=$results['pk_order_id']?>">
-										  </form>
-										
-										  </th>
-                                          
-											<th><?=keyword_value('order_status','Order Status')?></th>
-											<th>
-											
-											<?php echo form_open_multipart('admin/update_order_status'); ?>
-											<select name="order_status" class="form-control"  onchange="this.form.submit()">
-											<option value="pending" <?php if($results['order_status']=='paid'){ echo 'selected'; } ?> >Pending</option>
-											<option value="paid" <?php if($results['order_status']=='paid'){ echo 'selected'; } ?>>Paid</option>
-											<option value="shipped" <?php if($results['order_status']=='shipped'){ echo 'selected'; } ?>>Shipped</option>
-											<option value="completed" <?php if($results['order_status']=='completed'){ echo 'selected'; } ?>>Completed</option>
-											</select>
-											<input type="hidden" name="id" value="<?=$results['pk_order_id']?>">
-											</form>
-											</th> -->
                                         </tr>
 										
                                     </tfoot>

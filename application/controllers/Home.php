@@ -9,26 +9,7 @@ class Home extends CI_Controller {
 		 $this->data['cities']			=	$this->home_model->get_cities();
 		 construct_init();
  	}
-		 
-
-	public function home2()
-	{
-		$this->data['products']			=	$this->home_model->get_products();
-		$this->data['banners']			=	$this->home_model->get_banners();
-		$this->data['brands']			=	$this->home_model->get_brands();
-		$this->data['advertisements']	=	$this->home_model->get_advertisements('home','left_sidebar');
-		
-		
-		$this->load->view('frontend/templates/header');
-		$this->load->view('frontend/home');
-		$this->load->view('frontend/templates/sidebar');
-		$this->load->view('frontend/templates/footer');
-		
-		//	var_dump($this->session);
-		
-	}
-	
-	
+		 	
 		public function index()
 	{
 	
@@ -175,17 +156,28 @@ class Home extends CI_Controller {
 					$data3['coupon_discount']	= 0;
 					$data3['invoice_date']		= time();
 					$data3['payment_id']		= $pg;
-					$data3['order_status']		= 'paid';
+					$data3['order_status']		= 'cod';
 					
 					$rid=$this->home_model->add_user_order($data3);
 					
 					if($rid)
 					{
 						$this->home_model->generate_order_id($rid);
-						
+					
 						foreach(get_cart_data() as $row) 
 					{ 
-						$data4[]=array('fk_order_id'=>$rid,'fk_pricing_id'=>$row['item_pid'],'quantity'=>$row['item_qty'],'unit_price'=>$row['item_price'],'gst_slab'=>$row['item_gstrate'],'order_type'=>$row['item_type']);
+						if($row['item_type']=='product')
+						{
+							$aid=get_admin_id_from_pid($row['item_pid']);
+						}
+						else
+						{	
+						   $aid=get_admin_id_from_sid($row['item_pid']);
+						}
+						$stotal=number_format(($row['item_qty']*$row['item_price']),'2','.','');
+						$sgst=number_format(((intval($row['item_gstrate'])/100)*$stotal),'2','.','');
+						$gtotal=number_format(($stotal+$sgst),'2','.','');
+						$data4[]=array('fk_order_id'=>$rid,'order_status'=>'processing','fk_pricing_id'=>$row['item_pid'],'quantity'=>$row['item_qty'],'unit_price'=>$row['item_price'],'gst_slab'=>$row['item_gstrate'],'order_type'=>$row['item_type'],'fk_admin_id'=>$aid,'subtotal'=>$stotal,'gst'=>$sgst,'grandtotal'=>$gtotal);
 						
 					} 
 						
@@ -327,7 +319,7 @@ class Home extends CI_Controller {
 					$data3['coupon_discount']	= 0;
 					$data3['invoice_date']		= time();
 					$data3['payment_id']		= $pg;
-					$data3['order_status']		= 'paid';
+					$data3['order_status']		= 'cod';
 					
 					$rid=$this->home_model->add_user_order($data3);
 					
@@ -337,7 +329,18 @@ class Home extends CI_Controller {
 						
 						foreach(get_cart_data() as $row) 
 					{ 
-						$data4[]=array('fk_order_id'=>$rid,'fk_pricing_id'=>$row['item_pid'],'quantity'=>$row['item_qty'],'unit_price'=>$row['item_price'],'gst_slab'=>$row['item_gstrate'],'order_type'=>$row['item_type']);
+					if($row['item_type']=='product')
+						{
+							$aid=get_admin_id_from_pid($row['item_pid']);
+						}
+						else
+						{	
+						   $aid=get_admin_id_from_sid($row['item_pid']);
+						}
+						$stotal=number_format(($row['item_qty']*$row['item_price']),'2','.','');
+						$sgst=number_format(((intval($row['item_gstrate'])/100)*$stotal),'2','.','');
+						$gtotal=number_format(($stotal+$sgst),'2','.','');
+						$data4[]=array('fk_order_id'=>$rid,'order_status'=>'processing','fk_pricing_id'=>$row['item_pid'],'quantity'=>$row['item_qty'],'unit_price'=>$row['item_price'],'gst_slab'=>$row['item_gstrate'],'order_type'=>$row['item_type'],'fk_admin_id'=>$aid,'subtotal'=>$stotal,'gst'=>$sgst,'grandtotal'=>$gtotal);
 						
 					} 
 						
