@@ -182,6 +182,8 @@ class Home extends CI_Controller {
 					} 
 						
 					$this->home_model->add_order_details($data4);
+					$this->send_new_order_emails_user($rid);
+					$this->send_new_order_emails_admin($rid);
 					$this->session->unset_userdata('cart_data');
 					redirect('my-orders');
 						
@@ -343,8 +345,13 @@ class Home extends CI_Controller {
 						$data4[]=array('fk_order_id'=>$rid,'order_status'=>'processing','fk_pricing_id'=>$row['item_pid'],'quantity'=>$row['item_qty'],'unit_price'=>$row['item_price'],'gst_slab'=>$row['item_gstrate'],'order_type'=>$row['item_type'],'fk_admin_id'=>$aid,'subtotal'=>$stotal,'gst'=>$sgst,'grandtotal'=>$gtotal);
 						
 					} 
+						 
 						
+			
+			
 					$this->home_model->add_order_details($data4);
+					$this->send_new_order_emails_user($rid);
+					$this->send_new_order_emails_admin($rid);
 					$this->session->unset_userdata('cart_data');
 					redirect('my-orders');
 						
@@ -537,6 +544,8 @@ class Home extends CI_Controller {
 		$this->data['meta_keywords']	=   DEFAULT_KEYWORDS;
 		$this->data['meta_description']	=   DEFAULT_DESCRIPTION;
 		$this->data['profile']			=   $this->home_model->get_user_profile();
+		$this->data['states']			=   $this->home_model->get_states();
+		$this->data['cities']			=   $this->home_model->get_cities();
 		$this->load->view('public/templates/header',$this->data);
 		$this->load->view('public/my_account',$this->data);
 		$this->load->view('public/templates/footer',$this->data);
@@ -607,6 +616,8 @@ class Home extends CI_Controller {
 		$this->data['meta_description']	=   DEFAULT_DESCRIPTION;
 		$this->data['profile']			=   $this->home_model->get_user_profile();
 		$this->data['msg']			    =  $msg?$msg:'';
+		$this->data['states']			=   $this->home_model->get_states();
+		$this->data['cities']			=   $this->home_model->get_cities();
 		$this->load->view('public/templates/header',$this->data);
 		$this->load->view('public/my_account',$this->data);
 		$this->load->view('public/templates/footer',$this->data);
@@ -651,7 +662,7 @@ class Home extends CI_Controller {
 		
 	}
 	
-			public function my_orders()
+			public function my_orders($order_id=null)
 	
 	{
 		
@@ -660,7 +671,19 @@ class Home extends CI_Controller {
 		$this->data['title']			=   DEFAULT_TITLE;
 		$this->data['meta_keywords']	=   DEFAULT_KEYWORDS;
 		$this->data['meta_description']	=   DEFAULT_DESCRIPTION;
-		$this->data['orders']			=   $this->home_model->get_user_orders();
+		if(!$order_id)
+		{
+			$this->data['orders']			=   $this->home_model->get_user_orders();
+			
+		}
+		else
+		{
+			$order_no=base64_decode($order_id);
+			$this->data['order_details']			=   $this->home_model->get_order_details_frontend($order_no);	
+		}
+		$this->data['order_id']			=   $order_id;
+		$this->data['states']			=   $this->home_model->get_states();
+		$this->data['cities']			=   $this->home_model->get_cities();
 		$this->load->view('public/templates/header',$this->data);
 		$this->load->view('public/my_orders',$this->data);
 		$this->load->view('public/templates/footer',$this->data);
@@ -784,6 +807,180 @@ class Home extends CI_Controller {
 		
 		
 		
+	}
+	
+	private function send_new_order_emails_user($order_id=null)
+	{
+		if($order_id)
+		{
+			
+			 $details=$this->home_model->get_order_details($order_id);
+			 if($details){
+				 $order_html='	 <table class="table table-bordered"  width="100%">
+										<thead>
+                                        <tr>
+                                            <th>'.keyword_value('name','Name').'</th>
+                                            <th>'.keyword_value('price','Price').'</th>
+                                            <th>'.keyword_value('quantity','Qty').'</th>
+											<th>'.keyword_value('gst','GST').'</th>
+											<th>'.keyword_value('total','Total').'</th>
+										
+                                        </tr>
+                                    </thead>
+									<tbody>';
+									
+									
+								
+							$stotal=$tgst=$gtotal=0;									
+						foreach($details as $row)
+						{
+							$stotal+=$row['unit_price'];
+							$tgst+=$row['gst'];
+							$gtotal+=$row['grandtotal'];
+						$order_html.="<tr>
+									<td>".($row['order_type']=='product')?$row['product_name'].'('.$row['color_name'].' | '.$row['size_name'] .')':$row['service_name'].'('.$row['service_variation'].' | '.$row['service_subvariation'] .')'."</td>
+									<td>₹".$row['unit_price']."</td>
+									<td>".$row['quantity']."</td>
+									<td>₹".$row['gst'].' ('.$row['gst_slab'].')'."</td>
+									<td>₹".$row['grandtotal']."</td>
+									</tr>";	
+							
+						}
+						$order_html.='</tbody>
+                                    <tfoot>
+                                         <tr>
+                                           <th colspan="3">&nbsp;</th>
+                                           
+											<th>'.keyword_value('subtotal','Subtotal').'</th>
+											<th>₹'.number_format($stotal,'2','.','').'</th>
+                                        </tr>
+										<tr>
+                                           <th colspan="3">&nbsp;</th>
+                                           
+											<th>'.keyword_value('gst','GST').'</th>
+											<th>₹'.number_format($tgst,'2','.','').'</th>
+                                        </tr>
+										<tr>
+                                           <th colspan="3">&nbsp;</th>
+                                           
+											<th>'.keyword_value('gtotal','Grand Total').'</th>
+											<th>₹'.number_format($gtotal,'2','.','').'</th>
+                                        </tr>
+										
+											<tr>
+                                        </tr>
+										
+                                    </tfoot>
+							</table>';
+						$template=get_email_template('new_order_user');
+						$data['to']=$details[0]['user_email'];
+						
+						$find = array("{{LOGO}}","{{SITE_URL}}","{{SITE_NAME}}","{{USER_NAME}}","{{ORDER_DETAILS}}","{{ORDER_NUMBER}}");
+						$replace = array(LOGO,base_url(),SITE_NAME,$details[0]['user'],$order_html,$details[0]['order_number']);
+						$data['subject']= str_replace($find,$replace,$template['subject']);
+						$data['message']=str_replace($find,$replace,$template['template']);
+						
+						$ret=sendemail($data);
+			 }
+		}
+		
+	}
+	
+		private function send_new_order_emails_admin($order_id=null)
+	{
+		if($order_id)
+		{
+		
+			 $details=$this->home_model->get_order_admin($order_id);
+			 if($details){
+				 $order_html='	 <table class="table table-bordered"  width="100%">
+										<thead>
+                                        <tr>
+                                            <th>'.keyword_value('name','Name').'</th>
+                                            <th>'.keyword_value('price','Price').'</th>
+                                            <th>'.keyword_value('quantity','Qty').'</th>
+											<th>'.keyword_value('gst','GST').'</th>
+											<th>'.keyword_value('total','Total').'</th>
+										
+                                        </tr>
+                                    </thead>
+									<tbody>';
+									
+									
+								
+							
+							$done=array();$current=0;							
+						foreach($details as $row)
+						{
+							if(!in_array($row['fk_admin_id'],$done))
+							{
+								array_push($done,$row['fk_admin_id']);	
+							}
+							else
+							{
+								continue;
+							}
+							
+							$odetails=$this->home_model->get_order_details_admin($order_id,$row['fk_admin_id']);
+							$stotal=$tgst=$gtotal=0;
+							foreach($odetails as $det)
+						{
+							
+							$stotal	+=	$det['unit_price'];
+							$tgst	+=	$det['gst'];
+							$gtotal	+=	$det['grandtotal'];
+							$order_html.="<tr>
+										<td>".($det['order_type']=='product')?$det['product_name'].'('.$det['color_name'].' | '.$det['size_name'] .')':$det['service_name'].'('.$det['service_variation'].' | '.$det['service_subvariation'] .')'."</td>
+										<td>₹".$det['unit_price']."</td>
+										<td>".$det['quantity']."</td>
+										<td>₹".$det['gst'].' ('.$det['gst_slab'].')'."</td>
+										<td>₹".$det['grandtotal']."</td>
+										</tr>";	
+							
+						}
+						$order_html.='</tbody>
+                                    <tfoot>
+                                         <tr>
+                                           <th colspan="3">&nbsp;</th>
+                                           
+											<th>'.keyword_value('subtotal','Subtotal').'</th>
+											<th>₹'.number_format($stotal,'2','.','').'</th>
+                                        </tr>
+										<tr>
+                                           <th colspan="3">&nbsp;</th>
+                                           
+											<th>'.keyword_value('gst','GST').'</th>
+											<th>₹'.number_format($tgst,'2','.','').'</th>
+                                        </tr>
+										<tr>
+                                           <th colspan="3">&nbsp;</th>
+                                           
+											<th>'.keyword_value('gtotal','Grand Total').'</th>
+											<th>₹'.number_format($gtotal,'2','.','').'</th>
+                                        </tr>
+										
+											<tr>
+                                        </tr>
+										
+                                    </tfoot>
+							</table>';
+						$admin=get_admin_name_by_id($row['fk_admin_id']);
+						if($admin)
+						{
+						$template=get_email_template('new_order_admin');
+						$data['to']=$admin['admin_email'];
+						
+						$find = array("{{LOGO}}","{{SITE_URL}}","{{SITE_NAME}}","{{USER_NAME}}","{{ORDER_DETAILS}}","{{ORDER_NUMBER}}");
+						$replace = array(LOGO,base_url(),SITE_NAME,$admin['admin_name'],$order_html,$row['order_number']);
+						$data['subject']= str_replace($find,$replace,$template['subject']);
+						$data['message']=str_replace($find,$replace,$template['template']);
+						
+						$ret=sendemail($data);
+						}
+			 }
+		}
+		
+	}
 	}
 	
 	

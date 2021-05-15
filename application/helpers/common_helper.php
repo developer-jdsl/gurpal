@@ -546,4 +546,24 @@ function  construct_init()
 		}			
 		
 	}
+	
+	
+	function get_admin_name_by_id($admin_id=null)
+	{
+		if($admin_id)
+		{
+			$CI = & get_instance();		
+			$CI->db->select('admin_name,admin_email');	
+			$CI->db->from('tbl_admin');
+			$CI->db->where(array('pk_admin_id'=>$admin_id));
+			$res=$CI->db->get();
+			if($res)
+			{
+				return $res->row_array();
+			}
+		}
+		
+		return false;
+		
+	}
 ?>

@@ -59,7 +59,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 									<td><?php $tgst+=$row['gst']; echo '₹'.$row['gst'].' ('.$row['gst_slab'].')';?></td>
 									<td><?php $gtotal+=$row['grandtotal'];echo '₹'.$row['grandtotal'];?></td>
 									</tr>
-										<tr>
+										<tr class="bg-light">
 											<?php echo form_open_multipart('admin/update_order'); ?>
 										   <td><input type="text" name="tracking_carrier" class="form-control" placeholder="Shipping Partner" value="<?=$row['tracking_company']?>" ></td>
 										 <td> <input type="text" name="tracking_number" class="form-control" placeholder="Tracking Number" value="<?=$row['tracking_number']?>" > </td>

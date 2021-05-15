@@ -651,6 +651,90 @@ class Home_model extends CI_Model {
 	
 	}
 	
+		   function get_order_details_frontend($id=false)
+   {
+	   if($id)
+	   {
+		 
+			$this->db->select('o.*,od.*,p.product_name,c.color_name,ps.size_name,s.service_name,sp.service_variation,sp.service_subvariation,CONCAT(u.user_firstname," ",u.user_lastname) AS user,u.user_email');	  
+			$this->db->from('tbl_orders as o');
+			$this->db->join('tbl_order_details as od','o.pk_order_id=od.fk_order_id','inner');
+			$this->db->join('tbl_product_pricing as pp','pp.pk_price_id=od.fk_pricing_id and od.order_type="product"','left');
+			$this->db->join('tbl_products as p','p.pk_product_id=pp.fk_product_id and od.order_type="product"','left');
+			$this->db->join('tbl_color as c','pp.fk_color_id=c.pk_color_id and od.order_type="product"','left');
+			$this->db->join('tbl_size as ps','pp.fk_size_id=ps.pk_size_id and od.order_type="product"','left');
+			$this->db->join('tbl_service_pricing as sp','sp.pk_pricing_id=od.fk_pricing_id and od.order_type="service"','left');
+			$this->db->join('tbl_services as s','s.pk_service_id=sp.fk_service_id and od.order_type="service"','left');
+			$this->db->join('tbl_user as u','o.fk_user_id=u.pk_user_id','inner');	
+			$this->db->where(array('o.order_number'=>$id,'u.pk_user_id'=>$this->session->front_user_id));
+			 $query = $this->db->get();
+			return $query->result_array();
+		   
+	   }
+	   return false;
+   }
+	
+	   function get_order_details($id=false)
+   {
+	   if($id)
+	   {
+		 
+			$this->db->select('o.*,od.*,p.product_name,c.color_name,ps.size_name,s.service_name,sp.service_variation,sp.service_subvariation,CONCAT(u.user_firstname," ",u.user_lastname) AS user,u.user_email');	  
+			$this->db->from('tbl_orders as o');
+			$this->db->join('tbl_order_details as od','o.pk_order_id=od.fk_order_id','inner');
+			$this->db->join('tbl_product_pricing as pp','pp.pk_price_id=od.fk_pricing_id and od.order_type="product"','left');
+			$this->db->join('tbl_products as p','p.pk_product_id=pp.fk_product_id and od.order_type="product"','left');
+			$this->db->join('tbl_color as c','pp.fk_color_id=c.pk_color_id and od.order_type="product"','left');
+			$this->db->join('tbl_size as ps','pp.fk_size_id=ps.pk_size_id and od.order_type="product"','left');
+			$this->db->join('tbl_service_pricing as sp','sp.pk_pricing_id=od.fk_pricing_id and od.order_type="service"','left');
+			$this->db->join('tbl_services as s','s.pk_service_id=sp.fk_service_id and od.order_type="service"','left');
+			$this->db->join('tbl_user as u','o.fk_user_id=u.pk_user_id','inner');	
+			$this->db->where('o.pk_order_id',$id);
+			 $query = $this->db->get();
+			return $query->result_array();
+		   
+	   }
+	   return false;
+   }
+   	   function get_order_admin($id=false)
+   {
+	   if($id)
+	   {
+		 
+			$this->db->select('o.order_number,o.pk_order_id,od.fk_admin_id');	  
+			$this->db->from('tbl_orders as o');
+			$this->db->join('tbl_order_details as od','o.pk_order_id=od.fk_order_id','inner');	
+			$this->db->where('o.pk_order_id',$id);
+			 $query = $this->db->get();
+			return $query->result_array();
+		   
+	   }
+	   return false;
+   }
+   
+   	   function get_order_details_admin($id=false,$aid=false)
+   {
+	   if($id && $aid)
+	   {
+		 
+			$this->db->select('o.*,od.*,p.product_name,c.color_name,ps.size_name,s.service_name,sp.service_variation,sp.service_subvariation,CONCAT(u.user_firstname," ",u.user_lastname) AS user,u.user_email');	  
+			$this->db->from('tbl_orders as o');
+			$this->db->join('tbl_order_details as od','o.pk_order_id=od.fk_order_id','inner');
+			$this->db->join('tbl_product_pricing as pp','pp.pk_price_id=od.fk_pricing_id and od.order_type="product"','left');
+			$this->db->join('tbl_products as p','p.pk_product_id=pp.fk_product_id and od.order_type="product"','left');
+			$this->db->join('tbl_color as c','pp.fk_color_id=c.pk_color_id and od.order_type="product"','left');
+			$this->db->join('tbl_size as ps','pp.fk_size_id=ps.pk_size_id and od.order_type="product"','left');
+			$this->db->join('tbl_service_pricing as sp','sp.pk_pricing_id=od.fk_pricing_id and od.order_type="service"','left');
+			$this->db->join('tbl_services as s','s.pk_service_id=sp.fk_service_id and od.order_type="service"','left');
+			$this->db->join('tbl_user as u','o.fk_user_id=u.pk_user_id','inner');	
+			$this->db->where(array('o.pk_order_id'=>$id,'od.fk_admin_id'=>$aid));
+			 $query = $this->db->get();
+			return $query->result_array();
+		   
+	   }
+	   return false;
+   }
+   	
 }
    
 
