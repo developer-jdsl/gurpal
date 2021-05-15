@@ -4823,7 +4823,6 @@ class Admin extends CI_Controller {
 				$this->session->set_flashdata('order_id',$order_id);
 				redirect('admin/edit_order/');
 			}
-			
 			else
 			{
 				$this->session->set_flashdata('msg', 'Action was not successfull');
