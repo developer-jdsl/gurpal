@@ -435,6 +435,39 @@ function  construct_init()
 		
 	}
 	
+	
+		function state_ut_menu_li()
+	{
+		$html="<ul>";
+	$CI = & get_instance();		
+	$states=$CI->db->get_where('tbl_states',array('active'=>1,'is_deleted'=>0));
+	if($states)
+	{
+		$states=$states->result_array();
+		
+		foreach($states as $row)
+		{
+		$html.="<li><a href='javascript:void(0)'>".$row['state_name']."</a>";
+		$cities=$CI->db->get_where('tbl_cities',array('active'=>1,'is_deleted'=>0,'fk_state_id'=>$row['pk_state_id']));
+		if($cities)
+		{
+			$html.="<ul>";
+			$cities=$cities->result_array();
+			foreach($cities as $row2)
+			{
+			$html.="<li><a href='".base_url('city/'.$row2['city_slug'])."'>".$row2['city_name']."</a>";	
+			}
+			$html.="</li></ul>";
+		}
+		
+		}
+		$html.="</li>";
+	}
+	$html.="</ul>";
+	
+	return $html;
+	}
+	
 	function get_popular_services($limit)
 	{
 		$CI = & get_instance();	
@@ -565,5 +598,20 @@ function  construct_init()
 		
 		return false;
 		
+	}
+	
+	
+	function check_wishlist($type='product',$id)
+	{	
+		
+		$CI = & get_instance();
+		$uid=$CI->session->front_user_id?$CI->session->front_user_id:0;
+		$records=$CI->db->get_where('tbl_wishlist',array('item_type'=>$type,'item_id'=>$id,'fk_user_id'=>$CI->session->front_user_id));
+		
+		if($records->num_rows()>0)
+		{
+			return true;
+		}
+		return false;
 	}
 ?>

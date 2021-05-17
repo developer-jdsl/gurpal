@@ -3,10 +3,10 @@
                         <div class="row">
                             <div class="col-md-7">
                                 <div class="fotorama" data-nav="thumbs" data-allowfullscreen="1" data-thumbheight="100" data-thumbwidth="100">
-                                    <img src="<?=base_url('public/front/img/800x600.png')?>" alt="Image Alternative text" title="Gamer Chick" />
-                                    <img src="<?=base_url('public/front/img/800x600.png')?>" alt="Image Alternative text" title="AMaze" />
-                                    <img src="<?=base_url('public/front/img/800x600.png')?>" alt="Image Alternative text" title="Urbex Esch/Lux with Laney and Laaaaag" />
-                                    <img src="<?=base_url('public/front/img/800x600.png')?>" alt="Image Alternative text" title="Food is Pride" />
+                                    <img src="<?= base_url('public/front/img/800x600.png') ?>" alt="Image Alternative text" title="Gamer Chick" />
+                                    <img src="<?= base_url('public/front/img/800x600.png') ?>" alt="Image Alternative text" title="AMaze" />
+                                    <img src="<?= base_url('public/front/img/800x600.png') ?>" alt="Image Alternative text" title="Urbex Esch/Lux with Laney and Laaaaag" />
+                                    <img src="<?= base_url('public/front/img/800x600.png') ?>" alt="Image Alternative text" title="Food is Pride" />
                                 </div>
                             </div>
                             <div class="col-md-5">
@@ -40,213 +40,232 @@
                                 </ul>
                             </div>
                         </div>
-                        <hr/><a class="btn btn-primary" href="#">More Details</a>
+                        <hr /><a class="btn btn-primary" href="#">More Details</a>
                     </div>
                     <div class="owl-carousel owl-slider" id="owl-carousel-slider" data-inner-pagination="true" data-white-pagination="true" data-nav="false">
-					
-					<?php foreach($banners as $banner) { ?>
-					
-					    <div>
-                            <div class="bg-holder">
-                                <img src="<?=base_url('uploads/banners/'.$banner['banner_image'])?>" alt="Banner" title="Banner" />
-                                <div class="bg-mask"></div>
-								<div class="bg-front vert-center text-white text-center">
-                               <?=$banner['banner_text']?>
-							   </div>
+
+                        <?php foreach ($banners as $banner) { ?>
+
+                            <div>
+                                <div class="bg-holder">
+                                    <img src="<?= base_url('uploads/banners/' . $banner['banner_image']) ?>" alt="Banner" title="Banner" />
+                                    <div class="bg-mask"></div>
+                                    <div class="bg-front vert-center text-white text-center">
+                                        <?= $banner['banner_text'] ?>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-					
-					<?php } ?>
+
+                        <?php } ?>
                     </div>
                     <div class="gap"></div>
                     <div class="row row-wrap">
-					<?php $pi=0; foreach($cities as $row) { if($pi<3){?>
-                        <div class="col-md-4">
-                            <div class="product-banner">
-                                <img src="<?=base_url('uploads/cities/'.$row['city_image'])?>" alt="<?=$row['city_name']?>" title="<?=$row['city_name']?>"  style="height:170px;"/>
-                                <div class="product-banner-inner">
-                                    <h5><?=$row['city_name']?></h5><a class="btn btn-sm btn-white btn-ghost" href="<?=base_url('city/'.$row['city_slug'])?>">Explore Now</a>
-                                </div>
-                            </div>
-                        </div>
-						
-					<?php $pi++;}} ?>
-                      
-                    </div>
-                    <div class="gap gap-small"></div>
-                    <h1 class="mb20">Featured Services<small><a href="<?=base_url('city/'.$this->session->city.'/services/all')?>">View All</a></small></h1>
-                    <div class="row row-wrap">
-					
-					<?php //var_dump($services);?>
-					<?php if($services)
-					{foreach($services as $service) { ?>
-					
-					                        <div class="col-md-4">
-                            <div class="product-thumb">
-                                <header class="product-header">
-                                    <img src="<?=base_url('uploads/service/'.$service['service_banners'])?>" alt="<?=$service['service_name']?>" title="<?=$service['service_name']?>" />
-                                    <div class="product-quick-view">
-                                       <!-- <a class="fa fa-eye popup-text" href="#product-quick-view-dialog" data-effect="mfp-move-from-top" data-toggle="tooltip" data-placement="top" title="Quick View"></a> -->
-                                    </div>
-									
-                                    <div class="product-secondary-image">
-                                        <img src="<?=base_url('uploads/service/'.$service['service_banners'])?>" alt="<?=$service['service_name']?>" title="<?=$service['service_name']?>" />
-                                    </div>
-                                </header>
-                                <div class="product-inner">
-                                    <ul class="icon-group icon-list-rating icon-list-non-rated" title="not rated yet">
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                    </ul>
-                                    <h5 class="product-title"><?=$service['service_name']?></h5>
-                                    <p class="product-desciption"><?=word_limiter($service['service_description'], 20);?></p>
-                                    <div class="product-meta">
-                                        <ul class="product-price-list">
-                                          	<?php if($service['original_price']>0 && $service['discount_price']>0) { ?>
-                                             <li><span class="product-price">₹<?=$service['discount_price']?></span>
-                                            </li>
-                                          
-										   <li><span class="product-old-price">₹<?=$service['original_price']?></span>
-                                            </li>
-										<?php } else if($service['original_price']>0) {?>
-										   <li><span class="product-price">₹<?=$service['original_price']?></span>
-                                            </li>
-										<?php  } else if($service['discount_price']>0) { ?>
-										
-										  <li><span class="product-price">₹<?=$service['discount_price']?></span>
-                                            </li>
-										<?php  } ?>
-                       
-                                        </ul>
-                                        <ul class="product-actions-list">
-                                            <li><a class="btn btn-sm add_service_list" data-id="<?=$service['pk_pricing_id']?>" href="javascript:void(0);"><i class="fa fa-shopping-cart"></i> To Cart</a>
-                                            </li>
-                                            <li><a class="btn btn-sm" href="<?=base_url('city/'.$this->session->city.'/service/'.$service['service_slug'])?>"><i class="fa fa-bars"></i> Details</a>
-                                            </li>
-                                        </ul>
+                        <?php $pi = 0;
+                        foreach ($cities as $row) {
+                            if ($pi < 3) { ?>
+                                <div class="col-md-4">
+                                    <div class="product-banner">
+                                        <img src="<?= base_url('uploads/cities/' . $row['city_image']) ?>" alt="<?= $row['city_name'] ?>" title="<?= $row['city_name'] ?>" style="height:170px;" />
+                                        <div class="product-banner-inner">
+                                            <h5><?= $row['city_name'] ?></h5><a class="btn btn-sm btn-white btn-ghost" href="<?= base_url('city/' . $row['city_slug']) ?>">Explore Now</a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-					
-					<?php } } else {?>
-					
-					<p align="center">No services found in your city.</p>
-					<?php }?>
 
-                 </div>
- 
-        
-           
+                        <?php $pi++;
+                            }
+                        } ?>
+
+                    </div>
                     <div class="gap gap-small"></div>
-                    <h1 class="mb20">Featured Products <small><a href="<?=base_url('products/all')?>">View All</a></small></h1>
+
+                    <div class="widget">
+                        <!-- /widget heading -->
+                        <div class="widget-heading">
+                            <h3 class="widget-title text-dark">
+                                Top Brands
+                            </h3>
+                            <div class="widget-widgets"> <a href="#">View All <span class="ti-angle-right"></span></a> </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="widget-body">
+                            <div class="row">
+
+                                <?php $cnt = 0;
+                                foreach ($brands as $brand) {
+
+                                    if ($cnt < 6) { ?>
+
+                                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6 thumb">
+                                            <div class="thumb-inside">
+                                                <a class="thumbnail" href="#"> <img class="img-responsive" src="<?= base_url('uploads/brands/' . $brand['brand_image']) ?>" alt=""> </a> <span class="favorite"><a href="#" data-toggle="tooltip" data-placement="left" title="" data-original-title="Save store"><i class="ti-heart"></i></a></span>
+                                            </div>
+                                            <div class="store_name text-center">
+                                                <h5><?= $brand['brand_name'] ?></h5>
+                                            </div>
+                                        </div>
+
+                                <?php }
+                                    $cnt++;
+                                } ?>
+
+                                <!-- /thumb -->
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gap gap-small"></div>
+                    <h1 class="mb20">Featured Services <small><a href="<?= base_url('city/' . $this->session->city . '/services/all') ?>">View All</a></small></h1>
                     <div class="row row-wrap">
-					<?php //var_dump($products) ;?>
-					
-					<?php foreach($products as $product) { ?>
-                        <div class="col-md-4">
-                            <div class="product-thumb">
-							<a  href="<?=base_url('product/'.$product['product_slug'])?>">
-                                <header class="product-header">
-                                    <img src="<?=base_url('uploads/product/'.$product['product_image'])?>" alt="<?=$product['product_name']?>" title="<?=$product['product_name']?>" />
-                                    
-									<div class="product-quick-view">
-                                       <!-- <a class="fa fa-eye popup-text" href="#product-quick-view-dialog" data-effect="mfp-move-from-top" data-toggle="tooltip" data-placement="top" title="Quick View"></a> -->
+
+                        <?php //var_dump($services);
+                        ?>
+                        <?php if ($services) {
+                            foreach ($services as $service) { ?>
+
+                                <div class="col-md-4">
+                                    <div class="product-thumb">
+                                        <header class="product-header">
+                                            <img src="<?= base_url('uploads/service/' . $service['service_banners']) ?>" alt="<?= $service['service_name'] ?>" title="<?= $service['service_name'] ?>" />
+                                            <div class="product-quick-view">
+                                                <!-- <a class="fa fa-eye popup-text" href="#product-quick-view-dialog" data-effect="mfp-move-from-top" data-toggle="tooltip" data-placement="top" title="Quick View"></a> -->
+                                            </div>
+
+                                            <div class="product-secondary-image">
+                                                <img src="<?= base_url('uploads/service/' . $service['service_banners']) ?>" alt="<?= $service['service_name'] ?>" title="<?= $service['service_name'] ?>" />
+                                            </div>
+                                        </header>
+                                        <div class="product-inner">
+                                            <ul class="icon-group icon-list-rating icon-list-non-rated" title="not rated yet">
+                                                <li><i class="fa fa-star"></i>
+                                                </li>
+                                                <li><i class="fa fa-star"></i>
+                                                </li>
+                                                <li><i class="fa fa-star"></i>
+                                                </li>
+                                                <li><i class="fa fa-star"></i>
+                                                </li>
+                                                <li><i class="fa fa-star"></i>
+                                                </li>
+                                            </ul>
+                                            <h5 class="product-title"><?= $service['service_name'] ?></h5>
+                                            <p class="product-desciption"><?= word_limiter($service['service_description'], 20); ?></p>
+                                            <div class="product-meta">
+                                                <ul class="product-price-list">
+                                                    <?php if ($service['original_price'] > 0 && $service['discount_price'] > 0) { ?>
+                                                        <li><span class="product-price">₹<?= $service['discount_price'] ?></span>
+                                                        </li>
+
+                                                        <li><span class="product-old-price">₹<?= $service['original_price'] ?></span>
+                                                        </li>
+                                                    <?php } else if ($service['original_price'] > 0) { ?>
+                                                        <li><span class="product-price">₹<?= $service['original_price'] ?></span>
+                                                        </li>
+                                                    <?php  } else if ($service['discount_price'] > 0) { ?>
+
+                                                        <li><span class="product-price">₹<?= $service['discount_price'] ?></span>
+                                                        </li>
+                                                    <?php  } ?>
+
+                                                </ul>
+                                                <ul class="product-actions-list">
+                                                    <li><a class="btn btn-sm add_service_list" data-id="<?= $service['pk_pricing_id'] ?>" href="javascript:void(0);"><i class="fa fa-shopping-cart"></i> To Cart</a>
+                                                    </li>
+                                                    <li><a class="btn btn-sm" href="<?= base_url('city/' . $this->session->city . '/service/' . $service['service_slug']) ?>"><i class="fa fa-bars"></i> Details</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </div>
-									
-                                    <div class="product-secondary-image">
-                                        <img src="<?=base_url('uploads/product/'.$product['product_image'])?>" alt="<?=$product['product_name']?>" title="<?=$product['product_name']?>" />
-                                    </div>
-                                </header>
-								</a>
-                                <div class="product-inner">
-                                    <ul class="icon-group icon-list-rating icon-list-non-rated" title="not rated yet">
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                    </ul>
-                                    <h5 class="product-title"><a  href="<?=base_url('product/'.$product['product_slug'])?>"><?=$product['product_name']?></a></h5>
-                                    <p class="product-desciption"><?=word_limiter($product['product_description'], 20);?></p>
-                                    <div class="product-meta">
-                                        <ul class="product-price-list">
-										<?php if($product['original_price']>0 && $product['discount_price']>0) { ?>
-                                             <li><span class="product-price">₹<?=$product['discount_price']?></span>
+                                </div>
+
+                            <?php }
+                        } else { ?>
+
+                            <p align="center">No services found in your city.</p>
+                        <?php } ?>
+
+                    </div>
+
+                    <div class="gap gap-small"></div>
+                    <h1 class="mb20">Featured Products <small><a href="<?= base_url('products/all') ?>">View All</a></small></h1>
+                    <div class="row row-wrap">
+                        <?php //var_dump($products) ;
+                        ?>
+
+                        <?php foreach ($products as $product) { ?>
+                            <div class="col-md-4">
+                                <div class="product-thumb">
+                                    <a href="<?= base_url('product/' . $product['product_slug']) ?>">
+                                        <header class="product-header">
+                                            <img src="<?= base_url('uploads/product/' . $product['product_image']) ?>" alt="<?= $product['product_name'] ?>" title="<?= $product['product_name'] ?>" />
+
+                                            <div class="product-quick-view">
+                                                <!-- <a class="fa fa-eye popup-text" href="#product-quick-view-dialog" data-effect="mfp-move-from-top" data-toggle="tooltip" data-placement="top" title="Quick View"></a> -->
+                                            </div>
+
+                                            <div class="product-secondary-image">
+                                                <img src="<?= base_url('uploads/product/' . $product['product_image']) ?>" alt="<?= $product['product_name'] ?>" title="<?= $product['product_name'] ?>" />
+                                            </div>
+                                        </header>
+                                    </a>
+                                    <div class="product-inner">
+                                        <ul class="icon-group icon-list-rating icon-list-non-rated" title="not rated yet">
+                                            <li><i class="fa fa-star"></i>
                                             </li>
-                                          
-										   <li><span class="product-old-price">₹<?=$product['original_price']?></span>
+                                            <li><i class="fa fa-star"></i>
                                             </li>
-										<?php } else if($product['original_price']>0) {?>
-										   <li><span class="product-price">₹<?=$product['original_price']?></span>
+                                            <li><i class="fa fa-star"></i>
                                             </li>
-										<?php  } else if($product['discount_price']>0) { ?>
-										
-										  <li><span class="product-price">₹<?=$product['discount_price']?></span>
+                                            <li><i class="fa fa-star"></i>
                                             </li>
-										<?php  } ?>
+                                            <li><i class="fa fa-star"></i>
+                                            </li>
                                         </ul>
-                                        <ul class="product-actions-list">
-                                            <li><a class="btn btn-sm add_to_cart_list" href="javascript:void(0);" data-id="<?=$product['pk_price_id']?>" ><i class="fa fa-shopping-cart"></i> To Cart</a>
-                                            </li>
-											<?php if($product['product_slug']) { ?>
-                                            <li><a class="btn btn-sm" href="<?=base_url('product/'.$product['product_slug'])?>"><i class="fa fa-bars"></i> Details</a>
-                                            </li>
-											<?php } ?>
-                                        </ul>
+                                        <h5 class="product-title"><a href="<?= base_url('product/' . $product['product_slug']) ?>"><?= $product['product_name'] ?></a></h5>
+                                        <p class="product-desciption"><?= word_limiter($product['product_description'], 20); ?></p>
+                                        <div class="product-meta">
+                                            <ul class="product-price-list">
+                                                <?php if ($product['original_price'] > 0 && $product['discount_price'] > 0) { ?>
+                                                    <li><span class="product-price">₹<?= $product['discount_price'] ?></span>
+                                                    </li>
+
+                                                    <li><span class="product-old-price">₹<?= $product['original_price'] ?></span>
+                                                    </li>
+                                                <?php } else if ($product['original_price'] > 0) { ?>
+                                                    <li><span class="product-price">₹<?= $product['original_price'] ?></span>
+                                                    </li>
+                                                <?php  } else if ($product['discount_price'] > 0) { ?>
+
+                                                    <li><span class="product-price">₹<?= $product['discount_price'] ?></span>
+                                                    </li>
+                                                <?php  } ?>
+                                            </ul>
+                                            <ul class="product-actions-list">
+                                                <li><a class="btn btn-sm add_to_cart_list" href="javascript:void(0);" data-id="<?= $product['pk_price_id'] ?>"><i class="fa fa-shopping-cart"></i> To Cart</a>
+                                                </li>
+                                                <?php if ($product['product_slug']) { ?>
+                                                    <li><a class="btn btn-sm" href="<?= base_url('product/' . $product['product_slug']) ?>"><i class="fa fa-bars"></i> Details</a>
+                                                    </li>
+                                                <?php } ?>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-					<?php } ?>
-						
-                    </div>
-                    <div class="gap gap-small"></div>
-					
-					
-					<h1 class="mb20">Brands</h1>
-					<div class="row">
-					<?php $cnt=0;
-					foreach($brands as $brand) { 
-					
-					if($cnt<6){?>
-					
-					        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6 thumb">
-                                 <div class="thumb-inside">
-                                    <a class="thumbnail" href="#"> <img class="img-responsive" src="<?=base_url('uploads/brands/'.$brand['brand_image'])?>" alt=""> </a> <span class="favorite"><a href="#" data-toggle="tooltip" data-placement="left" title="" data-original-title="Save store"><i class="ti-heart"></i></a></span> 
-                                 </div>
-                                 <div class="store_name text-center">
-                                    <h5><?=$brand['brand_name']?></h5>
-                                 </div>
-                              </div>
-					
-					<?php }  $cnt++;}?>
-                             
-                              <!-- /thumb -->
-                           </div>
+                        <?php } ?>
+
+                    </div>                               
+
                 </div>
-            </div>
+                </div>
 
-        </div>
-		<?php if(@$this->session->flashdata('lflag')=='login') { ?>
-		<script>
-		function open_login()
-		{
-			$('#login_li').click();
-		}
-		open_login();
-		</script>
-		<?php } ?>
+                </div>
+                <?php if (@$this->session->flashdata('lflag') == 'login') { ?>
+                    <script>
+                        function open_login() {
+                            $('#login_li').click();
+                        }
+                        open_login();
+                    </script>
+                <?php } ?>

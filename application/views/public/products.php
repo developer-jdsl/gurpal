@@ -25,7 +25,14 @@
                         <div class="col-md-4">
                             <div class="product-thumb">
                                 <header class="product-header">
+								<a  href="<?=base_url('product/'.$product['product_slug'])?>">
+								 <div class="product-quick-view">
+                                        
+                                    </div>
+									
                                     <img src="<?=base_url('uploads/product/'.$product['product_image'])?>" alt="<?=$product['product_name']?>" title="<?=$product['product_name']?>" />
+									
+									</a>
                                 </header>
                                 <div class="product-inner">
                                     <ul class="icon-group icon-list-rating" title="5/5 rating">
@@ -40,7 +47,7 @@
                                         <li><i class="fa fa-star"></i>
                                         </li>
                                     </ul>
-                                    <h5 class="product-title"><?=$product['product_name']?></h5>
+                                    <h5 class="product-title"><a  href="<?=base_url('product/'.$product['product_slug'])?>"><?=$product['product_name']?></a></h5>
                                     <p class="product-desciption"><?=word_limiter($product['product_description'], 20);?></p>
                                     <div class="product-meta">
                                                          <ul class="product-price-list">

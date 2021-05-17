@@ -95,46 +95,6 @@
                </div>
             </section> -->
             <!-- end:Newsletter signup -->
-            <section class="call-to-action">
-               <div class="container">
-                  <div class="row explain_group">
-                     <div class="col-md-4">
-                        <a class="item" rel="nofollow" href="#">
-                           <div class="box-icon"> <i class="fa fa-search"></i> </div>
-                           <div class="box-info">
-                              <h3>Custom Search</h3>
-                              <h4>Find best services and products.</h4>
-                              <div class="point"><i class="fa fa-check"></i><span>Services, Guides</span> </div>
-                              <div class="point"><i class="fa fa-check"></i><span>Products, Places</span> </div>
-                           </div>
-                        </a>
-                     </div>
-                     <div class="col-md-4">
-                        <a class="item" rel="nofollow" href="#">
-                           <div class="box-icon"> <i class="fa fa-rupee-sign"></i> </div>
-                           <div class="box-info">
-                              <h3>Start Earning</h3>
-                              <h4>Register Your Business.</h4>
-                              <div class="point"><i class="fa fa-check"></i><span>Free & Paid Listing</span> </div>
-                              <div class="point"><i class="fa fa-check"></i><span>List Services/Products</span> </div>
-                           </div>
-                        </a>
-                     </div>
-                     <div class="col-md-4">
-                        <a class="item" rel="nofollow" href="#">
-                           <div class="box-icon"> <i class="fa fa-gift"></i> </div>
-                           <div class="box-info">
-                              <h3>Sign Up</h3>
-                              <h4>Find best money-saving coupons.</h4>
-                              <div class="point"><i class="fa fa-check"></i><span>Find fresh coupons</span> </div>
-                              <div class="point"><i class="fa fa-check"></i><span>Top Coupons &amp; Offers</span> </div>
-                           </div>
-                        </a>
-                     </div>
-                  </div>
-               </div>
-            </section>
-            <div class="gap gap-small"></div>
 			
             <!-- Footer -->
             <footer id="footer">

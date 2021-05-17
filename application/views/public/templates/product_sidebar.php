@@ -1,18 +1,31 @@
       <div class="col-md-3">
                     <aside class="sidebar-left">
-                        <h3 class="mb20">I am looking for</h3>
+                        <h3 class="mb20">Top Services</h3>
                         <ul class="nav nav-tabs nav-stacked nav-coupon-category nav-coupon-category-left">
 						
 						<?php 
 		
 						foreach($categories as $category) { ?>
-						   <li><a href="<?=base_url('products/'.$category['category_slug'])?>"><i class="fa p-2">
-						   <?php if($category['category_image']) { ?> <img src="<?=base_url('uploads/category/'.$category['category_image'])?>" width="20px"> <?php } ?>
+						   <li><a href="<?=base_url('city/'.$this->session->city.'/services/'.$category['category_slug'])?>"><i class="fa p-2 <?php if($category['category_icon']) { echo $category['category_icon']; } ?>">
 						   </i><?=$category['category_name']?></a>
                             </li>
 						<?php } ?>
                      
                         </ul>
+
+						<h3 class="mb20">Product Categories</h3>
+                        <ul class="nav nav-tabs nav-stacked nav-coupon-category nav-coupon-category-left">
+						
+						<?php 
+		
+						foreach($pro_categories as $category) { ?>
+						   <li><a href="<?=base_url('products/'.$category['category_slug'])?>"><i class="fa p-2 <?php if($category['category_icon']) { echo $category['category_icon']; } ?>">						   
+						   </i><?=$category['category_name']?></a>
+                            </li>
+						<?php } ?>
+                     
+                        </ul>
+
 						                        <div class="sidebar-box">
                             <h5>Filter By Price</h5>
                             <input type="text" id="price_slider">

@@ -734,6 +734,109 @@ class Home_model extends CI_Model {
 	   }
 	   return false;
    }
+   
+   
+   function add_to_whishlist($id,$type)
+   {
+	   if($uid=$this->session->front_user_id)
+	   {
+		   return $this->db->insert('tbl_wishlist',array('item_id'=>$id,'item_type'=>$type,'fk_user_id'=>$uid)); 
+	   }
+	   
+	   
+   }
+   
+   
+   function get_user_wishlist()
+   {
+	   $data=array();
+	   $arr1=array();
+	   $arr2=array();
+	   $pids=array();
+	   $sids=array();
+	  if($this->session->front_user_id)
+	   {
+		   $pres=$this->db->get_where('tbl_wishlist',array('fk_user_id'=>$this->session->front_user_id,'item_type'=>'product'));
+
+		   if($pres)
+		   {
+			   $pres=$pres->result_array();
+			   foreach($pres as $row)
+			   {
+				 $pids[]=  $row['item_id']; 
+			   }
+			   
+			     if(count($pids)>0)
+			   {
+			   $this->db->select('p.product_name as item_name,pp.product_image as item_image,p.product_slug as item_url,pp.original_price as item_price');
+			   $this->db->from('tbl_products as p');
+			   $this->db->join('tbl_product_pricing as pp','p.pk_product_id=pp.fk_product_id','left');
+			   $this->db->where(array('pp.is_default'=>1));
+			   $this->db->where_in('p.pk_product_id',$pids);
+			   $arr1=$this->db->get();
+			   if($arr1)
+			   {
+				   
+				   $arr1=$arr1->result_array();
+				   
+				   foreach($arr1 as $key=>$val)
+				   {
+					   $arr1[$key]['item_image']=base_url('uploads/product/'.$val['item_image']);
+					   $arr1[$key]['item_url']=base_url('products/'.$val['item_url']);					   
+				   }
+				   
+				   
+			   }
+			   
+			   }
+			   
+			   
+		   }
+		   
+		   
+		   
+		    $spres=$this->db->get_where('tbl_wishlist',array('fk_user_id'=>$this->session->front_user_id,'item_type'=>'service'));
+		   
+		   if($spres)
+		   {
+			   $spres=$spres->result_array();
+			   foreach($spres as $row)
+			   {
+				 $sids[]=  $row['item_id']; 
+			   }
+			   if(count($sids)>0)
+			   {
+			   $this->db->select('s.service_name as item_name,s.service_banners as item_image,s.service_slug as item_url,p.original_price as item_price');
+			   $this->db->from('tbl_services as s');
+			   $this->db->join('tbl_service_pricing as p','s.pk_service_id=p.fk_service_id','inner');
+			   $this->db->where(array('p.is_default'=>1));
+			   $this->db->where_in('s.pk_service_id',$sids);
+			   $arr2=$this->db->get();
+			   if($arr2)
+			   {
+				   
+				   $arr2=$arr2->result_array();
+				    foreach($arr2 as $key=>$val)
+				   {
+					   $arr2[$key]['item_image']=base_url('uploads/service/'.$val['item_image']);
+					   $arr2[$key]['item_url']=base_url('city/'.$this->session->city.'/service/'.$val['item_url']);					   
+				   }
+			   }
+			   }
+			   
+			   
+		   }
+		   
+		   
+		  $data= array_merge($arr1,$arr2);
+		   
+		   return $data;
+		   
+		   
+		   
+	   }  
+	   die();
+   }
    	
 }
    

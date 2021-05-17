@@ -44,6 +44,7 @@ class Service extends CI_Controller {
 		$this->data['brands']			=	$this->home_model->get_brands();
 		$this->data['advertisements']	=	$this->home_model->get_advertisements('home','left_sidebar');
 		$this->data['categories']		=	$this->home_model->get_service_cats();
+		$this->data['pro_categories']	=	$this->home_model->get_product_cats();
 		$this->data['title']			=   $tmp['meta_title']?$tmp['meta_title']:DEFAULT_TITLE;
 		$this->data['meta_keywords']	=   $tmp['meta_keywords']?$tmp['meta_keywords']:DEFAULT_KEYWORDS;
 		$this->data['meta_description']	=   $tmp['meta_description']?$tmp['meta_description']:DEFAULT_DESCRIPTION;
@@ -94,6 +95,7 @@ class Service extends CI_Controller {
 			$config['link_func']   = 'service_ajax';
 			$this->ajax_pagination->initialize($config);
 			$this->data['categories']		=	$this->home_model->get_service_cats();
+			$this->data['pro_categories']	=	$this->home_model->get_product_cats();
 			$this->data['services'] 		= 	$this->service_model->get_rows_service($from,$to,$city,$category,$order,$this->per_page,$page);
 			$this->data['city'] 			=	$city;
 			$this->data['category'] 		=	$category;

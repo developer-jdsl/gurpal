@@ -425,6 +425,45 @@ $.post(base_url+"service/add_to_cart",
 });
 
 
+
+$('.add_to_whishlist').click(function(){
+var target=$(this);
+var id=target.data('id');
+var type=target.data('type');
+var uid=target.data('uid');
+
+
+if(uid>0)
+{
+	target.html('Adding to Whistlist...');
+$.post(base_url+"home/add_to_whishlist",
+		{id:id,
+		type:type,
+		uid:uid},
+	 function(result){
+		 if(result && result!="fail")
+		 {
+			 $(".shopping-cart-box").html(result); 
+			 target.html('<a href="'+base_url+'my-wishlist"><i class="fa fa-star"></i> My Wishlist</a>');
+			 target.parent().parent().append('<li><div class="alert alert-success fade in alert-dismissible" style="margin-top:10px;margin-bottom:0;padding:8px">'+'<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>'+'<strong>Item Added to Whistlist</strong></div></li>');
+		 }
+		 else
+		 {
+		
+			 target.parent().parent().append('<li><div class="alert alert-warning fade in alert-dismissible" style="margin-top:10px;margin-bottom:0;padding:8px">'+'<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>'+'<strong>Item Currenlty Not Available</strong></div></li>');
+			 target.html('<i class="fa fa-star"></i> To Wishlist');
+		 }
+     
+    });
+}
+else{
+	
+	$('#login_li').click();
+}
+
+});
+
+
 $('.add_service_list').click(function(){
 var target=$(this)
 var pid=target.data('id');
@@ -685,7 +724,7 @@ $(document).ready(function() {
 				   });
 				   
 				   
-				   function updateQueryStringParameter(uri, key, value) {
+	function updateQueryStringParameter(uri, key, value) {
       var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
       var separator = uri.indexOf('?') !== -1 ? "&" : "?";
       if (uri.match(re)) {

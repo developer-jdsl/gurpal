@@ -71,6 +71,7 @@ $route['products/(:any)/(:num)']		=	'product/list/$1/$2';
 $route['products/(:any)']				=	'product/list/$1/0';
 $route['products']						=	'product/list/all/0';
 
+$route['my-wishlist']					=	'home/my_wishlist';
 $route['my-account']					=	'home/my_account';
 $route['my-orders']						=	'home/my_orders';
 $route['my-orders/(:any)']				=	'home/my_orders/$1';

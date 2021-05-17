@@ -7,7 +7,7 @@
                             </li>
                             <li><a href="<?=base_url('my-orders')?>">Orders History</a>
                             </li>
-                            <li><a href="javascript:void(0);">Wishlist</a>
+                            <li><a href="<?=base_url('my-wishlist')?>">Wishlist</a>
                             </li>
                         </ul>
                     </aside>

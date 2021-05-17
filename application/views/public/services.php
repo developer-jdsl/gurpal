@@ -25,7 +25,10 @@
                         <div class="col-md-4">
                             <div class="product-thumb">
                                 <header class="product-header">
+								<a href="<?=base_url('city/'.$this->session->city.'/service/'.$service['service_slug'])?>">
+									<div class="product-quick-view"></div>
                                     <img src="<?=base_url('uploads/service/'.$service['service_banners'])?>" alt="<?=$service['service_name']?>" title="<?=$service['service_name']?>" />
+									</a>
                                 </header>
                                 <div class="product-inner">
                                     <ul class="icon-group icon-list-rating" title="5/5 rating">
@@ -40,7 +43,7 @@
                                         <li><i class="fa fa-star"></i>
                                         </li>
                                     </ul>
-                                    <h5 class="product-title"><?=$service['service_name']?></h5>
+                                    <h5 class="product-title"><a href="<?=base_url('city/'.$this->session->city.'/service/'.$service['service_slug'])?>"><?=$service['service_name']?></a></h5>
                                     <p class="product-desciption"><?=word_limiter($service['service_description'], 20);?></p>
                                     <div class="product-meta">
                                                          <ul class="product-price-list">

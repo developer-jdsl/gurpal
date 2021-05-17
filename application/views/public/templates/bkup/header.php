@@ -13,7 +13,7 @@
     <!-- Bootstrap styles -->
     <link rel="stylesheet" href="<?=base_url('public/front/css/boostrap.css')?>">
     <!-- Font Awesome styles (icons) -->
-    <link rel="stylesheet" href="<?=base_url('public/vendor/fontawesome-free/css/all.min.css')?>">
+    <link rel="stylesheet" href="<?=base_url('public/front/css/font_awesome.css')?>">
     <!-- Main Template styles -->
     <link rel="stylesheet" href="<?=base_url('public/front/css/styles.css')?>">
     <!-- IE 8 Fallback -->
@@ -41,8 +41,7 @@
                 <div class="row">
                     <div class="col-md-2">
                         <a href="<?=base_url()?>" class="logo mt5">
-                            <!-- <img src="<?//=base_url('public/front/img/logo-small-dark.png')?>" alt="Image Alternative text" title="Image Title" /> -->
-                            <h1>V4U</h1>
+                            <img src="<?=base_url('public/front/img/logo-small-dark.png')?>" alt="Image Alternative text" title="Image Title" />
                         </a>
                     </div>
                     <div class="col-md-6 col-md-offset-4">
@@ -75,22 +74,21 @@
         <header class="main">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <div class="flexnav-menu-button" id="flexnav-menu-button">Menu</div>
                         <nav>
                             <ul class="nav nav-pills flexnav" id="flexnav" data-breakpoint="800">
                                 <li class="active"><a href="<?=base_url()?>">Home</a>
                                 </li>
-                                <li><a href="#">About us</a>
-                                </li>
-                                <li ><a href="javascript:void(0);">State/UT</a>
-                                  <?=state_ut_menu_li();?></li>
                                 <li><a href="<?=base_url('city/'.$this->session->city.'/services/all')?>">Services</a>
 								<?=service_cats_menu_li();?>
                                 </li>
-                                <li><a href="<?=base_url('products/all')?>">Products</a>
+                                <li><a href="<?=base_url('products/all')?>">Product </a>
                                  <?=product_cats_menu_li();?>
-                                </li>																		
+                                </li>
+								<li><a href="#">About us</a>
+                                </li>
+										
                                 <li><a href="#">Contact</a>
                                 </li>
 								<li><a href="#">Blog</a>
@@ -99,7 +97,7 @@
                             </ul>
                         </nav>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <ul class="login-register">
                             <li class="shopping-cart"><a href="javascript:void(0);"><i class="fa fa-shopping-cart"></i>My Cart</a>
                                 <div class="shopping-cart-box">
@@ -161,7 +159,6 @@
                     <label>Password</label>
                     <input type="password" id="login_password" class="form-control">
                 </div>
-				
                 <div class="checkbox">
                     <label>
                         <input type="checkbox">Remember me
@@ -201,7 +198,6 @@
 			var mobile=$('#reg_mobile').val();
 			var pass=$('#reg_password').val();
 			var cpass=$('#reg_password_confirm').val();
-		
 			if(fname && lname && email && mobile && pass && cpass)
 			{
 						$.ajax({
@@ -214,7 +210,7 @@
 										if(obj.status==true)
 										{
 											$('#reg_message').html(obj.message);
-											window.location.reload();
+											window.location.href="<?=base_url('my-account')?>";
 										}
 										else
 										{
@@ -244,7 +240,7 @@
 			$('#login_message').html();
 			var email=$('#login_email').val();
 			var pass=$('#login_password').val();
-			//var nurl=$('#next_url').val();
+
 			if(email && pass)
 			{
 						$.ajax({
@@ -257,7 +253,7 @@
 										if(obj.status==true)
 										{
 											$('#login_message').html(obj.message);
-												window.location.reload();
+											window.location.href="<?=base_url('my-account')?>";
 										}
 										else
 										{
@@ -322,8 +318,6 @@
                     <label>Repeat Password *</label>
                     <input type="password" id="reg_password_confirm" class="form-control" required>
                 </div>
-				
-				 
 
 				<a href="javascript:void(0);" class="btn btn-primary" onclick="user_signup();">Sign up<a>
             </form>
@@ -383,7 +377,7 @@
             </div>
         </form>
         <!-- END SEARCH AREA -->
-<input type="hidden" id="next_url" value="<?=current_url()?>"> 
+
         <div class="gap"></div>
 
 

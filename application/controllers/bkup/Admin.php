@@ -4838,24 +4838,6 @@ class Admin extends CI_Controller {
 		}
 		
 		
-	}
-	
-	
-		/* 
-   #######################################
-   Users MODULE 
-   #######################################
-   */	
-	
-		public function users()
-	{
-		is_superadmin();
-		$this->data['users']=$this->admin_model->get_users();
-		$this->load->view('admin/templates/header');
-		$this->load->view('admin/templates/sidebar');
-		$this->load->view('admin/templates/topbar');
-		$this->load->view('admin/users/users',$this->data);
-		$this->load->view('admin/templates/footer');
 	}
 	
 	

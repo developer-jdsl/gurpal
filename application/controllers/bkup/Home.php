@@ -19,7 +19,6 @@ class Home extends CI_Controller {
 		$this->data['brands']			=	$this->home_model->get_brands();
 		$this->data['advertisements']	=	$this->home_model->get_advertisements('home','left_sidebar');
 		$this->data['categories']		=	$this->home_model->get_service_cats();
-		$this->data['pro_categories']	=	$this->home_model->get_product_cats();
 		$this->data['title']			=   DEFAULT_TITLE;
 		$this->data['meta_keywords']	=   DEFAULT_KEYWORDS;
 		$this->data['meta_description']	=   DEFAULT_DESCRIPTION;
@@ -45,7 +44,6 @@ class Home extends CI_Controller {
 		$this->data['brands']			=	$this->home_model->get_brands();
 		$this->data['advertisements']	=	$this->home_model->get_advertisements('home','left_sidebar');
 		$this->data['categories']		=	$this->home_model->get_service_cats();
-		$this->data['pro_categories']	=	$this->home_model->get_product_cats();
 		$this->data['title']			=   $ret['meta_title']?$ret['meta_title']:DEFAULT_TITLE;
 		$this->data['meta_keywords']	=   $ret['meta_keywords']?$ret['meta_keywords']:DEFAULT_KEYWORDS;
 		$this->data['meta_description']	=   $ret['meta_description']?$ret['meta_description']:DEFAULT_DESCRIPTION;
@@ -664,32 +662,6 @@ class Home extends CI_Controller {
 		
 	}
 	
-			public function my_wishlist()
-	
-	{
-		
-		if($this->session->front_user_id)
-		{
-		$this->data['title']			=   DEFAULT_TITLE;
-		$this->data['meta_keywords']	=   DEFAULT_KEYWORDS;
-		$this->data['meta_description']	=   DEFAULT_DESCRIPTION;
-		$this->data['wishlist']			=   $this->home_model->get_user_wishlist();
-		$this->data['states']			=   $this->home_model->get_states();
-		$this->data['cities']			=   $this->home_model->get_cities();
-		$this->load->view('public/templates/header',$this->data);
-		$this->load->view('public/my_wishlist',$this->data);
-		$this->load->view('public/templates/footer',$this->data);
-		}
-		else
-		{
-			$this->session->set_flashdata('lflag','login');
-			redirect('/');
-			
-		}
-
-		
-	}
-	
 			public function my_orders($order_id=null)
 	
 	{
@@ -1009,35 +981,6 @@ class Home extends CI_Controller {
 		}
 		
 	}
-	}
-	
-	
-	public function add_to_whishlist()
-	{
-		$id=$this->input->post('id');
-		$type=$this->input->post('type');
-		$uid=$this->input->post('uid');
-		
-		if($id && $type && $uid)
-		{
-			if($this->home_model->add_to_whishlist($id,$type))
-			{
-				echo 'success';
-			}
-			else
-			{
-				echo 'fail';
-			}
-
-		}
-		else 
-			
-			{
-					echo 'fail';
-				
-			}
-		
-		
 	}
 	
 	

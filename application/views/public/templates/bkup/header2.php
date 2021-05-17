@@ -15,7 +15,7 @@
     <!-- Bootstrap styles -->
     <link rel="stylesheet" href="<?=base_url('public/front/css/boostrap.css')?>">
     <!-- Font Awesome styles (icons) -->
-    <link rel="stylesheet" href="<?=base_url('public/vendor/fontawesome-free/css/all.min.css')?>">
+    <link rel="stylesheet" href="<?=base_url('public/front/css/font_awesome.css')?>">
     <!-- Main Template styles -->
     <link rel="stylesheet" href="<?=base_url('public/front/css/styles.css')?>">
     <!-- IE 8 Fallback -->
@@ -76,7 +76,7 @@
         <header class="main">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <div class="flexnav-menu-button" id="flexnav-menu-button">Menu</div>
                         <nav>
                             <ul class="nav nav-pills flexnav" id="flexnav" data-breakpoint="800">
@@ -299,7 +299,7 @@
                             </ul>
                         </nav>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <ul class="login-register">
                             <li class="shopping-cart"><a href="page-cart.html"><i class="fa fa-shopping-cart"></i>My Cart</a>
                                 <div class="shopping-cart-box">

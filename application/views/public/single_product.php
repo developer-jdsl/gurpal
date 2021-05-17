@@ -117,8 +117,10 @@
                                 <ul class="list-inline">
                                     <li><a href="javascript:void(0)" data-pid="<?=$product['pk_product_id']?>" class="add_to_cart btn btn-primary"><i class="fa fa-shopping-cart"></i> Add to cart</a>
                                     </li>
-                                    <li><a href="#" class="btn"><i class="fa fa-star"></i> To Wishlist</a>
-                                    </li>
+                                    <li>
+									<?php if(check_wishlist('product',$product['pk_product_id'])) {?> <a href="<?=base_url('my-wishlist')?>"><i class="fa fa-star"></i> My Wishlist</a><?php } else { ?>  <a href="javascript:void(0)" data-id="<?=$product['pk_product_id']?>" data-type="product" data-uid="<?=$this->session->front_user_id?>" class="btn add_to_whishlist"> <i class="fa fa-star"></i> To Wishlist </a><?php } ?>
+                            
+									</li>
                                 </ul>
                             </div>
                         </div>
