@@ -13,7 +13,10 @@
     <!-- Bootstrap styles -->
     <link rel="stylesheet" href="<?=base_url('public/front/css/boostrap.css')?>">
     <!-- Font Awesome styles (icons) -->
+	
     <link rel="stylesheet" href="<?=base_url('public/vendor/fontawesome-free/css/all.min.css')?>">
+	 <link rel="stylesheet" href="<?=base_url('public/vendor/fontawesome-free/css/solid.min.css')?>">
+	<link rel="stylesheet" href="<?=base_url('public/front/css/font_awesome.css')?>">
     <!-- Main Template styles -->
     <link rel="stylesheet" href="<?=base_url('public/front/css/styles.css')?>">
     <!-- IE 8 Fallback -->
@@ -60,10 +63,10 @@
                                         <p class="header-feature-sub-title">Indigeneous Products</p>
                                     </div>
                                 </li>
-                                <li><i class="fa fa-asterisk"></i>
+                                <li><i class="fa fa-flag"></i>
                                     <div class="header-feature-caption">
-                                        <h5 class="header-feature-title">Huge Bonuses</h5>
-                                        <p class="header-feature-sub-title">shopping with ease</p>
+                                        <h5 class="header-feature-title">Dekho Apna Desh</h5>
+                                        <p class="header-feature-sub-title">Explore Country</p>
                                     </div>
                                 </li>
                             </ul>
@@ -81,8 +84,6 @@
                             <ul class="nav nav-pills flexnav" id="flexnav" data-breakpoint="800">
                                 <li class="active"><a href="<?=base_url()?>">Home</a>
                                 </li>
-                                <li><a href="#">About us</a>
-                                </li>
                                 <li ><a href="javascript:void(0);">State/UT</a>
                                   <?=state_ut_menu_li();?></li>
                                 <li><a href="<?=base_url('city/'.$this->session->city.'/services/all')?>">Services</a>
@@ -90,12 +91,14 @@
                                 </li>
                                 <li><a href="<?=base_url('products/all')?>">Products</a>
                                  <?=product_cats_menu_li();?>
-                                </li>																		
-                                <li><a href="#">Contact</a>
                                 </li>
-								<li><a href="#">Blog</a>
+								<?=get_menu_pages();?>								
+                                <li><a href="<?=base_url('contact')?>">Contact</a>
+                                </li>
+								<!--<li><a href="#">Blog</a>
                                     
                                 </li>
+								-->
                             </ul>
                         </nav>
                     </div>
@@ -358,7 +361,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-8 clearfix">
-                        <label><i class="fa fa-search"></i><span>I am searching for</span>
+                        <label><i class="fa fa-search"></i><span>What are you looking for?</span>
                         </label>
                         <div class="search-area-division search-area-division-input">
                             <input class="form-control" type="text" placeholder="Travel Vacation" name="search" required/>

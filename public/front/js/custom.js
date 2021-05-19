@@ -76,15 +76,6 @@ if ($('body').hasClass('sticky-header')) {
     });
 }
 
-// Price slider
-$("#price-slider").ionRangeSlider({
-    min: 130,
-    max: 575,
-    type: 'double',
-    prefix: "$",
-    prettify: false,
-    hasGrid: false
-});
 
 // Responsive navigation
 $('#flexnav').flexNav();
@@ -130,6 +121,7 @@ $('#star-rating > li').each(function() {
             for (var i = 0; i < listItems.length; i++) {
                 if (i <= itemIndex) {
                     $(listItems[i]).addClass('selected');
+					$('#rstars').val($(listItems[i]).data('id'));
                 } else {
                     $(listItems[i]).removeClass('selected');
                 }

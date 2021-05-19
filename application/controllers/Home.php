@@ -9,6 +9,19 @@ class Home extends CI_Controller {
 		 $this->data['cities']			=	$this->home_model->get_cities();
 		 construct_init();
  	}
+	
+	function _remap($method,$args)
+	{
+    	    if (method_exists($this, $method))
+        { 
+            $this->$method($args);
+        }
+    	else
+        { 
+            $this->pages($method,$args);
+        }
+     
+    }
 		 	
 		public function index()
 	{
@@ -706,7 +719,7 @@ class Home extends CI_Controller {
 		}
 		else
 		{
-			$order_no=base64_decode($order_id);
+			$order_no=base64_decode($order_id[0]);
 			$this->data['order_details']			=   $this->home_model->get_order_details_frontend($order_no);	
 		}
 		$this->data['order_id']			=   $order_id;
@@ -1039,6 +1052,89 @@ class Home extends CI_Controller {
 		
 		
 	}
+	
+	/* 
+   #######################################
+   Contact Page 
+   #######################################
+   */	
+   
+   public function contact()
+	{
+		$this->data['states']			=   $this->home_model->get_states();
+		$this->data['cities']			=   $this->home_model->get_cities();
+		$this->load->view('public/templates/header',$this->data);
+		$this->load->view('public/contact_us',$this->data);
+		$this->load->view('public/templates/footer',$this->data);	
+		
+		
+	}
+   
+
+	public function contact_us()
+	{
+		$this->load->library('form_validation');
+		$this->load->helper('form');
+	
+		$this->form_validation->set_rules('name', 'Name', 'required|trim');
+		$this->form_validation->set_rules('email', 'Email', 'required|valid_email_trim');
+		$this->form_validation->set_rules('message', 'Message', 'required|trim');	
+
+		  if ($this->form_validation->run() == FALSE)
+		{
+			
+		echo 'fail';
+		
+		}
+		
+		else
+			
+			{
+				$data['name']=$this->input->post('name');
+				$data['email']=$this->input->post('email');
+				$data['message']=$this->input->post('message');
+			
+				
+						$template=get_email_template('contact_form');
+						$data['to']=ADMIN_EMAIL;
+						$find = array("{{LOGO}}","{{SITE_URL}}","{{SITE_NAME}}","{{FORM_NAME}}","{{FORM_EMAIL}}","{{FORM_MESSAGE}}");
+						$replace = array(LOGO,base_url(),SITE_NAME,$data['name'],$data['email'],$data['message']);
+						$data['subject']= str_replace($find,$replace,$template['subject']);
+						$data['message']=str_replace($find,$replace,$template['template']);
+						
+						$ret=sendemail($data);	
+						if($ret)
+						{
+							echo 'sent';
+							
+						}
+						else
+						{
+							echo 'fail';
+						}
+				
+			}
+		
+		
+	}
+	
+	
+	public function add_review()
+	{
+	
+		$data['name']		=	$this->input->post('name');
+		$data['email']		=	$this->input->post('email');
+		$data['review']		=	$this->input->post('review');
+		$data['rating']		=	$this->input->post('rating');
+		$data['item_type']	=	$this->input->post('type');
+		$data['item_id']	=	$this->input->post('id');
+		$rdr_url			=	$this->input->post('url');
+		$data['fk_user_id']	=	$this->session->front_user_id?$this->session->front_user_id:0;
+		
+		$this->home_model->add_review($data);
+		redirect($rdr_url);
+	}
+	
 	
 	
 	

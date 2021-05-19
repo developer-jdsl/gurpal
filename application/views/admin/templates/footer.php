@@ -62,7 +62,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<script src="<?=base_url('public/js/bootstrap-colorpicker.js')?>"></script>
 	<?php } ?>
 	
-	<script src="<?=base_url('public/vendor/ckeditor5/ckeditor.js')?>"></script>
+	<script src="<?=base_url('public/vendor/tinymce/tinymce.min.js')?>"></script>
+
 	
 	<script src="<?=base_url('public/js/custom.js')?>"></script>
 	

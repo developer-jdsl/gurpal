@@ -86,6 +86,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 
 
 defined('SITE_NAME') 			OR define('SITE_NAME', 'Jehlum Chenab');
+defined('ADMIN_EMAIL') 			OR define('ADMIN_EMAIL','viveksharma84@gmail.com');
 defined('LOGO')  	  			OR define('LOGO',  'public/img/image-1.png');
 defined('DEFAULT_TITLE')  		OR define('DEFAULT_TITLE', 'Jehlum Chenab');
 defined('DEFAULT_KEYWORDS')  	OR define('DEFAULT_KEYWORDS',  'Jehlum Chenab');

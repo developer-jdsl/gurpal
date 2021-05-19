@@ -782,7 +782,7 @@ class Home_model extends CI_Model {
 				   foreach($arr1 as $key=>$val)
 				   {
 					   $arr1[$key]['item_image']=base_url('uploads/product/'.$val['item_image']);
-					   $arr1[$key]['item_url']=base_url('products/'.$val['item_url']);					   
+					   $arr1[$key]['item_url']=base_url('product/'.$val['item_url']);					   
 				   }
 				   
 				   
@@ -835,7 +835,14 @@ class Home_model extends CI_Model {
 		   
 		   
 	   }  
-	   die();
+	  
+   }
+   
+   
+   function add_review($data)
+   {
+	  return $this->db->insert('tbl_reviews',$data); 
+	   
    }
    	
 }

@@ -106,6 +106,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </a>
                
             </li>
+			
+			<li class="nav-item">
+                <a class="nav-link " href="<?=base_url('admin/pages')?>">
+                    <i class="fas fa-fw fa-tag"></i>
+                    <span><?=keyword_value('pages','Pages')?></span>
+                </a>
+               
+            </li>
 		
 			
 				<?php } ?>

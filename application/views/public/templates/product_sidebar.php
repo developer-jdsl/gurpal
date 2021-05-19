@@ -6,7 +6,7 @@
 						<?php 
 		
 						foreach($categories as $category) { ?>
-						   <li><a href="<?=base_url('city/'.$this->session->city.'/services/'.$category['category_slug'])?>"><i class="fa p-2 <?php if($category['category_icon']) { echo $category['category_icon']; } ?>">
+						   <li><a href="<?=base_url('city/'.$this->session->city.'/services/'.$category['category_slug'])?>"><i class="p-2 <?php if($category['category_icon']) { echo $category['category_icon']; } ?>">
 						   </i><?=$category['category_name']?></a>
                             </li>
 						<?php } ?>
@@ -19,7 +19,7 @@
 						<?php 
 		
 						foreach($pro_categories as $category) { ?>
-						   <li><a href="<?=base_url('products/'.$category['category_slug'])?>"><i class="fa p-2 <?php if($category['category_icon']) { echo $category['category_icon']; } ?>">						   
+						   <li><a href="<?=base_url('products/'.$category['category_slug'])?>"><i class="p-2 <?php if($category['category_icon']) { echo $category['category_icon']; } ?>">						   
 						   </i><?=$category['category_name']?></a>
                             </li>
 						<?php } ?>

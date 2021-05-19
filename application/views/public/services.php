@@ -31,18 +31,7 @@
 									</a>
                                 </header>
                                 <div class="product-inner">
-                                    <ul class="icon-group icon-list-rating" title="5/5 rating">
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                    </ul>
+                                    <?=get_rating_html('service',$service['pk_service_id'])?>
                                     <h5 class="product-title"><a href="<?=base_url('city/'.$this->session->city.'/service/'.$service['service_slug'])?>"><?=$service['service_name']?></a></h5>
                                     <p class="product-desciption"><?=word_limiter($service['service_description'], 20);?></p>
                                     <div class="product-meta">

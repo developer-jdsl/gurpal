@@ -44,7 +44,7 @@
                 $('#send-message').attr({'disabled' : 'true', 'value' : 'Sending...' });
                 
 				/* Post Ajax function of jQuery to get all the data from the submission of the form as soon as the form sends the values to email.php*/
-                $.post("includes/mail/index.php", $("#contact-form").serialize(),function(result){
+                $.post(base_url+"contact-us", $("#contact-form").serialize(),function(result){
                     //Check the result set from email.php file.
                     if(result == 'sent'){
                         //If the email is sent successfully, remove the submit button

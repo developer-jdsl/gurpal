@@ -53,6 +53,9 @@ $route['default_controller'] = 'Home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
+
+$route['admin']			=	'admin';
+
 $route['cart']			=	'home/cart';
 $route['checkout']		=	'home/checkout';
 $route['city/(:any)']	=	'home/get_listings_by_city/$1';
@@ -80,4 +83,11 @@ $route['my-addresses']					=	'home/my_addresses';
 $route['add-address']					=	'home/add_address';
 $route['edit-address']					=	'home/edit_address';
 
+$route['contact']						=	'home/contact';
+$route['contact-us']					=	'home/contact_us';
+
 $route['logout']						=	'home/logout';
+
+$route['register']						=	'register/admin_front';
+
+$route['(:any)']						=	'Check/index/$1';

@@ -614,4 +614,248 @@ function  construct_init()
 		}
 		return false;
 	}
+	
+	
+	function get_menu_pages()
+	{
+		$ophtml="";
+		$CI = & get_instance();
+		$menus=$CI->db->get_where('tbl_pages',array('active'=>1,'is_deleted'=>0,'show_on_menu'=>1));
+		if($menus)
+		{
+			$menus=$menus->result_array();
+			foreach($menus as $menu)
+			{
+				
+			$ophtml.="<li><a href='".base_url($menu['page_slug'])."'>".$menu['page_name']."</a></li>";	
+			}
+			
+		}
+		
+		return $ophtml;
+		
+	}
+	
+	function get_reviews($type=null,$id=null)
+	{
+		if($type && $id)
+		{
+			$CI = & get_instance();
+			$reviews=$CI->db->get_where('tbl_reviews',array('item_type'=>$type,'item_id'=>$id));
+			if($reviews)
+			{
+				return $reviews->result_array();
+			}
+		}
+		return false;
+	}
+	function get_reviews_count($type=null,$id=null)
+	{
+		if($type && $id)
+		{
+			$CI = & get_instance();
+			$reviews=$CI->db->get_where('tbl_reviews',array('item_type'=>$type,'item_id'=>$id));
+			if($reviews)
+			{
+				return count($reviews->result_array());
+			}
+		}
+		return false;
+	}
+	
+	
+	function get_rating_html($type=null,$id=null)
+	{
+		
+		if($type && $id)
+		{
+		$rating_html='<ul class="icon-group icon-list-rating text-color" style="margin-left:0">
+		 <li><i class="fa fa-star-o"></i></li>
+		  <li><i class="fa fa-star-o"></i></li>
+		   <li><i class="fa fa-star-o"></i></li>
+		    <li><i class="fa fa-star-o"></i></li>
+			 <li><i class="fa fa-star-o"></i></li></ul>';
+		$total_rating=$total=$avg_rating=0;
+		$CI = & get_instance();
+		$reviews=$CI->db->get_where('tbl_reviews',array('item_type'=>$type,'item_id'=>$id));
+		
+		if($reviews)
+			{
+				$reviews=$reviews->result_array();
+				$total=count($reviews);
+				foreach($reviews as $row)
+				{
+					$total_rating+=$row['rating'];
+				}
+				if($total_rating>0 && $total>0)
+				{
+				$avg_rating=number_format(($total_rating/$total),'2','.','');
+				
+				$rating_html='<ul class="icon-group icon-list-rating text-color" style="margin-left:0">';
+				if($avg_rating==1.00)
+				{
+					  $rating_html.='<li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star-o"></i></li>
+					   <li><i class="fa fa-star-o"></i></li>
+					    <li><i class="fa fa-star-o"></i></li>
+						 <li><i class="fa fa-star-o"></i></li>';
+				}
+				
+				if($avg_rating>1.00 && $avg_rating<2.00)
+				{
+					  $rating_html.='<li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star-half-empty"></i></li>
+					   <li><i class="fa fa-star-o"></i></li>
+					    <li><i class="fa fa-star-o"></i></li>
+						 <li><i class="fa fa-star-o"></i></li>';
+				}
+				
+				if($avg_rating==2.00)
+				{
+					
+					  $rating_html.='<li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star-o"></i></li>
+					  <li><i class="fa fa-star-o"></i></li>
+					  <li><i class="fa fa-star-o"></i></li>';
+				}
+				
+				if($avg_rating>2.00 && $avg_rating<3.00)
+				{
+					
+					  $rating_html.='<li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star-half-empty"></i></li>
+					  <li><i class="fa fa-star-o"></i></li>
+					  <li><i class="fa fa-star-o"></i></li>
+					  <li><i class="fa fa-star-o"></i></li>';
+				}
+				
+				if($avg_rating==3.00)
+				{
+					
+					  $rating_html.='<li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>
+					   <li><i class="fa fa-star-o"></i></li>
+					    <li><i class="fa fa-star-o"></i></li>';
+				}
+				
+				if($avg_rating>3.00 && $avg_rating<4.00)
+				{
+					
+					  $rating_html.='<li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star-half-empty"></i></li>
+					   <li><i class="fa fa-star-o"></i></li>';
+				}
+				
+				if($avg_rating==4.00)
+				{
+					
+					  $rating_html.='<li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>
+					   <li><i class="fa fa-star-o"></i></li>';
+				}
+				
+				if($avg_rating>4.00 && $avg_rating<5.00)
+				{
+					
+					  $rating_html.='<li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star-half-empty"></i></li>';
+				}
+				
+				if($avg_rating>=5.00)
+				{
+					
+					  $rating_html.='<li><i class="fa fa-star"></i></li>
+									<li><i class="fa fa-star"></i></li>
+									<li><i class="fa fa-star"></i></li>
+									<li><i class="fa fa-star"></i></li>
+									<li><i class="fa fa-star"></i></li>';
+				}
+				$rating_html.="</ul>";	
+				
+				}
+				return $rating_html;
+			}
+												
+		}
+		
+		return false;
+		
+	}	
+	
+	
+	function get_stars_html($rating=null)
+	{
+		
+		if($rating)
+		{
+			$rating_html='<ul class="icon-group icon-list-rating text-color" style="margin-left:0">';
+				if($rating==1)
+				{
+					  $rating_html.='<li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star-o"></i></li>
+					   <li><i class="fa fa-star-o"></i></li>
+					    <li><i class="fa fa-star-o"></i></li>
+						 <li><i class="fa fa-star-o"></i></li>';
+				}
+				
+				
+				
+				if($rating==2)
+				{
+					
+					  $rating_html.='<li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star-o"></i></li>
+					  <li><i class="fa fa-star-o"></i></li>
+					  <li><i class="fa fa-star-o"></i></li>';
+				}
+				
+				
+				
+				if($rating==3)
+				{
+					
+					  $rating_html.='<li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>
+					   <li><i class="fa fa-star-o"></i></li>
+					    <li><i class="fa fa-star-o"></i></li>';
+				}
+				
+			
+				
+				if($rating==4)
+				{
+					
+					  $rating_html.='<li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>
+					   <li><i class="fa fa-star-o"></i></li>';
+				}
+				
+				
+				if($rating==5)
+				{
+					
+					  $rating_html.='<li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>
+					  <li><i class="fa fa-star"></i></li>';
+				}
+				$rating_html.="</ul>";	
+				
+				return $rating_html;
+		}
+	}
 ?>

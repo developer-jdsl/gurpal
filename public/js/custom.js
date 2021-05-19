@@ -266,12 +266,56 @@ if($("select").hasClass("select_2"))
 
 if($("textarea").hasClass("editor"))
 {
+		tinymce.init({
+  selector: 'textarea.editor',
+  height: 500,
+  menubar: true,
+  plugins: [
+    'advlist autolink lists link image charmap print preview anchor',
+    'searchreplace visualblocks code fullscreen',
+    'insertdatetime media table paste code help wordcount'
+  ],
+  toolbar: 'undo redo | formatselect | ' +
+  'bold italic backcolor | alignleft aligncenter ' +
+  'alignright alignjustify | bullist numlist outdent indent | ' +
+  'removeformat | help | image',
+  images_upload_url : 'upload_image',
+		automatic_uploads : true,
 
-  ClassicEditor
-        .create( document.querySelector( '.editor' ) )
-        .catch( error => {
-            console.error( error );
-        } );
+		images_upload_handler : function(blobInfo, success, failure) {
+			var xhr, formData;
+
+			xhr = new XMLHttpRequest();
+			xhr.withCredentials = false;
+			xhr.open('POST', 'upload_image');
+
+			xhr.onload = function() {
+				var json;
+
+				if (xhr.status != 200) {
+					failure('HTTP Error: ' + xhr.status);
+					return;
+				}
+
+				json = JSON.parse(xhr.responseText);
+
+				if (!json || typeof json.file_path != 'string') {
+					failure('Invalid JSON: ' + xhr.responseText);
+					return;
+				}
+
+				success(json.file_path);
+			};
+
+			formData = new FormData();
+			formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+			xhr.send(formData);
+		},
+  content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+  
+		
+});
 	
 }
 

@@ -113,8 +113,8 @@
                         <a class="item" rel="nofollow" href="#">
                            <div class="box-icon"> <i class="fa fa-rupee-sign"></i> </div>
                            <div class="box-info">
-                              <h3>Start Earning</h3>
-                              <h4>Register Your Business.</h4>
+                              <h3>Promote Your Business</h3>
+                              <h4>Start Earning.</h4>
                               <div class="point"><i class="fa fa-check"></i><span>Free & Paid Listing</span> </div>
                               <div class="point"><i class="fa fa-check"></i><span>List Services/Products</span> </div>
                            </div>

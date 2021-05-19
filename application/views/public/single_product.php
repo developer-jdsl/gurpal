@@ -1,35 +1,40 @@
 
                 <div class="col-md-9">
-                    <div id="review-dialog" class="mfp-with-anim mfp-hide mfp-dialog clearfix">
+  <div id="review-dialog" class="mfp-with-anim mfp-hide mfp-dialog clearfix">
                         <h3>Add a Review</h3>
-                        <form>
+               
+						<?php echo form_open('home/add_review');?>
                             <div class="form-group">
                                 <label>Name</label>
-                                <input type="text" placeholder="e.g. John Doe" class="form-control" />
+                                <input type="text" name="name" placeholder="e.g. John Doe" class="form-control" <?php if(@$this->session->front_username){ echo 'value="'.$this->session->front_username.'"';}?> required />
                             </div>
                             <div class="form-group">
                                 <label>E-mail</label>
-                                <input type="text" placeholder="e.g. jogndoe@gmail.com" class="form-control" />
+                                <input type="text" name="email" placeholder="e.g. jogndoe@gmail.com" class="form-control"  <?php if(@$this->session->front_user_data->user_email){ echo 'value="'.$this->session->front_user_data->user_email.'"';}?> required />
                             </div>
                             <div class="form-group">
                                 <label>Review</label>
-                                <textarea class="form-control"></textarea>
+                                <textarea name="review" class="form-control" required></textarea>
                             </div>
                             <div class="form-group">
                                 <label>Rating</label>
                                 <ul class="icon-list icon-list-inline star-rating" id="star-rating">
-                                    <li><i class="fa fa-star"></i>
+                                    <li data-id="1" class="selected"><i class="fa fa-star"></i>
                                     </li>
-                                    <li><i class="fa fa-star"></i>
+                                    <li data-id="2" class="selected"><i class="fa fa-star"></i>
                                     </li>
-                                    <li><i class="fa fa-star"></i>
+                                    <li data-id="3" class="selected"><i class="fa fa-star"></i>
                                     </li>
-                                    <li><i class="fa fa-star"></i>
+                                    <li data-id="4" class="selected"><i class="fa fa-star"></i>
                                     </li>
-                                    <li><i class="fa fa-star"></i>
+                                    <li data-id="5" class="selected"><i class="fa fa-star"></i>
                                     </li>
                                 </ul>
                             </div>
+							<input type="hidden" name="rating" id="rstars" value="5">
+							<input type="hidden" name="type"  value="product">
+							<input type="hidden" name="id"  value="<?=$product['pk_product_id']?>">
+							<input type="hidden" name="url"  value="<?=current_url()?>">
                             <input type="submit" class="btn btn-primary" value="Submit" />
                         </form>
                     </div>
@@ -45,18 +50,7 @@
                         </div>
                         <div class="col-md-5">
                             <div class="product-info box">
-                                <ul class="icon-group icon-list-rating text-color" title="4.5/5 rating">
-                                    <li><i class="fa fa-star"></i>
-                                    </li>
-                                    <li><i class="fa fa-star"></i>
-                                    </li>
-                                    <li><i class="fa fa-star"></i>
-                                    </li>
-                                    <li><i class="fa fa-star"></i>
-                                    </li>
-                                    <li><i class="fa fa-star-half-empty"></i>
-                                    </li>
-                                </ul>	<small><a href="#" class="text-muted">based on 8 reviews</a></small>
+                                <?=get_rating_html('product',$product['pk_product_id'])?>	<small><a  class="text-muted">based on <?=get_reviews_count('product',$product['pk_product_id'])?> review(s)</a></small>
                                 <h3><?=$product['product_name']?></h3>
 								<?php if($product['discount_price']>0) { ?>
 								 <p class="product-info-price">₹<?=$product['discount_price']?></p>
@@ -145,12 +139,28 @@
                             <div class="tab-pane fade" id="tab-2">
                                 <?=$product['product_specifications']?>
                             </div>
-                            <div class="tab-pane fade" id="tab-3">
-                                <p>Sapien sapien eget elementum elit mollis eu vehicula suspendisse vel hac vulputate proin erat facilisis habitasse libero cursus leo magnis consequat tortor parturient id fermentum dictum enim maecenas curabitur egestas</p>
-                                <p>Blandit ridiculus donec purus mattis praesent netus vitae hendrerit eu tellus nulla viverra varius cursus turpis egestas pellentesque arcu morbi justo turpis ornare ridiculus justo parturient mauris euismod nascetur hendrerit</p>
-                            </div>
+                           
                             <div class="tab-pane fade" id="tab-4">
-                              
+                              	<?php $reviews=get_reviews('product',$product['pk_product_id']);?>
+							<?php if($reviews){ ?>
+								
+							<ul class="comments-list">
+							<?php foreach($reviews as $review){?>
+                                    <li>
+                                        <!-- REVIEW -->
+                                        <article class="comment">
+                                         
+                                            <div class="comment-inner">
+                                                <?=get_stars_html($review['rating'])?>
+											   <span class="comment-author-name"><?=$review['name']?></span>
+                                                <p class="comment-content"><?=$review['review']?></p>
+                                            </div>
+                                        </article>
+                                    </li>
+							<?php } ?>
+                                    
+                                </ul>
+							<?php } ?>
 								<a class="popup-text btn btn-primary" href="#review-dialog" data-effect="mfp-zoom-out"><i class="fa fa-pencil"></i> Add a review</a>
                             </div>
                         </div>
@@ -165,21 +175,10 @@
                         <div class="col-md-4">
                             <div class="product-thumb">
                                 <header class="product-header">
-                                    <img src="<?=base_url('uploads/product/'.$product['product_image'])?>" alt="<?=$product['product_name']?>" title="<?=$product['product_name']?>" />
+                                    <img src="<?=base_url('uploads/product/'.$product['product_image'])?>" alt="<?=$product['product_name']?>" title="<?=$product['product_name']?>" style="max-width:100%"/>
                                 </header>
                                 <div class="product-inner">
-                                    <ul class="icon-group icon-list-rating icon-list-non-rated" title="not rated yet">
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>
-                                        </li>
-                                    </ul>
+                                   <?=get_rating_html('product',$product['pk_product_id'])?>
                                     <h5 class="product-title"><a  href="<?=base_url('product/'.$product['product_slug'])?>"><?=$product['product_name']?></a></h5>
                                     <p class="product-desciption"><?=word_limiter($product['product_description'], 20);?></p>
                                     <div class="product-meta">
