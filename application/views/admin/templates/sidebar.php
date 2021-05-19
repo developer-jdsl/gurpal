@@ -128,7 +128,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </li>
 				<?php } ?>
 				
-				
+				<li class="nav-item">
+                <a class="nav-link " href="<?=base_url('admin/reports')?>">
+                    <i class="fas fa-fw fa-chart-bar"></i>
+                    <span><?=keyword_value('reports','Reports')?></span>
+                </a>
+               
+            </li>
 				
 				
 				<li class="nav-item">
