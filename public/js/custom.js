@@ -102,7 +102,7 @@ $('.image_update_ajax').change(function(){
 
 
 $('.update_default').click(function(){
- var id=$(this).data('id');
+ var id=$(this).val();
  var table=$(this).data('table');
  var column=$(this).data('column');
  var fd = new FormData();
@@ -135,7 +135,7 @@ $('.update_default').click(function(){
 });
 
 $('.update_default_service').click(function(){
- var id=$(this).data('id');
+ var id=$(this).val();
  var table=$(this).data('table');
  var column=$(this).data('column');
  var fd = new FormData();
@@ -326,6 +326,16 @@ if($("#color_value").length)
 {
 	$('#color_value').colorpicker();
 }
+
+$('#pro_gallery').click(function(){
+	
+	$('.sidebar').toggle();
+});
+
+$('#pro_basic').click(function(){
+	
+	$('.sidebar').show();
+});
 
 
 

@@ -68,7 +68,7 @@
                                 </ul>
 								-->
 								
-								<?php $size_li_html=$color_li_html='';$i=0; foreach($gallery as $gal) { 
+								<?php $size_unique=array();$color_unique=array();$size_li_html=$color_li_html='';$i=0; foreach($gallery as $gal) { 
 								$active="";
 								$sid="";
 								if($i==0)
@@ -76,15 +76,16 @@
 									$active="active";
 									$sid=$gal['fk_size_id'];
 								}
-								if($gal['fk_size_id']>0)
+								if($gal['fk_size_id']>0 && !in_array($gal['fk_size_id'],$size_unique))
 								{
-						
+									array_push($size_unique,$gal['fk_size_id']);
 									$size_li_html.='<li  class="size_li '.$active.'" data-id="'.$gal['fk_size_id'].'">'.$gal['size_value'].'</li>';
 								
 								}
 								
-								if($gal['fk_color_id']>0)
+								if($gal['fk_color_id']>0 && !in_array($gal['fk_color_id'],$color_unique))
 								{
+									array_push($color_unique,$gal['fk_color_id']);
 									$color_li_html.='<li  class="color_li '.$active.'" data-id="'.$gal['fk_color_id'].'" data-sizeid="'.$gal['fk_size_id'].'" style="background:'.$gal['color_value'].'">&nbsp;</li>';
 								
 								}
@@ -92,7 +93,7 @@
 								$i++; } 
 								?>
 								
-								
+								<?php if($size_li_html){ ?>
 								<label>Size :
 								 <ul class="list-inline variation_ul size_ul">
 								 	<?=$size_li_html?>
@@ -100,12 +101,24 @@
 								 
 								</label>
 								<br>
+								<?php } ?>
+								<?php if($color_li_html){ ?>
 								<label>Color :
 								  <ul class="list-inline variation_ul color_ul">
 								 <?=$color_li_html?>
 								 </ul>
 								 
-							</label>
+								</label>
+								<?php } ?>
+								
+								<label>Choose :
+								 <select class="form-control service_single_select">
+								 <?php foreach($gallery as $gal) {  ?>
+								 <option value="<?=$gal['pk_pricing_id']?>" data-price="₹<?=$gal['discount_price']?$gal['discount_price']:$gal['original_price']?>" >₹<?=$gal['discount_price']?$gal['discount_price']:$gal['original_price']?> <?=$gal['service_variation']?> (<?=$gal['service_subvariation']?>)</option>
+								 <?php } ?>
+								 </select>
+								 
+								</label>
 								
 					
                                 <ul class="list-inline">

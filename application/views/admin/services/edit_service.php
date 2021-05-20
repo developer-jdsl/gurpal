@@ -177,7 +177,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 											</td>
 											
 											<td>
-											<input type="radio"  class="form-control form-control-user update_default_service" value="<?=$row['pk_pricing_id']?>"  data-table="service_pricing" data-column="is_default" style="width:20px" <?php if($row['is_default']==1){ echo 'checked';} ?>>
+											<input type="radio"  name="service_radio" class="form-control form-control-user update_default_service" value="<?=$row['pk_pricing_id']?>"  data-table="service_pricing" data-column="is_default" style="width:20px" <?php if($row['is_default']==1){ echo 'checked';} ?>>
 											</td>
 											<td>
 											<a href="javascript:void(0);" data-id="<?=$row['pk_pricing_id']?>" data-flag="<?=$row['is_default']?>" class="btn btn-danger btn-circle btn-sm remove_pricing_ajax">

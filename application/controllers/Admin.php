@@ -1753,13 +1753,10 @@ class Admin extends CI_Controller {
 	
 	
 	public  function update_product()
-	{
-		
+	{
 		$id=$this->input->post('id');
 		if($id)
-		{
-			
-			
+		{
 		$this->form_validation->set_rules('product_name', 'Product Name', 'required',
 			array('required' =>  keyword_value('you_must_enter_product_name','You must Enter Product Name.'))
 		);
@@ -1835,7 +1832,7 @@ class Admin extends CI_Controller {
 			
 			$sizes=$this->input->post('add_size');
 			$colors=$this->input->post('add_color');
-			$org_price=$this->input->post('add_original_price');
+			$org_price=$this->input->post('add_original_price');						$variation=$this->input->post('add_variation');						$subvariation=$this->input->post('add_subvariation');
 			$dis_price=$this->input->post('add_discount_price');
 			$quantity=$this->input->post('add_quantity');
 			$img_array=array();
@@ -1895,7 +1892,7 @@ class Admin extends CI_Controller {
                     'fk_color_id' => $colors[$key],
 					'product_image'=>$img_array[$key],
                     'fk_size_id' => $sizes[$key],
-                    'original_price' => $value,
+                    'original_price' => $value,										'product_variation'=>$variation[$key],										'product_subvariation'=>$subvariation[$key],
                     'discount_price' => $dis_price[$key],
 					'quantity' => $quantity[$key]
                 );

@@ -23,8 +23,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <p align="center"><?php echo validation_errors();?></p>
 							
 							<ul class="nav nav-tabs">
-  <li class="nav-item "><a class="nav-link <?php if(@$galleryf==false){echo 'active';} ?>" data-toggle="tab" href="#details"><?=keyword_value('details','Details')?></a></li>
-<li class="nav-item" ><a data-toggle="tab" class="nav-link <?php if(@$galleryf==true){echo 'active';} ?>" href="#gallery"><?=keyword_value('gallery','Gallery')?></a></li>
+  <li class="nav-item "><a class="nav-link" id="pro_basic" <?php if(@$galleryf==false){echo 'active';} ?>" data-toggle="tab" href="#details"><?=keyword_value('details','Details')?></a></li>
+<li class="nav-item" ><a data-toggle="tab" id="pro_gallery" class="nav-link <?php if(@$galleryf==true){echo 'active';} ?>" href="#gallery"><?=keyword_value('gallery','Gallery')?></a></li>
 </ul>
 <?php echo form_open_multipart('admin/update_product'); ?>
 <div class="tab-content">
@@ -184,34 +184,36 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	  <thead>
                                         <tr>
                                             <th><?=keyword_value('image','Image')?></th>
-                                            <th><?=keyword_value('color','Color')?></th>
-                                            <th><?=keyword_value('size','Size')?></th>
-                                            <th><?=keyword_value('original_price','Original Price')?></th>
-                                            <th><?=keyword_value('discount_price','Discount Price')?></th>
-                                            <th><?=keyword_value('quantity','Quantity')?></th>
-											<th><?=keyword_value('make_default','Make Default')?></th>
-											<th><?=keyword_value('actions','Actions')?></th>
+                                            <th><?=keyword_value('size_color','Size/Color')?></th>
+                           
+											<th><?=keyword_value('variation','Custom Variation')?></th>
+								
+                                            <th><?=keyword_value('price','Price')?></th>
+                                            <th><?=keyword_value('quantity','Qty')?></th>
+											<th><?=keyword_value('make_default','Default')?></th>
+											<th>&nbsp;</th>
                                         </tr>
                                     </thead>
 									
 									<tbody>
 									<?php foreach($gallery as $row) { ?>
 										<tr data-id="<?=$row['pk_price_id']?>">
-											<td><img src="<?=base_url('uploads/product/'.$row['product_image'])?>" id="img_<?=$row['pk_price_id']?>" width="100px">
+											<td width="10%"><img src="<?=base_url('uploads/product/'.$row['product_image'])?>" id="img_<?=$row['pk_price_id']?>" width="100px">
 											<input type="file" name="product_image_<?=$row['pk_price_id']?>" accept="jpg,jpeg,png,gif" class="image_update_ajax" style="width:100px" data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-column="product_image">
  											</td>
-											<td>
+											<td width="20%">
+											<?=keyword_value('color','Color')?>
 											<select  class="form-control form-control-user update_product_fields" data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-cname="Product Color" data-column="fk_color_id">
-											<option value="0"><?=keyword_value('not_applicable','Not Applicable')?></option>
+											<option value="0"><?=keyword_value('na','NA')?></option>
 											<?php if(@$colors) {
 												foreach($colors as $row2) { ?>
 											<option value="<?=$row2['pk_color_id']?>" <?php if($row2['pk_color_id']==$row['fk_color_id']){ echo 'selected'; } ?>> <?=$row2['color_name']?> </option>
 											<?php } } ?>
 											</select>
-											</td>
-											<td>
+											
+											<?=keyword_value('size','Size')?>
 											<select  class="form-control form-control-user update_product_fields" data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-cname="Product Size" data-column="fk_size_id">
-											<option value="0"><?=keyword_value('not_applicable','Not Applicable')?></option>
+											<option value="0"><?=keyword_value('na','NA')?></option>
 											<?php if(@$sizes) { 
 											foreach($sizes as $row2) { ?>
 											<option value="<?=$row2['pk_size_id']?>" <?php if($row2['pk_size_id']==$row['fk_size_id']){ echo 'selected'; } ?>> <?=$row2['size_name']?> </option>
@@ -219,17 +221,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 											</select>
 											
 											</td>
+											
 											<td>
-											<input type="number"  class="form-control form-control-user update_product_fields" value="<?=$row['original_price']?>"  data-cname="Original Price"  data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-column="original_price" style="width:100px" min="0">
+											<?=keyword_value('variation','Variation')?>
+											<input type="text" class="form-control form-control-user update_product_fields" data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-cname="Variation" data-column="product_variation" value="<?=$row['product_variation']?>">
+											<?=keyword_value('subvariation','SubVariation')?>
+											<input type="text"  class="form-control form-control-user update_product_fields" data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-cname="Subvariation" data-column="product_subvariation" value="<?=$row['product_subvariation']?>">
+											</td>
+										
+											<td >
+											<?=keyword_value('original_price','Original Price')?>
+											<input type="number"  class="form-control form-control-user update_product_fields" value="<?=$row['original_price']?>"  data-cname="Original Price"  data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-column="original_price"  min="0">
+											<?=keyword_value('discount_price','Discount Price')?>	<input type="number"  class="form-control form-control-user update_product_fields" value="<?=$row['discount_price']?>"  data-cname="Discount Price" data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-column="discount_price" min="0">		
+											</td>
+										
+											<td>
+											<input type="number"  class="form-control form-control-user update_product_fields" value="<?=$row['quantity']?>"  data-cname="Quantity" data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-column="quantity"   style="width:80px" min="1">
 											</td>
 											<td>
-											<input type="number"  class="form-control form-control-user update_product_fields" value="<?=$row['discount_price']?>"  data-cname="Discount Price" data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-column="discount_price" style="width:100px"  min="0">
-											</td>
-											<td>
-											<input type="number"  class="form-control form-control-user update_product_fields" value="<?=$row['quantity']?>"  data-cname="Quantity" data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-column="quantity" style="width:100px"  min="1">
-											</td>
-											<td>
-											<input type="radio"  class="form-control form-control-user update_default" value="<?=$row['pk_price_id']?>"  data-table="product_pricing" data-column="is_default" style="width:20px" <?php if($row['is_default']==1){ echo 'checked';} ?>>
+											<input type="radio"  name="pro_radio" class="form-control form-control-user update_default" value="<?=$row['pk_price_id']?>"  data-table="product_pricing" data-column="is_default" style="width:20px" <?php if($row['is_default']==1){ echo 'checked';} ?>>
 											</td>
 											<td>
 											<a href="javascript:void(0);" data-id="<?=$row['pk_price_id']?>" data-flag="<?=$row['is_default']?>" class="btn btn-danger btn-circle btn-sm remove_gallery_ajax">
@@ -243,12 +253,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <tfoot>
                                          <tr>
                                             <th><?=keyword_value('image','Image')?></th>
-                                            <th><?=keyword_value('color','Color')?></th>
-                                            <th><?=keyword_value('size','Size')?></th>
-                                            <th><?=keyword_value('original_price','Original Price')?></th>
-                                            <th><?=keyword_value('discount_price','Discount Price')?></th>
-                                            <th><?=keyword_value('quantity','Quantity')?></th>
-											<th><?=keyword_value('actions','Actions')?></th>
+                                             <th><?=keyword_value('size_color','Size/Color')?></th>
+											<th><?=keyword_value('variation','Custom Variation')?></th>
+									
+                                            <th><?=keyword_value('price','Price')?></th>
+                                            <th><?=keyword_value('quantity','Qty')?></th>
+											<th><?=keyword_value('make_default','Default')?></th>
+											<th>&nbsp;</th>
                                         </tr>
                                     </tfoot>
 	 </table>
@@ -257,12 +268,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 									  <table class="table table-bordered"  width="100%">
 									  <thead>
                                         <tr>
-                                            <th ><?=keyword_value('image','Image')?></th>
-                                            <th><?=keyword_value('color','Color')?></th>
-                                            <th><?=keyword_value('size','Size')?></th>
-                                            <th><?=keyword_value('original_price','Original Price')?></th>
-                                            <th><?=keyword_value('discount_price','Discount Price')?></th>
-                                            <th><?=keyword_value('quantity','Quantity')?></th>
+                                            <th><?=keyword_value('image','Image')?></th>
+                                            <th><?=keyword_value('size_color','Size/Color')?></th>
+                                            <th><?=keyword_value('variation','Custom Variation')?></th>
+                                            <th><?=keyword_value('price','Price')?></th>
+                                            <th><?=keyword_value('quantity','Qty')?></th>
 											<th><?=keyword_value('actions','Actions')?></th>
                                         </tr>
                                     </thead>
@@ -270,14 +280,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 										<tr>
 											<td><input type="file" accept="jpg,jpeg,png,gif" class="file" name="add_product_image[]" style="width:100px"></td>
 											<td>
+											<?=keyword_value('color','Color')?>
 											<select  name="add_color[]" id="color_sel" class="form-control form-control-user">
 											<option value="0"><?=keyword_value('not_applicable','Not Applicable')?></option>
 											<?php if(@$colors){
 												foreach($colors as $row2) { ?>
 											<option value="<?=$row2['pk_color_id']?>" > <?=$row2['color_name']?> </option>
 											<?php } } ?>
-											</select></td>
-											<td>
+											</select>
+											<?=keyword_value('size','Size')?>
 											<select  name="add_size[]" id="size_sel" class="form-control form-control-user">
 											<option value="0"><?=keyword_value('not_applicable','Not Applicable')?></option>
 											<?php if(@$sizes){ foreach($sizes as $row2) { ?>
@@ -285,9 +296,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 											<?php } } ?>
 											</select>
 											</td>
-											<td><input type="number"  name="add_original_price[]" class="form-control form-control-user" style="width:100px" min="0"></td>
-											<td><input type="number"  name="add_discount_price[]" class="form-control form-control-user" style="width:100px"  min="0"></td>
-											<td><input type="number"  name="add_quantity[]" class="form-control form-control-user" style="width:100px"   min="1"></td>
+											<td>
+											<?=keyword_value('variation','Variation')?>
+											<input type="text" class="form-control form-control-user " name="add_variation[]" >
+											<?=keyword_value('subvariation','SubVariation')?>
+											<input type="text"  class="form-control form-control-user"  name="add_subvariation[]">
+											</td>
+											<td>
+											<?=keyword_value('original_price','Original Price')?>
+											<input type="number"  name="add_original_price[]" class="form-control form-control-user" min="0">
+											<?=keyword_value('discount_price','Discount Price')?>
+											<input type="number"  name="add_discount_price[]" class="form-control form-control-user"  min="0">
+											</td>
+										
+											<td><input type="number"  name="add_quantity[]" class="form-control form-control-user"   min="1"></td>
 											<td><a href="javascript:void(0);"  class="btn btn-info btn-circle btn-sm add-product">
 												<i class="fas fa-plus"></i>
 											</a>
@@ -296,12 +318,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 									</tbody>
                                     <tfoot>
                                          <tr>
-                                            <th><?=keyword_value('image','Image')?></th>
-                                            <th><?=keyword_value('color','Color')?></th>
-                                            <th><?=keyword_value('size','Size')?></th>
-                                            <th><?=keyword_value('original_price','Original Price')?></th>
-                                            <th><?=keyword_value('discount_price','Discount Price')?></th>
-                                            <th><?=keyword_value('quantity','Quantity')?></th>
+                                           <th><?=keyword_value('image','Image')?></th>
+                                            <th><?=keyword_value('size_color','Size/Color')?></th>
+                                            <th><?=keyword_value('variation','Custom Variation')?></th>
+                                            <th><?=keyword_value('price','Price')?></th>
+                                            <th><?=keyword_value('quantity','Qty')?></th>
 											<th><?=keyword_value('actions','Actions')?></th>
                                         </tr>
                                     </tfoot>
