@@ -83,7 +83,7 @@
 								
 								}
 								
-								if($gal['fk_color_id']>0 && !in_array($gal['fk_color_id'],$color_unique))
+								if($gal['fk_color_id']>0)
 								{
 									array_push($color_unique,$gal['fk_color_id']);
 									$color_li_html.='<li  class="color_li '.$active.'" data-id="'.$gal['fk_color_id'].'" data-sizeid="'.$gal['fk_size_id'].'" style="background:'.$gal['color_value'].'">&nbsp;</li>';
@@ -95,7 +95,7 @@
 								
 								<?php if($size_li_html){ ?>
 								<label>Size :
-								 <ul class="list-inline variation_ul size_ul">
+								 <ul class="list-inline variation_ul size_ul pro_common_click">
 								 	<?=$size_li_html?>
 								 </ul>
 								 
@@ -104,21 +104,23 @@
 								<?php } ?>
 								<?php if($color_li_html){ ?>
 								<label>Color :
-								  <ul class="list-inline variation_ul color_ul">
+								  <ul class="list-inline variation_ul color_ul pro_common_click">
 								 <?=$color_li_html?>
 								 </ul>
 								 
 								</label>
 								<?php } ?>
+								<br>
 								
-								<label>Choose :
-								 <select class="form-control service_single_select">
+								<label <?php if(!$gallery[0]['product_variation']) { ?> style="display:none" <?php } ?> >
+								 <select class="form-control product_single_select">
 								 <?php foreach($gallery as $gal) {  ?>
-								 <option value="<?=$gal['pk_pricing_id']?>" data-price="₹<?=$gal['discount_price']?$gal['discount_price']:$gal['original_price']?>" >₹<?=$gal['discount_price']?$gal['discount_price']:$gal['original_price']?> <?=$gal['service_variation']?> (<?=$gal['service_subvariation']?>)</option>
+								 <option value="<?=$gal['pk_price_id']?>" data-sizeid="<?=$gal['fk_size_id']?>" data-colorid="<?=$gal['fk_color_id']?>" data-cs="<?=$gal['fk_size_id']?><?=$gal['fk_color_id']?>" data-price="₹<?=$gal['discount_price']?$gal['discount_price']:$gal['original_price']?>" > <?=$gal['product_variation']?> <?php if($gal['product_subvariation']){ ?>( <?=$gal['product_subvariation']?> ) <?php } ?> </option>
 								 <?php } ?>
 								 </select>
-								 
-								</label>
+								 </label>
+								
+								
 								
 					
                                 <ul class="list-inline">
@@ -179,6 +181,7 @@
                         </div>
                     </div>
                     <div class="gap"></div>
+					<?php if($featured_products) { ?>
                     <h3>Related Products</h3>
                     <div class="gap gap-mini"></div>
                     <div class="row row-wrap">
@@ -228,6 +231,7 @@
 					<?php } $fp++;}?>
        
                     </div>
+					<?php } ?>
                     <div class="gap gap-small"></div>
                 </div>
             </div>

@@ -158,6 +158,7 @@ class Product extends CI_Controller {
 		$data['pid']=$this->input->post('product_id');
 		$data['sid']=$this->input->post('size_id');
 		$data['cid']=$this->input->post('color_id');
+		$data['vid']=$this->input->post('var_id');
 		$details=$this->product_model->get_variation_details($data,array('city'=>null,'search'=>null));
 		if($details)
 		{
@@ -192,6 +193,7 @@ class Product extends CI_Controller {
 					$cur_data['item_pid']=$details['pk_price_id'];
 					$cur_data['item_var']=$details['color_name'];
 					$cur_data['item_subvar']=$details['size_name'];
+					$cur_data['item_newvar']=$data['vid'];
 					$cart_data[]=$cur_data;	
 			
 			}

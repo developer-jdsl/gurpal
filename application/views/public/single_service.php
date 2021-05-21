@@ -134,6 +134,7 @@
                         </div>
                     </div>
                     <div class="gap"></div>
+					<?php if($featured_services) { ?>
                     <h3>Related Services</h3>
                     <div class="gap gap-mini"></div>
                     <div class="row row-wrap">
@@ -183,6 +184,7 @@
 					<?php } $fp++;}?>
        
                     </div>
+					<?php } ?>
                     <div class="gap gap-small"></div>
                 </div>
             </div>
