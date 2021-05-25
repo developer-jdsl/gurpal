@@ -186,6 +186,59 @@
                     </div>
 					<?php } ?>
                     <div class="gap gap-small"></div>
+					
+					<?php if($nearby_services) { ?>
+                    <h3>Nearby Services</h3>
+                    <div class="gap gap-mini"></div>
+                    <div class="row row-wrap">
+					
+					<?php $fp=0;
+					foreach($nearby_services as $service) { if($fp<3) { ?>
+                        <div class="col-md-4">
+                            <div class="product-thumb">
+                                <header class="product-header">
+                                    <img src="<?=base_url('uploads/service/'.$service['service_banners'])?>" alt="<?=$service['service_name']?>" title="<?=$service['service_name']?>" style="max-width:100%"/>
+                                </header>
+                                <div class="product-inner">
+                                    <?=get_rating_html('service',$service['pk_service_id'])?>	
+                                    <h5 class="product-title"><a  href="<?=base_url('service/'.$service['service_slug'])?>"><?=$service['service_name']?></a></h5>
+                                    <p class="product-desciption"><?=word_limiter($service['service_description'], 20);?></p>
+                                    <div class="product-meta">
+                        
+                                            <ul class="product-price-list">
+										<?php if($service['original_price']>0 && $service['discount_price']>0) { ?>
+                                             <li><span class="product-price">₹<?=$service['discount_price']?></span>
+                                            </li>
+                                          
+										   <li><span class="product-old-price">₹<?=$service['original_price']?></span>
+                                            </li>
+										<?php } else if($service['original_price']>0) {?>
+										   <li><span class="product-price">₹<?=$service['original_price']?></span>
+                                            </li>
+										<?php  } else if($service['discount_price']>0) { ?>
+										
+										  <li><span class="product-price">₹<?=$service['discount_price']?></span>
+                                            </li>
+										<?php  } ?>
+                                        </ul>
+										
+                                        <ul class="product-actions-list">
+                                            <li><a class="btn btn-sm add_service_list" href="javascript:void(0);" data-id="<?=$service['pk_pricing_id']?>><i class="fa fa-shopping-cart"></i> To Cart</a>
+                                            </li>
+                                           <?php if($service['service_slug']) { ?>
+                                            <li><a class="btn btn-sm" href="<?=base_url('city/'.$this->session->city.'/service/'.$service['service_slug'])?>"><i class="fa fa-bars"></i> Details</a>
+                                            </li>
+											<?php } ?>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+					<?php } $fp++;}?>
+       
+                    </div>
+					<?php } ?>
+                    <div class="gap gap-small"></div>
                 </div>
             </div>
 			</div>

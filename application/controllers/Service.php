@@ -11,6 +11,8 @@ class Service extends CI_Controller {
 		 $this->data['cities']			=	$this->home_model->get_cities();
 		 construct_init();
 		 $this->per_page=18;
+		 $this->load->model('authentication_model');
+		 $this->data['social_login']	=	$this->authentication_model->generate_social_logins();
 		
  	}
 		 
@@ -39,6 +41,7 @@ class Service extends CI_Controller {
 		
 		$this->data['gallery']			=	$this->home_model->get_service_gallery($tmp['pk_service_id']);
 		$this->data['featured_services']=	$this->home_model->get_related_services(false,$tmp['pk_category_id'],$tmp['pk_service_id']);
+		$this->data['nearby_services']	=	$this->home_model->get_nearby_services(4,$tmp['pk_service_id']);
 		//$this->data['services']		=	$this->home_model->get_services();
 		//$this->data['banners']		=	$this->home_model->get_banners();
 		$this->data['brands']			=	$this->home_model->get_brands();
@@ -47,6 +50,7 @@ class Service extends CI_Controller {
 		$this->data['pro_categories']	=	$this->home_model->get_product_cats();
 		$this->data['title']			=   $tmp['meta_title']?$tmp['meta_title']:DEFAULT_TITLE;
 		$this->data['meta_keywords']	=   $tmp['meta_keywords']?$tmp['meta_keywords']:DEFAULT_KEYWORDS;
+		$this->data['meta_description']	=   $tmp['meta_description']?$tmp['meta_description']:DEFAULT_DESCRIPTION;
 		$this->data['meta_description']	=   $tmp['meta_description']?$tmp['meta_description']:DEFAULT_DESCRIPTION;
 		
 		$this->load->view('public/templates/header',$this->data);

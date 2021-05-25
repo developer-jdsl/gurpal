@@ -174,7 +174,8 @@
 				<p align="center">Or</p>
 				
             </form>
-			<div class="social-login p-40">
+			<?=$social_login?>
+			<?php /* <div class="social-login p-40">
                                     <div class="mb-20">
                                         <button class="btn btn-lg btn-block btn-social btn-facebook"><i class="fa fa-facebook-square"></i>Sign In with Facebook</button>
                                     </div>
@@ -185,6 +186,8 @@
                                         <button class="btn btn-lg btn-block btn-social btn-google-plus"><i class="fa fa-google-plus"></i>Sign In with Google</button>
                                     </div>
                                 </div>
+								*/
+								?>
 			<br>
             <ul class="dialog-alt-links">
                 <li><a class="popup-text" href="#register-dialog" data-effect="mfp-zoom-out">Not member yet</a>

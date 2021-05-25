@@ -62,7 +62,8 @@
                     <div class="row row-wrap">
 					<?php //var_dump($products) ;?>
 					
-					<?php foreach($products as $product) { ?>
+					<?php if($products)
+					{foreach($products as $product) { ?>
                         <div class="col-md-4">
                             <div class="product-thumb">
 							<a  href="<?=base_url('product/'.$product['product_slug'])?>">
@@ -111,7 +112,10 @@
                                 </div>
                             </div>
                         </div>
-					<?php } ?>
+					<?php } }  else { ?>
+					
+					<p align="center">No products found in <?=$city_name?>.</p>
+					<?php }?>
 						
                     </div>
                     <div class="gap gap-small"></div>

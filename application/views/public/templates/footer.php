@@ -110,7 +110,7 @@
                         </a>
                      </div>
                      <div class="col-md-4">
-                        <a class="item" rel="nofollow" href="#">
+                        <a class="item" rel="nofollow" href="<?=base_url('register')?>">
                            <div class="box-icon"> <i class="fa fa-rupee-sign"></i> </div>
                            <div class="box-info">
                               <h3>Promote Your Business</h3>
@@ -121,7 +121,7 @@
                         </a>
                      </div>
                      <div class="col-md-4">
-                        <a class="item" rel="nofollow" href="#">
+                        <a  class="item popup-text" href="#register-dialog" data-effect="mfp-move-from-top">
                            <div class="box-icon"> <i class="fa fa-gift"></i> </div>
                            <div class="box-info">
                               <h3>Sign Up</h3>

@@ -1,5 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+require APPPATH . '/third_party/hybridauth/autoload.php';
+		use Hybridauth\Hybridauth;
 class Authentication_model extends CI_Model {
     public function __construct() {
         $this->load->database();
@@ -58,7 +60,11 @@ class Authentication_model extends CI_Model {
 	   $this->db->select('u.*,up.*');
 	   $this->db->from('tbl_user as u');
 	   $this->db->join('tbl_user_profile as up','u.pk_user_id=up.fk_user_id','left');
-	   $this->db->where(array('u.user_email'=>$email,'u.user_password'=>$pass));
+	   $this->db->group_start();
+	   $this->db->where('u.user_email',$email);
+	   $this->db->or_where('u.user_phone',$email);
+	   $this->db->group_end();
+	   $this->db->where(array('u.user_password'=>$pass));
 	   $return=$this->db->get();
 	   $return=$return->row();
 	   
@@ -92,6 +98,62 @@ class Authentication_model extends CI_Model {
 	   return $return_array;
 	   
    }
+   
+      function user_login_social($email)
+   {
+	   $return_array=array('status'=>false,'msg'=>'');
+	   $this->db->select('u.*,up.*');
+	   $this->db->from('tbl_user as u');
+	   $this->db->join('tbl_user_profile as up','u.pk_user_id=up.fk_user_id','left');
+	   $this->db->where('u.user_email',$email);
+	   $return=$this->db->get();
+	   $return=$return->row();
+	   
+	  
+	   if(isset($return->pk_user_id))
+	   {
+		   
+		   if($return->active==1)
+		   {
+			  
+			  
+		  $session_arr=array('front_user_id'=>$return->pk_user_id,
+							 'front_username'=>$return->user_firstname,
+							 'front_user_data'=>$return);
+							 
+			
+			  $this->session->set_userdata($session_arr);
+			  
+			    $return_array['status']=true;
+				
+		   }
+		else{
+			  $return_array['msg']=keyword_value('your_acccount_disabled','Your Account is disabled'); 
+		}	
+	   }
+	   else
+	   {
+		  $return_array['msg']=keyword_value('invalid_email_password','Invaild Email/password combination'); 
+	   }
+	   
+	   return $return_array;
+	   
+   }
+   
+   
+         public function user_register_social($data)
+   {
+	   
+	   $this->db->insert('tbl_user',$data);
+	   $id=$this->db->insert_id();
+	   if($id)
+	   {
+		return array('status'=>true);
+	   }
+	   
+	   return array('status'=>false);
+   }
+   
    
    public function update_email_otp($id,$otp)
    {
@@ -241,6 +303,29 @@ class Authentication_model extends CI_Model {
 	   return $this->db->update('tbl_admin',array('admin_password'=>$pass));
 	  
    }
+   
+   	function generate_social_logins()
+	{
+		
+	
+		 //Instantiate Hybridauth's classes
+        $hybrid = new Hybridauth(getHybridConfig());
+
+        //Get enabled providers array
+        $providers = $hybrid->getProviders();
+	
+		$shtml='<div class="social-login p-40">';
+        //List a link to login
+        foreach ($providers as $provider)
+        {
+            $href = sprintf(base_url('authentication/social/%s/'),strtolower($provider));
+           $shtml.=sprintf('<div class="mb-20"><a href="%s" class="btn btn-lg btn-block btn-social btn-%s"><i class="fa fa-%s"></i>Sign In with %s</a>
+                                    </div>', $href, strtolower($provider),strtolower($provider),strtolower($provider),$provider);
+        }
+		$shtml.='</div>';
+		
+		return $shtml;
+	}
    
 
 }

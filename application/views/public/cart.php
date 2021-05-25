@@ -18,7 +18,7 @@
                                         <img src="<?=$row['item_image']?>" alt="<?=$row['item_name']?>" title="<?=$row['item_name']?>" />
                                     </a>
                                 </td>
-                                <td><a href="<?=$row['item_slug']?>"><?=$row['item_name']?></a> <?php if(@$row['item_var']){ echo '('.$row['item_var'].')';} ?> <?php if(@$row['item_var']){ echo '('.$row['item_subvar'].')';} ?>
+                                <td><a href="<?=$row['item_slug']?>"><?=$row['item_name']?></a> <?php if(@$row['item_var']){ echo '('.$row['item_var'].')';} ?> <?php if(@$row['item_var']){ echo '('.$row['item_subvar'].')';} ?>   <?php if(@$row['item_newvar']){ echo '('.$row['item_newvar'].')';} ?>
                                 </td>
                                 <td class="cart-item-quantity">
 								<?php if($row['item_type']=='product'){ ?> <i class="fa fa-minus cart-item-minus"></i> <?php } ?>

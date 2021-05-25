@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+require APPPATH . '/third_party/hybridauth/autoload.php';
+use Hybridauth\Hybridauth;
 class Authentication extends CI_Controller {
 	
 	public function __construct(){
@@ -49,6 +50,8 @@ class Authentication extends CI_Controller {
 		}
 		
 	}
+	
+
 	
 	public function forgot_password()
 	{
@@ -145,6 +148,104 @@ class Authentication extends CI_Controller {
 		
 		
 	}
+	
+	
+	public function social($provider = NULL)
+	{
+		
+		 $service = NULL;
+
+        try
+        {
+            //Instantiate Hybridauth's classes
+            $hybrid = new Hybridauth(getHybridConfig());
+			
+	
+			
+            //Check if given provider is enabled
+            if ((isset($provider)) && in_array($provider, $hybrid->getProviders()))
+            {
+                $this->session->set_userdata('provider', $provider);
+            }
+
+            //Update variable with the valid provider
+            $provider = $this->session->userdata('provider');
+
+            if ($provider)
+            {
+                $service = $hybrid->authenticate($provider);
+				
+                if ($service->isConnected())
+                {
+                    //Get user profile
+                    $profile = $service->getUserProfile();
+					
+					if($this->authentication_model->check_email($profile->email))
+					{
+						$this->authentication_model->user_login_social($profile->email);
+						
+					}
+					else
+					{
+						$rdata['user_firstname']	=	$profile->firstName?$profile->firstName:$profile->displayName;
+						$rdata['user_lastname']		=	$profile->lastName?$profile->lastName:$profile->displayName;
+						$rdata['user_email']		=	$profile->email;
+						$rdata['active']			=	1;
+						$rdata['is_verified']		=	1;
+						$this->authentication_model->user_register_social($rdata);
+						$this->authentication_model->user_login_social($profile->email);
+					}
+					
+                    /*
+                    Disconnect the service else HA would reuse stored session data
+                    rather making a fresh request in case the user has denied permissions
+                    in the previous authorization request
+                    */
+                    $service->disconnect();
+
+                    $this->session->unset_userdata('provider');
+
+                    //Display the profile data
+                  redirect('my-account');
+                }
+                else
+                {
+                    $this->session->set_flashdata('showmsg', array('msg' => 'Sorry! We couldn\'t authenticate your identity.'));
+					
+				redirect('/');
+                }
+            }
+        }
+        catch(Exception $e)
+        {
+            if (isset($service) && $service->isConnected()) 
+                $service->disconnect();
+
+            $error = 'Sorry! We couldn\'t authenticate you.';
+            $this->session->set_flashdata('showmsg', array('msg' => $error));
+            $error .= '\nError Code: ' . $e->getCode();
+            $error .= '\nError Message: ' . $e->getMessage();
+
+            log_message('error', $error);
+        }
+		
+		
+	}
+	
+	
+	function social_callback()
+	
+	{
+		
+		var_dump($_GET);
+		
+		var_dump($_POST);
+		
+			var_dump($_SESSION);
+	}
+	
+	
+
 
 	
 }

@@ -6,8 +6,10 @@ class Home extends CI_Controller {
 		public function __construct(){
 		parent::__construct();
 		 $this->load->model('home_model');
-		 $this->data['cities']			=	$this->home_model->get_cities();
-		 construct_init();
+		  construct_init();
+		  $this->data['cities']			=	$this->home_model->get_cities();
+		  $this->load->model('authentication_model');
+		  $this->data['social_login']	=	$this->authentication_model->generate_social_logins();
  	}
 	
 	function _remap($method,$args)
@@ -48,7 +50,7 @@ class Home extends CI_Controller {
 	
 	public function city($city)
 	{
-		if($ret=$this->home_model->is_valid_city($city))
+		if($ret=$this->home_model->is_valid_city($city[0]))
 		{
 		$dt['search']	=		$this->input->post('search')?$this->input->post('search'):null;
 		$dt['city']		=		$this->input->post('city')?$this->input->post('city'):null;
@@ -1141,3 +1143,8 @@ class Home extends CI_Controller {
 	
 	
 }
+
+		
+
+                                    
+                                

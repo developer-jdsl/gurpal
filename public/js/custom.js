@@ -4,11 +4,21 @@ $(document).on('click', '.add-product' ,function (e) {
   var target=$(this).parent().parent().parent();
 var color_select= $('#color_sel').html();
 var size_select= $('#size_sel').html();	
+
 var delete_btn='<a href="javascript:void(0);"  class="btn btn-danger btn-circle btn-sm btn-remove"><i class="fas fa-trash"></i></a>';
+
+
+/* 
 var html='<tr><td><input type="file" accept="jpg,jpeg,png,gif" class="file" name="add_product_image[]" style="width:100px"></td><td>'+
 		'<select name="add_color[]" class="form-control form-control-user">'+color_select+'</select></td><td><select name="add_size[]" class="form-control form-control-user">'+
 		size_select+'</select></td><td><input type="number" name="add_original_price[]" class="form-control form-control-user" style="width:100px"></td>'+'<td><input type="number" name="add_discount_price[]" class="form-control form-control-user" style="width:100px"></td>'+
 		'<td><input type="number" name="add_quantity[]" class="form-control form-control-user" style="width:100px"></td><td><a href="javascript:void(0);" class="btn btn-info btn-circle btn-sm add-product"><i class="fas fa-plus"></i></a></td></tr>';
+*/
+
+var html='<tr><td><input type="file" accept="jpg,jpeg,png,gif" class="file" name="add_product_image[]" style="width:100px"></td><td>'+
+		'Color <select name="add_color[]" class="form-control form-control-user">'+color_select+'</select> Size <select name="add_size[]" class="form-control form-control-user">'+size_select+'</select></td><td>Variation<input type="text" class="form-control form-control-user" name="product_variation[]" value="0">'+
+											'<div style="display:none">SubVariation <input type="text" class="form-control form-control-user" name="product_subvariation[]" value="0"></div></td>'+'<td>Original Price<input type="number" name="add_original_price[]" class="form-control form-control-user" > Discount Price <input type="number" name="add_discount_price[]" class="form-control form-control-user"></td>'+
+		'<td><input type="number" name="add_quantity[]" class="form-control form-control-user" ></td><td><a href="javascript:void(0);" class="btn btn-info btn-circle btn-sm add-product"><i class="fas fa-plus"></i></a></td></tr>';
 
 target.append(html);
 $(this).parent().html(delete_btn);

@@ -8,7 +8,8 @@ class Check extends CI_Controller {
 		$this->load->model('home_model');
 		 $this->data['cities']			=	$this->home_model->get_cities();
 		 construct_init();
-		
+				  $this->load->model('authentication_model');
+		  $this->data['social_login']	=	$this->authentication_model->generate_social_logins();
  	}
 
 	

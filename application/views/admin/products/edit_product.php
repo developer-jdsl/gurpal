@@ -225,8 +225,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 											<td>
 											<?=keyword_value('variation','Variation')?>
 											<input type="text" class="form-control form-control-user update_product_fields" data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-cname="Variation" data-column="product_variation" value="<?=$row['product_variation']?>">
+											<div style="display:none">
 											<?=keyword_value('subvariation','SubVariation')?>
 											<input type="text"  class="form-control form-control-user update_product_fields" data-id="<?=$row['pk_price_id']?>" data-table="product_pricing" data-cname="Subvariation" data-column="product_subvariation" value="<?=$row['product_subvariation']?>">
+											</div>
 											</td>
 										
 											<td >
@@ -298,9 +300,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 											</td>
 											<td>
 											<?=keyword_value('variation','Variation')?>
-											<input type="text" class="form-control form-control-user " name="add_variation[]" >
-											<?=keyword_value('subvariation','SubVariation')?>
-											<input type="text"  class="form-control form-control-user"  name="add_subvariation[]">
+											<input type="text" class="form-control form-control-user " name="add_variation[]"  value="0">
+											<div style="display:none" ><?=keyword_value('subvariation','SubVariation')?>
+											<input type="text"  class="form-control form-control-user"  name="add_subvariation[]" value="0">
+											</div>
 											</td>
 											<td>
 											<?=keyword_value('original_price','Original Price')?>

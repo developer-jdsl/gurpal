@@ -90,4 +90,8 @@ $route['logout']						=	'home/logout';
 
 $route['register']						=	'register/admin_front';
 
+$route['authentication/social/(:any)/'] = 'authentication/social/$1';
+
+$route['authentication/social/'] 		= 'authentication/social/';
+
 $route['(:any)']						=	'Check/index/$1';

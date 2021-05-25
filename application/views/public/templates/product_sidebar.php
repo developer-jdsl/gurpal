@@ -58,10 +58,11 @@
                             </ul>
                         </div>
                    -->
-                       <div class="sidebar-box">
-                            <h5>Popular</h5>
+						<div class="sidebar-box">
+                            <h5>Popular Products</h5>
                             <ul class="thumb-list">
-							<?php $popular_products=get_popular_products(3);
+                                <?php $popular_products=get_popular_products(3);
+								if($popular_products){
 							foreach($popular_products as $product) {
 							?>
                                 <li>
@@ -76,9 +77,10 @@
                                     </div>
                                 </li>
                                
-                              <?php } ?>
-                            </ul>
-                        </div>
+								<?php }} else {  ?>
+								<p align="center">No records found.</p>
+								<?php } ?>
+						</ul></div>
                       
                     </aside>
                 </div>

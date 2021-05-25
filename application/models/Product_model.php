@@ -17,8 +17,11 @@ class Product_model extends CI_Model {
 		$this->db->join('tbl_brands as b','p.product_brand=b.pk_brand_id','left');
 		$this->db->join('tbl_admin as a','p.fk_admin_id=a.pk_admin_id','left');
 		$this->db->join('tbl_gst as g','p.fk_gst_id=g.pk_gst_id','left');
-		
-		$this->db->where(array('p.active'=>1,'p.is_deleted'=>0,'p.pk_product_id'=>$data['pid'],'s.pk_size_id'=>$data['sid'],'c.pk_color_id'=>$data['cid'],'pp.product_variation'=>$data['vid']));
+		if($data['vid'])
+		{
+			$this->db->where('pp.product_variation',$data['vid']);
+		}
+		$this->db->where(array('p.active'=>1,'p.is_deleted'=>0,'p.pk_product_id'=>$data['pid'],'s.pk_size_id'=>$data['sid'],'c.pk_color_id'=>$data['cid']));
 		$records=$this->db->get();
 		if($records->num_rows()>0)
 		{

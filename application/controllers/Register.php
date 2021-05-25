@@ -5,19 +5,21 @@ class Register extends CI_Controller {
 	
 		public function __construct(){
 		parent::__construct();
-		 check_login();
+		 
 		 $this->load->library('form_validation');
 		 $this->load->helper('form');
 		 $this->load->model('authentication_model');
 		 	 $this->load->model('home_model');
 		 $this->data['cities']			=	$this->home_model->get_cities();
+		 $this->load->model('authentication_model');
+		  $this->data['social_login']	=	$this->authentication_model->generate_social_logins();
 		
  	}
 		 
 
 	public function admin()
 	{
-	
+	check_login();
 			$this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[tbl_admin.admin_email]',
 			array('required' =>  keyword_value('you_must_enter_email','You must enter Email.'),
 				  'valid_email' => keyword_value('please_enter_valid_email','Please Enter a valid Email'),

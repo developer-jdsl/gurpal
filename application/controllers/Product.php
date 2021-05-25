@@ -12,6 +12,8 @@ class Product extends CI_Controller {
 		 construct_init();
 		 $this->load->library('Ajax_pagination');
 		 $this->per_page=18;
+		 	$this->load->model('authentication_model');
+		  $this->data['social_login']	=	$this->authentication_model->generate_social_logins();
  	}
 		 
 		function _remap($method,$args)
@@ -39,6 +41,7 @@ class Product extends CI_Controller {
 		
 		$this->data['gallery']			=	$this->home_model->get_product_gallery($tmp['pk_product_id']);
 		$this->data['featured_products']=	$this->home_model->get_related_products(false,$tmp['pk_category_id'],$tmp['pk_product_id']);
+		$this->data['nearby_products']	=	$this->home_model->get_nearby_products(3,$tmp['pk_product_id']);
 		//$this->data['services']		=	$this->home_model->get_services();
 		//$this->data['banners']		=	$this->home_model->get_banners();
 		$this->data['brands']			=	$this->home_model->get_brands();
@@ -159,7 +162,8 @@ class Product extends CI_Controller {
 		$data['sid']=$this->input->post('size_id');
 		$data['cid']=$this->input->post('color_id');
 		$data['vid']=$this->input->post('var_id');
-		$details=$this->product_model->get_variation_details($data,array('city'=>null,'search'=>null));
+		$details=$this->product_model->get_variation_detail($data,array('city'=>null,'search'=>null));
+
 		if($details)
 		{
 			if($this->session->cart_data)
@@ -193,7 +197,7 @@ class Product extends CI_Controller {
 					$cur_data['item_pid']=$details['pk_price_id'];
 					$cur_data['item_var']=$details['color_name'];
 					$cur_data['item_subvar']=$details['size_name'];
-					$cur_data['item_newvar']=$data['vid'];
+					$cur_data['item_newvar']=$details['product_variation'];
 					$cart_data[]=$cur_data;	
 			
 			}

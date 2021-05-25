@@ -366,8 +366,23 @@ var price=$(this).find(':selected').data('price');
 });
 
 $('.pro_common_click').click(function(){
-var sid=$('.size_ul .active').data('id');
-var cid=$('.color_ul .active').data('id');
+	if($('.size_ul .active').data('id')>0)
+	{
+	var sid=$('.size_ul .active').data('id');	
+	}
+	else
+	{
+		var sid=0;
+	}
+	
+	if($('.color_ul .active').data('id')>0)
+	{
+	var cid=$('.color_ul .active').data('id');	
+	}
+	else
+	{
+		var cid=0;
+	}
 var price=$('[data-cs="'+sid+cid+'"]').data('price');
 	$('.product-info-price').html(price);
 	
@@ -516,7 +531,7 @@ $.post(base_url+"service/add_to_cart_list",
 });
 
 
-$(document).on('change', '#cart-quantity' ,function (e) {
+$(document).on('change', '.cart-quantity' ,function (e) {
 var qty=$(this).val();
 var pid=$(this).data('id');
 

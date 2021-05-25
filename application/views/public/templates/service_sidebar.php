@@ -56,10 +56,11 @@
                             </ul>
                         </div>
 						-->	
-                        <div class="sidebar-box">
-                            <h5>Popular</h5>
+                         <div class="sidebar-box">
+						<h5>Popular Services</h5>
                             <ul class="thumb-list">
-							<?php $popular_services=get_popular_services(3);
+							  <?php $popular_services=get_popular_services(3);
+							  if($popular_services){
 							foreach($popular_services as $service) {
 							?>
                                 <li>
@@ -74,9 +75,12 @@
                                     </div>
                                 </li>
                                
-                              <?php } ?>
+                              <?php } }  else { ?>
+							  <p align="center">No records found.</p>
+							  <?php } ?>
                             </ul>
                         </div>
+                  
                 
                     </aside>
                 </div>

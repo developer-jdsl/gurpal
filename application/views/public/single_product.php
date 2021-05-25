@@ -101,11 +101,25 @@
 								 
 								</label>
 								<br>
+								<?php } else {?>
+								<label style="display:none">Size :
+								 <ul class="list-inline variation_ul size_ul pro_common_click">
+								 <li class="size_li active" data-id="0"></li>
+								 </ul>
+								</label>
+								
 								<?php } ?>
 								<?php if($color_li_html){ ?>
 								<label>Color :
 								  <ul class="list-inline variation_ul color_ul pro_common_click">
 								 <?=$color_li_html?>
+								 </ul>
+								 
+								</label>
+								<?php } else { ?>
+								<label style="display:none">Color :
+								  <ul class="list-inline variation_ul color_ul pro_common_click">
+									<li class="color_li active" data-id="0"></li>
 								 </ul>
 								 
 								</label>
